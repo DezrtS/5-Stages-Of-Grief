@@ -134,10 +134,10 @@ GameObject:
   - component: {fileID: 22963206}
   - component: {fileID: 22963205}
   - component: {fileID: 22963204}
+  - component: {fileID: 22963209}
   - component: {fileID: 22963203}
   - component: {fileID: 22963208}
   - component: {fileID: 22963207}
-  - component: {fileID: 22963209}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -270,6 +270,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce4f13f7b421bd4d933d12152d5c150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxSpeed: 15
+  accelerateTime: 5
+  deaccelerateTime: 10
 --- !u!1 &144299048
 GameObject:
   m_ObjectHideFlags: 0

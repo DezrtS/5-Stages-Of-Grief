@@ -6,18 +6,18 @@ public class PlayerMovement : MonoBehaviour
 {
     private CharacterController characterController;
 
-    private float maxSpeed = 15;
-    private float accelerateTime = 1f;
-    private float deccelerateTime = 5;
+    [SerializeField] private float maxSpeed = 15;
+    [SerializeField] private float accelerateTime = 5f;
+    [SerializeField] private float deaccelerateTime = 10f;
 
-    private float startMovementTime = -1;
+    private float startTime = -1;
 
     bool accelerating = false;
-    bool isAtFullSpeed = false;
     bool deaccelerating = false;
 
     private float gravity;
     private Vector3 velocity;
+    private Vector3 stopVelocity;
 
     void Start()
     {
@@ -30,35 +30,47 @@ public class PlayerMovement : MonoBehaviour
         float xInput = Input.GetAxisRaw("Horizontal");
         float zInput = Input.GetAxisRaw("Vertical");
 
+        Vector3 movement = (transform.right * xInput + transform.forward * zInput).normalized * maxSpeed;
 
-
-        velocity = (transform.right * xInput + transform.forward * zInput).normalized * maxSpeed * Time.deltaTime;
-
-        if (velocity.magnitude > 0 && !accelerating && !isAtFullSpeed)
+        if (movement.magnitude == 0 && velocity.magnitude != 0 && !deaccelerating)
         {
-            startMovementTime = Time.timeSinceLevelLoad;
+            accelerating = false;
+            deaccelerating = true;
+            startTime = Time.timeSinceLevelLoad - (deaccelerateTime - ReverseAccelerate(velocity.magnitude, deaccelerateTime));
+            stopVelocity = velocity;
+            //Debug.Log($"Deaccelerating - Time To Deacceleration: {ReverseAccelerate(velocity.magnitude, deccelerateTime)}");
+        }
+
+        if (movement.magnitude > 0 && velocity.magnitude < maxSpeed && !accelerating)
+        {
+            deaccelerating = false;
             accelerating = true;
-        } else if (velocity.magnitude == 0)
-        {
-            accelerating = false;
-            //deaccelerating = true;
-            isAtFullSpeed = false;
-            startMovementTime = -1;
+            startTime = Time.timeSinceLevelLoad - ReverseAccelerate(velocity.magnitude, accelerateTime);
+            //Debug.Log($"Accelerating - Time To Accelerate: {accelerateTime - ReverseAccelerate(velocity.magnitude, accelerateTime)}");
         }
 
-        float movementSpeedMultiplier = 1;
+        float movementMultiplier = 1;
 
-        if (accelerating && !isAtFullSpeed && Time.timeSinceLevelLoad - startMovementTime > accelerateTime)
+        if (accelerating && Time.timeSinceLevelLoad - startTime < accelerateTime)
+        {
+            //Debug.Log("Accelerating");
+            movementMultiplier = Accelerate(startTime, accelerateTime);
+        } 
+        else if (deaccelerating && Time.timeSinceLevelLoad - startTime < deaccelerateTime)
+        {
+            //Debug.Log("Deaccelerating");
+            movement = stopVelocity;
+            movementMultiplier = 1 - Accelerate(startTime, deaccelerateTime);
+        } 
+        else if (accelerating || deaccelerating)
         {
             accelerating = false;
-            isAtFullSpeed = true;
-            Debug.Log(Time.timeSinceLevelLoad - startMovementTime);
-        } else if (accelerating)
-        {
-            movementSpeedMultiplier = Accelerate(startMovementTime, accelerateTime);
+            deaccelerating = false;
+            stopVelocity = Vector3.zero;
         }
 
-        characterController.Move(velocity * movementSpeedMultiplier);
+        characterController.Move(movement * movementMultiplier * Time.deltaTime);
+        velocity = movement * movementMultiplier;
     }
 
 
@@ -68,13 +80,8 @@ public class PlayerMovement : MonoBehaviour
         return (Time.timeSinceLevelLoad - startingTime) / timeTillCompletion;
     }
 
-    public float ReverseAccelerate(float currentSpeed, float maxSpeed)
+    public float ReverseAccelerate(float currentSpeed, float timeTillCompletion)
     {
-        return (1);
-    }
-
-    public float Deaccelerate(float startingTime, float timeTillCompletion)
-    {
-        return 1 - (0.5f * Mathf.Cos(((Time.timeSinceLevelLoad - startingTime - timeTillCompletion) * Mathf.PI) / timeTillCompletion) + 0.5f);
+        return (currentSpeed / maxSpeed) * timeTillCompletion;
     }
 }
