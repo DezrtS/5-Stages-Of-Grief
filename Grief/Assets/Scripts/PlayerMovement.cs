@@ -10,22 +10,28 @@ public class PlayerMovement : MonoBehaviour
     private InputAction playerMovement;
     private InputAction playerLook;
 
+    private Transform playerTransform;
+
+    // Debug
+    [SerializeField] private Transform playerTargetLook;
+
+    [SerializeField] private Transform playerModel;
+
     [SerializeField] private float maxSpeed = 15;
     [SerializeField] private float totalAccelerationTime = 5f;
     [SerializeField] private float totalDeaccelerationTime = 10f;
+    [SerializeField] private float inputSmoothMultiplier = 2;
 
     private float gravity;
     private float currentSpeed = 0;
     private Vector3 currentDirection = Vector3.right;
+    private Vector2 previousInput = Vector2.zero;
 
     private void Awake()
     {
-        playerInputControls = new PlayerInputControls();
-    }
-
-    void Start()
-    {
         characterController = GetComponent<CharacterController>();
+        playerInputControls = new PlayerInputControls();
+        playerTransform = transform;
     }
 
     private void OnEnable()
@@ -48,8 +54,11 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Vector2 input = playerMovement.ReadValue<Vector2>();
-        Vector3 targetDirection = (transform.right * input.x + transform.forward * input.y).normalized;
-        Vector3 targetVelocity = targetDirection * maxSpeed * input.magnitude;
+        Vector2 smoothedInput = Vector2.Lerp(previousInput, input, Time.deltaTime * inputSmoothMultiplier);
+        previousInput = smoothedInput;
+
+        Vector3 targetDirection = (playerTransform.right * smoothedInput.x + playerTransform.forward * smoothedInput.y).normalized;
+        Vector3 targetVelocity = targetDirection * maxSpeed * smoothedInput.magnitude;
         float targetSpeed = targetVelocity.magnitude;
 
         if (currentSpeed == 0)
@@ -88,6 +97,10 @@ public class PlayerMovement : MonoBehaviour
 
         if (targetDirection != Vector3.zero)
         {
+            // Debug
+            playerTargetLook.forward = (playerTransform.right * input.x + playerTransform.forward * input.y).normalized;
+
+            playerModel.forward = currentDirection;
             currentDirection = targetDirection;
         }
     }
