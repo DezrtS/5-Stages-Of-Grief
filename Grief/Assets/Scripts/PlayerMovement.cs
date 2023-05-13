@@ -1,87 +1,106 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
     private CharacterController characterController;
+    private PlayerInputControls playerInputControls;
+    private InputAction playerMovement;
+    private InputAction playerLook;
 
     [SerializeField] private float maxSpeed = 15;
-    [SerializeField] private float accelerateTime = 5f;
-    [SerializeField] private float deaccelerateTime = 10f;
-
-    private float startTime = -1;
-
-    bool accelerating = false;
-    bool deaccelerating = false;
+    [SerializeField] private float totalAccelerationTime = 5f;
+    [SerializeField] private float totalDeaccelerationTime = 10f;
 
     private float gravity;
-    private Vector3 velocity;
-    private Vector3 stopVelocity;
+    private float currentSpeed = 0;
+    private Vector3 currentDirection = Vector3.right;
+
+    private void Awake()
+    {
+        playerInputControls = new PlayerInputControls();
+    }
 
     void Start()
     {
         characterController = GetComponent<CharacterController>();
     }
 
+    private void OnEnable()
+    {
+        playerMovement = playerInputControls.Player.Movement;
+        playerMovement.Enable();
+
+        playerLook = playerInputControls.Player.Look;
+        playerLook.Enable();
+
+        playerInputControls.Player.Action.performed += DoAction;
+        playerInputControls.Player.Action.Enable();
+    }
+
+    private void DoAction(InputAction.CallbackContext obj)
+    {
+        Debug.Log($"Action Button Pressed {obj.action.activeControl.name}");
+    }
 
     void Update()
     {
-        float xInput = Input.GetAxisRaw("Horizontal");
-        float zInput = Input.GetAxisRaw("Vertical");
+        Vector2 input = playerMovement.ReadValue<Vector2>();
+        Vector3 targetDirection = (transform.right * input.x + transform.forward * input.y).normalized;
+        Vector3 targetVelocity = targetDirection * maxSpeed * input.magnitude;
+        float targetSpeed = targetVelocity.magnitude;
 
-        Vector3 movement = (transform.right * xInput + transform.forward * zInput).normalized * maxSpeed;
-
-        if (movement.magnitude == 0 && velocity.magnitude != 0 && !deaccelerating)
+        if (currentSpeed == 0)
         {
-            accelerating = false;
-            deaccelerating = true;
-            startTime = Time.timeSinceLevelLoad - (deaccelerateTime - ReverseAccelerate(velocity.magnitude, deaccelerateTime));
-            stopVelocity = velocity;
-            //Debug.Log($"Deaccelerating - Time To Deacceleration: {ReverseAccelerate(velocity.magnitude, deccelerateTime)}");
+            currentDirection = targetDirection;
         }
 
-        if (movement.magnitude > 0 && velocity.magnitude < maxSpeed && !accelerating)
+        if (currentSpeed < targetSpeed)
         {
-            deaccelerating = false;
-            accelerating = true;
-            startTime = Time.timeSinceLevelLoad - ReverseAccelerate(velocity.magnitude, accelerateTime);
-            //Debug.Log($"Accelerating - Time To Accelerate: {accelerateTime - ReverseAccelerate(velocity.magnitude, accelerateTime)}");
-        }
-
-        float movementMultiplier = 1;
-
-        if (accelerating && Time.timeSinceLevelLoad - startTime < accelerateTime)
-        {
-            //Debug.Log("Accelerating");
-            movementMultiplier = Accelerate(startTime, accelerateTime);
+            float accelerationIncrement = GetAcceleration(maxSpeed, totalAccelerationTime) * Time.deltaTime;
+            if (Mathf.Abs(currentSpeed - targetSpeed) < accelerationIncrement)
+            {
+                currentSpeed = targetSpeed;
+            } 
+            else
+            {
+                currentSpeed = currentSpeed + accelerationIncrement;
+            }
         } 
-        else if (deaccelerating && Time.timeSinceLevelLoad - startTime < deaccelerateTime)
+        else if (currentSpeed > targetSpeed)
         {
-            //Debug.Log("Deaccelerating");
-            movement = stopVelocity;
-            movementMultiplier = 1 - Accelerate(startTime, deaccelerateTime);
-        } 
-        else if (accelerating || deaccelerating)
-        {
-            accelerating = false;
-            deaccelerating = false;
-            stopVelocity = Vector3.zero;
+            float deaccelerationIncrement = GetAcceleration(maxSpeed, totalDeaccelerationTime) * Time.deltaTime;
+            if (Mathf.Abs(currentSpeed - targetSpeed) < deaccelerationIncrement)
+            {
+                currentSpeed = targetSpeed;
+            }
+            else
+            {
+                currentSpeed = currentSpeed - deaccelerationIncrement;
+            }
         }
 
-        characterController.Move(movement * movementMultiplier * Time.deltaTime);
-        velocity = movement * movementMultiplier;
+        //Debug.Log($"Current Speed: {currentSpeed}, Target Speed: {targetSpeed}, Current Direction: {currentDirection}, Target Direction: {targetDirection}");
+
+        characterController.Move(currentSpeed * currentDirection * Time.deltaTime);
+
+        if (targetDirection != Vector3.zero)
+        {
+            currentDirection = targetDirection;
+        }
     }
 
-
-    public float Accelerate(float startingTime, float timeTillCompletion)
+    private void OnDisable()
     {
-        //return (0.5f * Mathf.Cos(((Time.timeSinceLevelLoad - startingTime - timeTillCompletion) * Mathf.PI) / timeTillCompletion) + 0.5f);
-        return (Time.timeSinceLevelLoad - startingTime) / timeTillCompletion;
+        playerMovement.Disable();
+        playerLook.Disable();
+        playerInputControls.Player.Action.Disable();
     }
 
-    public float ReverseAccelerate(float currentSpeed, float timeTillCompletion)
+    public float GetAcceleration(float maxSpeed, float timeToReachFullSpeed)
     {
-        return (currentSpeed / maxSpeed) * timeTillCompletion;
+        return (maxSpeed) / timeToReachFullSpeed;
     }
 }
