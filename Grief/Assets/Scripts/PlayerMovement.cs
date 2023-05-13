@@ -12,8 +12,9 @@ public class PlayerMovement : MonoBehaviour
 
     private Transform playerTransform;
 
-    // Debug
+    // Debug - Remove Afterwards
     [SerializeField] private Transform playerTargetLook;
+    // Debug End
 
     [SerializeField] private Transform playerModel;
 
@@ -95,11 +96,16 @@ public class PlayerMovement : MonoBehaviour
 
         characterController.Move(currentSpeed * currentDirection * Time.deltaTime);
 
+        // Debug - Remove Afterwards
+        Vector2 targetInput = (playerTransform.right * input.x + playerTransform.forward * input.y).normalized;
+        if (targetInput != Vector2.zero)
+        {
+            playerTargetLook.forward = (playerTransform.right * input.x + playerTransform.forward * input.y).normalized;
+        }
+        // Debug End
+
         if (targetDirection != Vector3.zero)
         {
-            // Debug
-            playerTargetLook.forward = (playerTransform.right * input.x + playerTransform.forward * input.y).normalized;
-
             playerModel.forward = currentDirection;
             currentDirection = targetDirection;
         }
