@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 099861219deaa0944866fccc303c8f40, type: 3}
-  m_Name: Debug Player Ranged Attack
+  m_Script: {fileID: 11500000, guid: ddf9e3eebbe0d9b47b287859468c7e1a, type: 3}
+  m_Name: Basic Ranged Attack
   m_EditorClassIdentifier: 
-  attackRange: 17
-  attackDamage: 3
-  attackCooldown: 6
+  attackRange: 70
+  attackDamage: 13
+  attackCooldown: 12
+  spawnsProjectile: 1
   projectilePrefab: {fileID: 0}

@@ -104,7 +104,7 @@ public class AudioManager : Singleton<AudioManager>
 }
 
 [Serializable]
-public struct AudioSample
+public class AudioSample
 {
     [SerializeField] private string audioId;
     [SerializeField] private AudioClip audioClip;

@@ -10,23 +10,37 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
     private CharacterController characterController;
     //[SerializeField] private Transform modelTransform;
 
-    private PlayerDodge playerDodge;
     private PlayerMovement playerMovement;
+
+    private PlayerLook playerLook;
 
     private PlayerInputControls playerInputControls;
     private InputAction leftJoystick;
     private InputAction rightJoystick;
 
+    [Header("Movement")]
     [SerializeField] private float maxSpeed = 15;
+    [Range(0, 100)]
     [SerializeField] private float totalAccelerationTime = 0.5f;
+    [Range(0, 100)]
     [SerializeField] private float totalDeaccelerationTime = 0.5f;
     [SerializeField] private float inputSmoothMultiplier = 6;
 
+    [Space(10)]
+    [Header("Camera Panning")]
+    [SerializeField] private float panStrength = 5;
+    [Range(0.1f, 100)]
+    [SerializeField] private float panTimeMultiplier = 10;
+
     // Interface Variables
     // ---------------------------------------------------------------------------------------------------------
+    [Space(10)]
+    [Header("Health")]
     [SerializeField] private float maxHealth;
     private float health;
 
+    [Space(10)]
+    [Header("Attack and Dodging")]
     [SerializeField] private Attack attack;
     private bool isAttacking;
 
@@ -34,6 +48,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
     private bool isDodging;
 
     private Vector3 aimDirection;
+    [Space(10)]
+    [Header("Aiming")]
     [SerializeField] private float rotationSpeed;
     private bool isAiming;
 
@@ -58,8 +74,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
         playerTransform = transform;
         characterController = GetComponent<CharacterController>();
-        playerDodge = transform.AddComponent<PlayerDodge>();
         playerMovement = transform.AddComponent<PlayerMovement>();
+        playerLook = transform.AddComponent<PlayerLook>();
     }
 
     private void OnEnable()
@@ -90,7 +106,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
     private void Start()
     {
-
+        CameraManager.Instance.TransferCameraTo(transform);
     }
 
     private void Update()
@@ -100,12 +116,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
     private void FixedUpdate()
     {
-        if (isDodging)
-        {
-            playerDodge.HandleDodge(characterController, playerMovement.CurrentDirection, dodge);
-        } 
-        else
-        {
+        if (!isDodging) {
+
             playerMovement.HandleMovement(characterController, leftJoystick.ReadValue<Vector2>(), maxSpeed, totalAccelerationTime, totalDeaccelerationTime, inputSmoothMultiplier);
         }
 
@@ -115,7 +127,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
     private void LateUpdate()
     {
-        //playerLook.LookTowards(playerTransform, rightJoystick.ReadValue<Vector2>());
+        playerLook.PanTowards(rightJoystick.ReadValue<Vector2>(), panStrength, panTimeMultiplier);
     }
 
     private void OnDisable()
@@ -173,19 +185,24 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
         isDodging = true;
 
-        playerMovement.CurrentDirection = playerDodge.InitiateDodge(transform, leftJoystick.ReadValue<Vector2>());
+        Vector3 dodgeDirection = transform.forward;
+
+        if (leftJoystick.ReadValue<Vector2>().magnitude > 0)
+        {
+            dodgeDirection = PlayerMovement.movementAxis * leftJoystick.ReadValue<Vector2>().normalized;
+        }
+
+        playerMovement.CurrentDirection = dodgeDirection;
         playerMovement.CurrentSpeed = dodge.DodgeSpeed;
         playerMovement.ResetInput();
         playerMovement.UpdatePlayerRotation(playerTransform);
 
-        StartCoroutine(DodgeTimer());
-
-        OnDodgeStart();
+        dodge.InitiateDodge(this, characterController, playerMovement.CurrentDirection);
     }
 
     public bool CanDodge()
     {
-        return !isDodging && playerDodge.CanDodge(dodge);
+        return !isDodging;
     }
 
     public void OnDodgeStart()
@@ -195,6 +212,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
     public void OnDodgeEnd()
     {
+        isDodging = false;
         Debug.Log("Player Dodge Ended");
     }
 
@@ -211,14 +229,5 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
     public bool Pathfind()
     {
         return false;
-    }
-
-    // Timers
-    // ---------------------------------------------------------------------------------------------------------
-    private IEnumerator DodgeTimer()
-    {
-        yield return new WaitForSeconds(dodge.DodgeTime);
-        isDodging = false;
-        OnDodgeEnd();
     }
 }

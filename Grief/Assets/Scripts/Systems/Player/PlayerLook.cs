@@ -4,22 +4,34 @@ using UnityEngine;
 
 public class PlayerLook : MonoBehaviour
 {
-    private GameObject cameraFollowObject;
+    private CameraManager cameraManager;
 
-    [SerializeField] private float panStrenght = 5;
+    private Vector3 currentOffset = Vector2.zero;
 
-    private void Awake()
+    private void Start()
     {
-        cameraFollowObject = GameObject.Find("Camera Follow");
+        cameraManager = CameraManager.Instance;
     }
 
-    public void LookTowards(Transform player, Vector2 direction)
+    public void PanTowards(Vector2 input, float panStrength, float panTimeMultiplier)
     {
-        Vector3 camPos = player.position + PlayerMovement.movementAxis * direction * panStrenght;
+        Vector3 targetOffset = PlayerMovement.movementAxis * input * panStrength;
+        Vector3 direction = targetOffset - currentOffset;
+        Vector3 increment = (direction).normalized / panTimeMultiplier;
 
-        if (cameraFollowObject != null)
+        if (direction.magnitude <= increment.magnitude)
         {
-            cameraFollowObject.transform.position = camPos;
+            currentOffset = targetOffset;
+        } 
+        else
+        {
+            currentOffset += increment;
         }
+
+        cameraManager.SetCameraOffset(currentOffset);
+
+        //Vector2 smoothedInput = Vector2.Lerp(previousInput, input, Time.deltaTime * inputSmoothMultiplier);
+        //previousInput = smoothedInput;
+        //cameraManager.SetCameraOffset(PlayerMovement.movementAxis * smoothedInput * panStrength);
     } 
 }

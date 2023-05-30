@@ -24,11 +24,6 @@ public class PlayerMovement : MonoBehaviour
         Vector3 targetVelocity = targetDirection * maxSpeed * smoothedInput.magnitude;
         float targetSpeed = targetVelocity.magnitude;
 
-        if (currentSpeed == 0)
-        {
-            //currentDirection = targetDirection;
-        }
-
         if (currentSpeed < targetSpeed)
         {
             float accelerationIncrement = GetAcceleration(maxSpeed, totalAccelerationTime) * Time.deltaTime;
