@@ -35,8 +35,6 @@ public abstract class Attack : ScriptableObject
     [SerializeField] private bool hasMaxAttackLength;
     [SerializeField] private float maxAttacklength;
 
-    private Coroutine attackCoroutine;
-
     private float timeSinceAimStart = 0;
     private float timeSinceLastAttack = 0;
     private bool isClone = false;
@@ -54,6 +52,8 @@ public abstract class Attack : ScriptableObject
         clone.attackEffects = attackEffects;
         clone.attackCooldown = attackCooldown;
         clone.attackChargeUpTime = attackChargeUpTime;
+        clone.hasMaxAttackLength = hasMaxAttackLength;
+        clone.maxAttacklength = maxAttacklength;
         clone.isClone = true;
 
         return clone;
@@ -88,9 +88,13 @@ public abstract class Attack : ScriptableObject
                 CancelAiming();
                 return false;
             }
-        } else if (attackCommand == AttackCommand.AttackAnimationFinished)
+        } 
+        else if (attackCommand == AttackCommand.AttackAnimationFinished)
         {
-            OnAttackEnd(transform);
+            if (attackState == AttackState.Attacking)
+            {
+                OnAttackEnd(transform);
+            }
         }
 
         //Debug.Log(attackCommand + " command was sent");
@@ -117,7 +121,7 @@ public abstract class Attack : ScriptableObject
 
         if (hasMaxAttackLength)
         {
-            attackCoroutine = CoroutineRunner.Instance.StartCoroutine(StopAttack(transform));
+            CoroutineRunner.Instance.StartCoroutine(StopAttack(transform));
         }
     }
 
@@ -130,7 +134,7 @@ public abstract class Attack : ScriptableObject
     {
         //Debug.Log("Attack Ended");
         timeSinceLastAttack = Time.timeSinceLevelLoad;
-        CoroutineRunner.Instance.StopCoroutine(attackCoroutine);
+        CoroutineRunner.Instance.StopCoroutine(StopAttack(transform));
         attackState = AttackState.Idle;
     }
 

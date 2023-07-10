@@ -22,6 +22,7 @@ public class PlayerAttack : Attack
 
     public override void OnAttackEnd(Transform transform)
     {
+        //Debug.Log("Player Attack Ended");
         base.OnAttackEnd(transform);
         Destroy(attackTrigger);
     }

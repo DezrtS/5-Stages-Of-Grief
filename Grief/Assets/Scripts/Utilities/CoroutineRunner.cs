@@ -20,6 +20,11 @@ public class CoroutineRunner : Singleton<CoroutineRunner>
 
     public new void StopCoroutine(IEnumerator routine)
     {
+        if (routine == null)
+        {
+            return;
+        }
+
         coroutineContainer.StopCoroutine(routine);
     }
 
