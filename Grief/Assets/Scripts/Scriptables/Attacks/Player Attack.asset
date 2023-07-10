@@ -9,14 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddf9e3eebbe0d9b47b287859468c7e1a, type: 3}
-  m_Name: Basic Melee Attack
+  m_Script: {fileID: 11500000, guid: 6a1af6b6a04f1a048b4f04d56f1f4eaa, type: 3}
+  m_Name: Player Attack
   m_EditorClassIdentifier: 
-  attackRange: 7
-  attackDamage: 17
-  attackTime: 1
-  attackCooldown: 3
-  givesEffect: 0
   attackEffects: 
-  spawnsProjectile: 0
-  projectilePrefab: {fileID: 0}
+  attackCooldown: 0
+  attackChargeUpTime: 0

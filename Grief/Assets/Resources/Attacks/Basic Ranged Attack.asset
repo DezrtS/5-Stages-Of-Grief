@@ -14,6 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 70
   attackDamage: 13
+  attackTime: 1
   attackCooldown: 12
+  canAimAttack: 1
+  attackGivesEffect: 0
+  projectileGivesEffect: 0
+  attackEffects: 
   spawnsProjectile: 1
   projectilePrefab: {fileID: 0}

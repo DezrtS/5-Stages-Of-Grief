@@ -137,6 +137,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5152a7eb28bae143b11ed5ebb2c6e48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  circleTrigger: {fileID: 6240561615398202094, guid: 23bde1fc2e74ca44d9ff49e9bd638771,
+    type: 3}
 --- !u!1 &2534719790838855531
 GameObject:
   m_ObjectHideFlags: 0

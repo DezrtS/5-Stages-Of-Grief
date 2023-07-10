@@ -28,16 +28,6 @@ public class CameraManager : Singleton<CameraManager>
         }
     }
 
-    private void Start()
-    {
-        
-    }
-
-    private void Update()
-    {
-        
-    }
-
     public void TransferCameraTo(Transform transform)
     {
         if (foundCamera)

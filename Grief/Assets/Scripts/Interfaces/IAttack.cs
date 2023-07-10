@@ -9,5 +9,7 @@ public interface IAttack
 
     void OnAttackStart();
 
+    void OnAttackCancel();
+
     void OnAttackEnd();
 }

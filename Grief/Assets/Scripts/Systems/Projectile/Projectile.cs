@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private float timeSinceLastAttack = 0;
+}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
+public class ProjectileStats : ScriptableObject
+{
+
 }

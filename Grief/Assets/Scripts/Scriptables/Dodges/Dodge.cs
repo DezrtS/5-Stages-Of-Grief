@@ -10,24 +10,35 @@ public class Dodge : ScriptableObject
     [SerializeField] private float dodgeCooldown;
 
     private Coroutine dodgeCoroutine;
+    private bool isClone;
     private float timeSinceLastDodge = 0;
 
     public float DodgeSpeed { get { return dodgeSpeed; } }
     public float DodgeTime { get { return dodgeTime; } }
     public float DodgeCooldown { get { return dodgeCooldown; } }
 
+    public Dodge Clone()
+    {
+        Dodge clone = ScriptableObject.CreateInstance<Dodge>();
+
+        clone.dodgeSpeed = dodgeSpeed;
+        clone.dodgeTime = dodgeTime;
+        clone.dodgeCooldown = dodgeCooldown;
+
+        clone.isClone = true;
+
+        return clone;
+    }
+
     public virtual void InitiateDodge<T>(T entity, CharacterController characterController, Vector3 dodgeDirection) where T : IDodge
     {
-        if (CanDodge())
-        {
-            entity.OnDodgeStart();
-            dodgeCoroutine = CoroutineRunner.Instance.StartCoroutine(HandleDodge(entity, characterController, dodgeDirection));
-        }
+        entity.OnDodgeStart();
+        dodgeCoroutine = CoroutineRunner.Instance.StartCoroutine(HandleDodge(entity, characterController, dodgeDirection));
     }
 
     public virtual bool CanDodge()
     {
-        return Time.timeSinceLevelLoad - timeSinceLastDodge >= dodgeCooldown || timeSinceLastDodge == 0;
+        return (Time.timeSinceLevelLoad - timeSinceLastDodge >= dodgeCooldown || timeSinceLastDodge == 0) && isClone;
     }
 
     public virtual IEnumerator HandleDodge<T>(T entity, CharacterController characterController, Vector3 dodgeDirection) where T : IDodge
@@ -46,6 +57,7 @@ public class Dodge : ScriptableObject
             yield return null;
         }
 
+        timeSinceLastDodge = Time.timeSinceLevelLoad;
         entity.OnDodgeEnd();
     }
 }

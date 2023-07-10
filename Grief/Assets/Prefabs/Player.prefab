@@ -50,12 +50,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 15
-  totalAccelerationTime: 0.5
+  totalAccelerationTime: 0.25
   totalDeaccelerationTime: 0.5
   inputSmoothMultiplier: 6
+  panStrength: 5
+  panTimeMultiplier: 10
   maxHealth: 10
-  attack: {fileID: 0}
-  dodge: {fileID: 11400000, guid: ec0da447481ee7949b576ba445886240, type: 2}
+  attackTemplate: {fileID: 11400000, guid: f6cea25dee6a23c45947d8009d51682a, type: 2}
+  dodgeTemplate: {fileID: 11400000, guid: ec0da447481ee7949b576ba445886240, type: 2}
   rotationSpeed: 1
 --- !u!136 &6919339057877188737
 CapsuleCollider:

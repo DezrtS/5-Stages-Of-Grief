@@ -10,13 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ddf9e3eebbe0d9b47b287859468c7e1a, type: 3}
-  m_Name: Basic Melee Attack
+  m_Name: Temporal Kunai
   m_EditorClassIdentifier: 
-  attackRange: 7
-  attackDamage: 17
-  attackTime: 1
-  attackCooldown: 3
-  givesEffect: 0
+  attackRange: 25
+  attackDamage: 5
+  attackTime: 0
+  attackCooldown: 10
+  canAimAttack: 1
+  attackGivesEffect: 0
+  projectileGivesEffect: 0
   attackEffects: 
-  spawnsProjectile: 0
+  spawnsProjectile: 1
   projectilePrefab: {fileID: 0}

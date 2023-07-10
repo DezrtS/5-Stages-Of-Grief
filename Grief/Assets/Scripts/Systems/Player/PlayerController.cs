@@ -32,6 +32,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
     [Range(0.1f, 100)]
     [SerializeField] private float panTimeMultiplier = 10;
 
+    private Attack attack;
+    private Dodge dodge;
+
     // Interface Variables
     // ---------------------------------------------------------------------------------------------------------
     [Space(10)]
@@ -41,10 +44,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
     [Space(10)]
     [Header("Attack and Dodging")]
-    [SerializeField] private Attack attack;
+    [SerializeField] private Attack attackTemplate;
     private bool isAttacking;
 
-    [SerializeField] private Dodge dodge;
+    [SerializeField] private Dodge dodgeTemplate;
     private bool isDodging;
 
     private Vector3 aimDirection;
@@ -59,9 +62,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
     // ---------------------------------------------------------------------------------------------------------
     public float MaxHealth { get { return maxHealth; } }
     public float Health { get { return health; } }
-    public Attack Attack { get { return attack; } }
+    public Attack Attack { get { return attackTemplate; } }
     public bool IsAttacking { get { return isAttacking; } }
-    public Dodge Dodge { get { return dodge; } }
+    public Dodge Dodge { get { return dodgeTemplate; } }
     public bool IsDodging { get { return isDodging; } }
     public Vector3 AimDirection { get { return aimDirection; } }
     public float RotationSpeed { get { return rotationSpeed; } }
@@ -76,6 +79,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
         characterController = GetComponent<CharacterController>();
         playerMovement = transform.AddComponent<PlayerMovement>();
         playerLook = transform.AddComponent<PlayerLook>();
+
+        dodge = dodgeTemplate.Clone();
+        attack = attackTemplate.Clone(attack);
     }
 
     private void OnEnable()
@@ -91,16 +97,31 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
         rightJoystick = playerInputControls.Player.Look;
         rightJoystick.Enable();
 
-        playerInputControls.Player.Action.performed += DoAction;
+        playerInputControls.Player.Action.performed += OnActionPerformed;
+        playerInputControls.Player.Action.canceled += OnActionCancelled;
         playerInputControls.Player.Action.Enable();
     }
 
-    private void DoAction(InputAction.CallbackContext obj)
+    private void OnActionPerformed(InputAction.CallbackContext obj)
     {
         //Debug.Log($"Action Button Pressed {obj.action.activeControl.name}");
         if (obj.action.activeControl.name == "buttonEast")
         {
             InitiateDodge();
+        } 
+        else if (obj.action.activeControl.name == "buttonWest")
+        {
+            InitiateAttack();
+        }
+    }
+
+    private void OnActionCancelled(InputAction.CallbackContext obj)
+    {
+        //Debug.Log($"Action Button Cancelled {obj.action.activeControl.name}");
+        if (obj.action.activeControl.name == "buttonWest" && isAiming)
+        {
+            attack.SendCommand(AttackCommand.AttackButtonReleased, transform);
+            isAiming = false;
         }
     }
 
@@ -111,18 +132,56 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
     private void Update()
     {
+        if (attack.AttackState == AttackState.Aiming)
+        {
+            if (!isAiming)
+            {
+                isAiming = true;
+            }
 
+            Aim();
+            attack.OnAim(transform);
+        }
+        else
+        {
+            if (isAiming)
+            {
+                isAiming = false;
+            }
+
+            playerMovement.UpdatePlayerRotation(playerTransform);
+        }
+
+        if (attack.AttackState == AttackState.Attacking)
+        {
+            if (!isAttacking)
+            {
+                OnAttackStart();
+            }
+
+            attack.OnAttack(transform);
+        }
+        else
+        {
+            if (isAttacking)
+            {
+                OnAttackCancel();
+            }
+        }
     }
 
     private void FixedUpdate()
     {
-        if (!isDodging) {
-
-            playerMovement.HandleMovement(characterController, leftJoystick.ReadValue<Vector2>(), maxSpeed, totalAccelerationTime, totalDeaccelerationTime, inputSmoothMultiplier);
+        if (!isDodging && !isAiming && !isAttacking) 
+        {
+            playerMovement.HandleMovement2(characterController, leftJoystick.ReadValue<Vector2>(), maxSpeed, totalAccelerationTime, totalDeaccelerationTime, inputSmoothMultiplier);
+        } 
+        else if (!isDodging)
+        {
+            playerMovement.HandleMovement2(characterController, Vector2.zero, maxSpeed, totalAccelerationTime, totalDeaccelerationTime, inputSmoothMultiplier);
         }
 
-        playerMovement.HandleGravity(characterController);
-        playerMovement.UpdatePlayerRotation(playerTransform);
+        //playerMovement.HandleGravity(characterController);
     }
 
     private void LateUpdate()
@@ -135,7 +194,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
         leftJoystick.Disable();
         rightJoystick.Disable();
 
-        playerInputControls.Player.Action.performed -= DoAction;
+        playerInputControls.Player.Action.performed -= OnActionPerformed;
+        playerInputControls.Player.Action.canceled -= OnActionCancelled;
         playerInputControls.Player.Action.Disable();
     }
 
@@ -143,37 +203,57 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
     // ---------------------------------------------------------------------------------------------------------
     public void Damage(float damage)
     {
+        health = Mathf.Max(health - damage, 0);
 
+        if (health == 0)
+        {
+            Die();
+        }
     }
 
     public void Heal(float healing)
     {
-
+        health = Mathf.Min(health + healing, maxHealth);
     }
 
     public void Die()
     {
-
+        Debug.Log("Player Has Died");
     }
 
     public void InitiateAttack()
     {
+        if (!CanAttack())
+        {
+            return;
+        }
 
+        attack.SendCommand(AttackCommand.AttackButtonPressed, transform);
     }
 
     public bool CanAttack()
     {
-        return false;
+        return !isAttacking && !isAiming;
     }
 
     public void OnAttackStart()
     {
+        StartCoroutine(AttackDelay());
+        isAttacking = true;
+        //Debug.Log("Player Attack Started");
+    }
 
+    public void OnAttackCancel()
+    {
+        isAiming = false;
+        isAttacking = false;
     }
 
     public void OnAttackEnd()
     {
-
+        attack.SendCommand(AttackCommand.AttackAnimationFinished, transform);
+        isAttacking = false;
+        //Debug.Log("Player Attack Ended");
     }
 
     public void InitiateDodge()
@@ -185,24 +265,23 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
         isDodging = true;
 
-        Vector3 dodgeDirection = transform.forward;
-
-        if (leftJoystick.ReadValue<Vector2>().magnitude > 0)
-        {
-            dodgeDirection = PlayerMovement.movementAxis * leftJoystick.ReadValue<Vector2>().normalized;
-        }
-
-        playerMovement.CurrentDirection = dodgeDirection;
-        playerMovement.CurrentSpeed = dodge.DodgeSpeed;
-        playerMovement.ResetInput();
-        playerMovement.UpdatePlayerRotation(playerTransform);
+        Debug.Log("Player Preparing For Dodge");
+        playerMovement.PrepareForDodge2(playerTransform, leftJoystick.ReadValue<Vector2>(), dodge);
 
         dodge.InitiateDodge(this, characterController, playerMovement.CurrentDirection);
     }
-
+     
     public bool CanDodge()
     {
-        return !isDodging;
+        if (!isDodging && dodge != null)
+        {
+            if (dodge.CanDodge())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void OnDodgeStart()
@@ -218,16 +297,32 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
     public bool Aim()
     {
-        return false;
+        Vector3 currentDirection = playerTransform.forward;
+        Vector3 targetDirection = PlayerMovement.movementAxis * leftJoystick.ReadValue<Vector2>().normalized;
+
+        if (targetDirection.magnitude > 0)
+        {
+            playerTransform.forward = targetDirection;
+            
+            return currentDirection == targetDirection;
+        }
+        
+        return true;
     }
 
     public bool CanAim()
     {
-        return false;
+        return !isDodging && !isAttacking;
     }
 
     public bool Pathfind()
     {
         return false;
+    }
+
+    public IEnumerator AttackDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        OnAttackEnd();
     }
 }

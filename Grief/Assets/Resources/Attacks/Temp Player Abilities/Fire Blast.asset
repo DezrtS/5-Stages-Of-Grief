@@ -10,13 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ddf9e3eebbe0d9b47b287859468c7e1a, type: 3}
-  m_Name: Basic Melee Attack
+  m_Name: Fire Blast
   m_EditorClassIdentifier: 
-  attackRange: 7
-  attackDamage: 17
-  attackTime: 1
-  attackCooldown: 3
-  givesEffect: 0
-  attackEffects: 
+  attackRange: 5
+  attackDamage: 25
+  attackTime: 0
+  attackCooldown: 20
+  canAimAttack: 0
+  attackGivesEffect: 1
+  projectileGivesEffect: 0
+  attackEffects: 00000000
   spawnsProjectile: 0
   projectilePrefab: {fileID: 0}
