@@ -26,6 +26,11 @@ public class CombatManager : Singleton<CombatManager>
         //}
     }
 
+    public void AttackInDirection(Transform transform, Vector3 direction, float force)
+    {
+
+    }
+
     public GameObject CreateCircleTrigger(Vector3 position, float scale)
     {
         GameObject trigger = Instantiate(circleTrigger, position, Quaternion.identity);

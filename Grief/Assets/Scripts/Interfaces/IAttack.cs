@@ -1,15 +1,32 @@
+using UnityEngine;
+
+public enum AttackState
+{
+    Idle,
+    Aiming,
+    Attacking
+}
+
 public interface IAttack
 {
     Attack Attack { get; }
-    bool IsAttacking { get; }
 
-    void InitiateAttack();
+    AttackState AttackState { get; }
 
-    bool CanAttack();
+    Vector3 AimDirection { get; }
+    float RotationSpeed { get; }
 
-    void OnAttackStart();
+    bool TransferToState(AttackState attackState);
 
-    void OnAttackCancel();
+    void InitiateState(AttackState attackState);
 
-    void OnAttackEnd();
+    bool CanInitiateState(AttackState attackState);
+
+    void OnStateStart(AttackState attackState);
+
+    void OnState(AttackState attackState);
+
+    void OnStateEnd(AttackState attackState);
+
+    void OnStateCancel(AttackState attackState);
 }

@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, IDodge, IAim, IPathfind
+public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, IDodge, IPathfind
 {
     private Transform playerTransform;
     private CharacterController characterController;
@@ -45,7 +45,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
     [Space(10)]
     [Header("Attack and Dodging")]
     [SerializeField] private Attack attackTemplate;
-    private bool isAttacking;
+    private AttackState attackState;
 
     [SerializeField] private Dodge dodgeTemplate;
     private bool isDodging;
@@ -54,7 +54,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
     [Space(10)]
     [Header("Aiming")]
     [SerializeField] private float rotationSpeed;
-    private bool isAiming;
 
     private Vector3 pathfindPosition;
 
@@ -63,12 +62,11 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
     public float MaxHealth { get { return maxHealth; } }
     public float Health { get { return health; } }
     public Attack Attack { get { return attackTemplate; } }
-    public bool IsAttacking { get { return isAttacking; } }
+    public AttackState AttackState { get { return attackState; } }
     public Dodge Dodge { get { return dodgeTemplate; } }
     public bool IsDodging { get { return isDodging; } }
     public Vector3 AimDirection { get { return aimDirection; } }
     public float RotationSpeed { get { return rotationSpeed; } }
-    public bool IsAiming { get { return isAiming; } }
     public Vector3 PathfindPosition { get { return pathfindPosition; } set { pathfindPosition = value; } }
 
     protected override void Awake()
@@ -111,17 +109,16 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
         } 
         else if (obj.action.activeControl.name == "buttonWest")
         {
-            InitiateAttack();
+            InitiateState(AttackState.Aiming);
         }
     }
 
     private void OnActionCancelled(InputAction.CallbackContext obj)
     {
         //Debug.Log($"Action Button Cancelled {obj.action.activeControl.name}");
-        if (obj.action.activeControl.name == "buttonWest" && isAiming)
+        if (obj.action.activeControl.name == "buttonWest" && attackState == AttackState.Aiming)
         {
-            attack.SendCommand(AttackCommand.AttackButtonReleased, transform);
-            isAiming = false;
+            InitiateState(AttackState.Attacking);
         }
     }
 
@@ -132,48 +129,14 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
 
     private void Update()
     {
-        if (attack.AttackState == AttackState.Aiming)
-        {
-            if (!isAiming)
-            {
-                isAiming = true;
-            }
 
-            Aim();
-            attack.OnAim(transform);
-        }
-        else
-        {
-            if (isAiming)
-            {
-                isAiming = false;
-            }
-
-            playerMovement.UpdatePlayerRotation(playerTransform);
-        }
-
-        if (attack.AttackState == AttackState.Attacking)
-        {
-            if (!isAttacking)
-            {
-                OnAttackStart();
-            }
-
-            attack.OnAttack(transform);
-        }
-        else
-        {
-            if (isAttacking)
-            {
-                OnAttackCancel();
-            }
-        }
     }
 
     private void FixedUpdate()
     {
-        if (!isDodging && !isAiming && !isAttacking) 
+        if (!isDodging && attackState != AttackState.Aiming && attackState != AttackState.Attacking) 
         {
+            playerMovement.UpdatePlayerRotation(playerTransform);
             playerMovement.HandleMovement2(characterController, leftJoystick.ReadValue<Vector2>(), maxSpeed, totalAccelerationTime, totalDeaccelerationTime, inputSmoothMultiplier);
         } 
         else if (!isDodging)
@@ -221,39 +184,67 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
         Debug.Log("Player Has Died");
     }
 
-    public void InitiateAttack()
+    public bool TransferToState(AttackState attackState)
     {
-        if (!CanAttack())
+        if (CanInitiateState(attackState))
         {
-            return;
+            this.attackState = attackState;
+            return true;
         }
 
-        attack.SendCommand(AttackCommand.AttackButtonPressed, transform);
+        return false;
     }
 
-    public bool CanAttack()
+    public void InitiateState(AttackState attackState)
     {
-        return !isAttacking && !isAiming;
+        if (CanInitiateState(attackState))
+        {
+            attack.TransferToState(attackState, this, transform);
+        } 
+        else
+        {
+            Debug.Log($"Cannot Enter State {attackState}");
+        }
     }
 
-    public void OnAttackStart()
+    public bool CanInitiateState(AttackState attackState)
     {
-        StartCoroutine(AttackDelay());
-        isAttacking = true;
-        //Debug.Log("Player Attack Started");
+        // Specific requirements to the class rather than the attack
+        if (this.attackState == attackState)
+        {
+            return false;
+        }
+
+        return true;
     }
 
-    public void OnAttackCancel()
+    public void OnStateStart(AttackState attackState)
     {
-        isAiming = false;
-        isAttacking = false;
+        // Actions to do when the state has first started
+        if (attackState == AttackState.Attacking)
+        {
+            StartCoroutine(EndAttack());
+        }
     }
 
-    public void OnAttackEnd()
+    public void OnState(AttackState attackState)
     {
-        attack.SendCommand(AttackCommand.AttackAnimationFinished, transform);
-        isAttacking = false;
-        //Debug.Log("Player Attack Ended");
+        // Actions to do while the state is happening
+        if (attackState == AttackState.Aiming)
+        {
+            Aim();
+        }
+    }
+
+    public void OnStateEnd(AttackState attackState)
+    {
+        // Actions to do when the state has ended
+    }
+
+    public void OnStateCancel(AttackState attackState)
+    {
+        // Actions to do when the state is cancelled
+        attackState = AttackState.Idle;
     }
 
     public void InitiateDodge()
@@ -310,19 +301,14 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IAttack, I
         return true;
     }
 
-    public bool CanAim()
-    {
-        return !isDodging && !isAttacking;
-    }
-
     public bool Pathfind()
     {
         return false;
     }
 
-    public IEnumerator AttackDelay()
+    public IEnumerator EndAttack()
     {
-        yield return new WaitForSeconds(0.5f);
-        OnAttackEnd();
+        yield return new WaitForSeconds(1f);
+        InitiateState(AttackState.Idle);
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player Attack
   m_EditorClassIdentifier: 
   attackEffects: 
-  attackCooldown: 0.2
+  attackCooldown: 0
   attackChargeUpTime: 0
   hasMaxAttackLength: 0
   maxAttacklength: 0

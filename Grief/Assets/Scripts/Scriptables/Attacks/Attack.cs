@@ -11,33 +11,30 @@ public enum AttackEffectType
     Stunned
 }
 
-public enum AttackCommand
-{
-    AttackButtonPressed,
-    AttackButtonReleased,
-    AttackAnimationFinished
-}
-
-public enum AttackState
-{
-    Idle,
-    Aiming,
-    Attacking
-}
-
 public abstract class Attack : ScriptableObject
 {
     // Shared Variables
     [SerializeField] private List<AttackEffectType> attackEffects = new List<AttackEffectType>();
+    
     [SerializeField] private float attackCooldown;
     [SerializeField] private float attackChargeUpTime;
 
-    [SerializeField] private bool hasMaxAttackLength;
-    [SerializeField] private float maxAttacklength;
+    [SerializeField] private bool hasAimingStage;
+    [SerializeField] private bool hasAttackStage;
+
+    [SerializeField] private float maxAimTime;
+    [SerializeField] private float maxAttackTime;
+
+    private float timeWhenStateStarted = 0;
+    private float timeWhenStateEnded = 0;
 
     private float timeSinceAimStart = 0;
     private float timeSinceLastAttack = 0;
+
     private bool isClone = false;
+
+    protected Transform parentTransform;
+    private IEnumerator stateCoroutine;
 
     private AttackState attackState = AttackState.Idle;
     public AttackState AttackState { get { return attackState; } }
@@ -52,8 +49,7 @@ public abstract class Attack : ScriptableObject
         clone.attackEffects = attackEffects;
         clone.attackCooldown = attackCooldown;
         clone.attackChargeUpTime = attackChargeUpTime;
-        clone.hasMaxAttackLength = hasMaxAttackLength;
-        clone.maxAttacklength = maxAttacklength;
+
         clone.isClone = true;
 
         return clone;
@@ -64,99 +60,95 @@ public abstract class Attack : ScriptableObject
         Destroy(this);
     }
 
-    public virtual bool SendCommand(AttackCommand attackCommand, Transform transform)
+    public virtual bool TransferToState<T>(AttackState attackState, T attacker, Transform attackingTransform) where T : IAttack
     {
-        if (attackCommand == AttackCommand.AttackButtonPressed)
+        if (CanInitiateState(attackState))
         {
-            if (CanAim())
-            {
-                OnAimStart(transform);
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else if (attackCommand == AttackCommand.AttackButtonReleased)
-        {
-            if (CanAttack())
-            {
-                OnAimToAttack(transform);
-            }
-            else
-            {
-                CancelAiming();
-                return false;
-            }
-        } 
-        else if (attackCommand == AttackCommand.AttackAnimationFinished)
-        {
-            if (attackState == AttackState.Attacking)
-            {
-                OnAttackEnd(transform);
-            }
+            OnStateEnd(this.attackState, attacker);
+
+            //Debug.Log($"Attack transfering from {this.attackState} to {attackState}");
+
+            this.attackState = attackState;
+            InitiateState(attackState, attacker, attackingTransform);
+
+            return true;
         }
 
-        //Debug.Log(attackCommand + " command was sent");
+        return false;
+    }
+
+    public virtual void InitiateState<T>(AttackState attackState, T attacker, Transform attackingTransform) where T : IAttack
+    {
+        attacker.TransferToState(attackState);
+        
+        if (attackState == AttackState.Idle)
+        {
+            return;
+        }
+
+        parentTransform = attackingTransform;
+
+        OnStateStart(attackState, attacker);
+
+        stateCoroutine = StateCoroutine(attackState, attacker);
+        CoroutineRunner.Instance.StartCoroutine(stateCoroutine);
+    }
+
+    public virtual bool CanInitiateState(AttackState attackState)
+    {
+        if (!isClone)
+        {
+            return false;
+        }
+
+        if (attackState == AttackState.Attacking)
+        {
+            return (Time.timeSinceLevelLoad - timeSinceAimStart >= attackChargeUpTime);
+        } 
+        else if (attackState == AttackState.Aiming)
+        {
+            return (Time.timeSinceLevelLoad - timeSinceLastAttack >= attackCooldown || timeSinceLastAttack == 0);
+        }
 
         return true;
     }
 
-    public virtual void OnAimStart(Transform transform)
+    public virtual void OnStateStart<T>(AttackState attackState, T attacker) where T : IAttack
     {
-        //Debug.Log("Aiming Started");
-        timeSinceAimStart = Time.timeSinceLevelLoad;
-        attackState = AttackState.Aiming;
+        attacker.OnStateStart(attackState);
     }
 
-    public virtual void OnAim(Transform transform)
+    public virtual void OnState<T>(AttackState attackState, T attacker, float timeSinceStateStart) where T : IAttack
     {
-
+        attacker.OnState(attackState);
     }
 
-    public virtual void OnAimToAttack(Transform transform)
+    public virtual void OnStateEnd<T>(AttackState attackState, T attacker) where T : IAttack
     {
-        //Debug.Log("Transitioning From Aiming to Attacking");
-        attackState = AttackState.Attacking;
+        attacker.OnStateEnd(attackState);
+        CoroutineRunner.Instance.StopCoroutine(stateCoroutine);
+        parentTransform = null;
+        timeWhenStateEnded = Time.timeSinceLevelLoad;
+    }
 
-        if (hasMaxAttackLength)
+    public virtual void OnStateCancel<T>(AttackState attackState, T attacker) where T : IAttack
+    {
+        attackState = AttackState.Idle;
+        CoroutineRunner.Instance.StopCoroutine(stateCoroutine);
+        parentTransform = null;
+        timeWhenStateEnded = Time.timeSinceLevelLoad;
+    }
+
+    public IEnumerator StateCoroutine<T>(AttackState attackState, T attacker) where T : IAttack 
+    {
+        timeWhenStateStarted = Time.timeSinceLevelLoad;
+
+        while (true)
         {
-            CoroutineRunner.Instance.StartCoroutine(StopAttack(transform));
+            yield return new WaitForFixedUpdate();
+            OnState(attackState, attacker, Time.timeSinceLevelLoad - timeWhenStateStarted);
+            
+            // Check if attack or aiming has lasted until its max
         }
-    }
-
-    public virtual void OnAttack(Transform transform)
-    {
-
-    }
-
-    public virtual void OnAttackEnd(Transform transform)
-    {
-        //Debug.Log("Attack Ended");
-        timeSinceLastAttack = Time.timeSinceLevelLoad;
-        CoroutineRunner.Instance.StopCoroutine(StopAttack(transform));
-        attackState = AttackState.Idle;
-    }
-
-    public virtual void CancelAiming()
-    {
-        //Debug.Log("Aiming Canceled");
-        attackState = AttackState.Idle;
-    }
-
-    public virtual bool CanAim()
-    {
-        return (Time.timeSinceLevelLoad - timeSinceLastAttack >= attackCooldown || timeSinceLastAttack == 0) && isClone && attackState == AttackState.Idle;
-    }
-
-    public virtual bool CanAttack()
-    {
-        return (Time.timeSinceLevelLoad - timeSinceAimStart >= attackChargeUpTime);
-    }
-
-    public virtual IEnumerator StopAttack(Transform transform)
-    {
-        yield return new WaitForSeconds(maxAttacklength);
-        OnAttackEnd(transform);
     }
 }

@@ -8,22 +8,34 @@ public class PlayerAttack : Attack
     private GameObject attackTrigger;
     private Vector3 triggerOffset;
 
-    public override void OnAimToAttack(Transform transform)
+    public override void OnStateStart<T>(AttackState attackState, T attacker)
     {
-        base.OnAimToAttack(transform);
-        attackTrigger = CombatManager.Instance.CreateCircleTrigger(transform.position + transform.forward * 2, 3);
-        triggerOffset = attackTrigger.transform.position - transform.position;
+        base.OnStateStart<T>(attackState, attacker);
+
+        if (attackState == AttackState.Attacking)
+        {
+            attackTrigger = CombatManager.Instance.CreateCircleTrigger(parentTransform.position + parentTransform.forward * 2, 3);
+            triggerOffset = attackTrigger.transform.position - parentTransform.position;
+        }
     }
 
-    public override void OnAttack(Transform transform)
+    public override void OnState<T>(AttackState attackState, T attacker, float timeSinceStateStart)
     {
-        attackTrigger.transform.position = transform.position + triggerOffset;
+        base.OnState(attackState, attacker, timeSinceStateStart);
+
+        if (attackState == AttackState.Attacking)
+        {
+            attackTrigger.transform.position = parentTransform.position + triggerOffset;
+        }
     }
 
-    public override void OnAttackEnd(Transform transform)
+    public override void OnStateEnd<T>(AttackState attackState, T attacker)
     {
-        //Debug.Log("Player Attack Ended");
-        base.OnAttackEnd(transform);
-        Destroy(attackTrigger);
+        base.OnStateEnd(attackState, attacker);
+
+        if (attackState == AttackState.Attacking)
+        {
+            Destroy(attackTrigger);
+        }
     }
 }
