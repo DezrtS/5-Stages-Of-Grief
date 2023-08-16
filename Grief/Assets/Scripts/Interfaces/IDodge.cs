@@ -5,9 +5,13 @@ public interface IDodge
 
     void InitiateDodge();
 
-    bool CanDodge();
+    bool CanInitiateDodge();
 
     void OnDodgeStart();
 
+    void OnDodge();
+
     void OnDodgeEnd();
+
+    void OnDodgeCancel(bool otherHasCancelled);
 }

@@ -21,6 +21,12 @@ public class CameraManager : Singleton<CameraManager>
         {
             cinemachineCamera = cameraGameObject.GetComponent<CinemachineVirtualCamera>();
             cinemachineTransposer = cinemachineCamera.GetCinemachineComponent<CinemachineTransposer>();
+
+            if (cinemachineTransposer == null)
+            {
+                Debug.LogError("Cinemachine Camera was found however, the camera is currently not set to Transposer [Set the Body to \"Transpose\", the Binding Mode to \"World Space\", and the Follow Offset to Vector3.Zero]");
+                foundCamera = false;
+            }
         } 
         else
         {

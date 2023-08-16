@@ -4,7 +4,8 @@ public enum AttackState
 {
     Idle,
     Aiming,
-    Attacking
+    Attacking,
+    CoolingDown
 }
 
 public interface IAttack
@@ -16,17 +17,17 @@ public interface IAttack
     Vector3 AimDirection { get; }
     float RotationSpeed { get; }
 
-    bool TransferToState(AttackState attackState);
+    bool TransferToAttackState(AttackState attackState);
 
-    void InitiateState(AttackState attackState);
+    void InitiateAttackState(AttackState attackState);
 
-    bool CanInitiateState(AttackState attackState);
+    bool CanInitiateAttackState(AttackState attackState);
 
-    void OnStateStart(AttackState attackState);
+    void OnAttackStateStart(AttackState attackState);
 
-    void OnState(AttackState attackState);
+    void OnAttackState(AttackState attackState);
 
-    void OnStateEnd(AttackState attackState);
+    void OnAttackStateEnd(AttackState attackState);
 
-    void OnStateCancel(AttackState attackState);
+    void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled);
 }

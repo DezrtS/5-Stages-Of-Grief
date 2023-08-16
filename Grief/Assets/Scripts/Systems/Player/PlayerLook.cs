@@ -15,7 +15,7 @@ public class PlayerLook : MonoBehaviour
 
     public void PanTowards(Vector2 input, float panStrength, float panTimeMultiplier)
     {
-        Vector3 targetOffset = PlayerMovement.movementAxis * input * panStrength;
+        Vector3 targetOffset = RigidTransform.MovementAxis * input * panStrength;
         Vector3 direction = targetOffset - currentOffset;
         Vector3 increment = (direction).normalized / panTimeMultiplier;
 
