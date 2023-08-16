@@ -42,7 +42,6 @@ public abstract class Dodge : ScriptableObject
     {
         if (CanInitiateDodge())
         {
-            Debug.Log("Dodge Triggered");
 
             if (isDodging)
             {

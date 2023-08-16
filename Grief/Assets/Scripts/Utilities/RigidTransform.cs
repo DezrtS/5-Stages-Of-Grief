@@ -140,12 +140,12 @@ public class RigidTransform : MonoBehaviour
 
     private void CheckCollisions()
     {
-        // Needs to be updated to adjust for larger models and different collisions
+        // Needs to be updated to adjust for larger models and for avoiding different collisions / collision layers
 
         RaycastHit raycastHit;
         if (Physics.Raycast(transform.position, velocity.normalized, out raycastHit, 0.75f))
         {
-            Debug.Log("Raycast Hit");
+            //Debug.Log("Raycast Hit");
 
             Vector3 normal = raycastHit.normal;
 
