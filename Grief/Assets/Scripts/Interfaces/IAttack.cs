@@ -17,7 +17,7 @@ public interface IAttack
     Vector3 AimDirection { get; }
     float RotationSpeed { get; }
 
-    bool TransferToAttackState(AttackState attackState);
+    void TransferToAttackState(AttackState attackState);
 
     void InitiateAttackState(AttackState attackState);
 

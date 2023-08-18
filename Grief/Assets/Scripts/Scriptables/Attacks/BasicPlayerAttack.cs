@@ -19,12 +19,12 @@ public class BasicPlayerAttack : Attack
 
     public override void OnAttackState<T>(AttackState attackState, T attacker, float timeSinceStateStart)
     {
-        base.OnAttackState(attackState, attacker, timeSinceStateStart);
-
         if (attackState == AttackState.Attacking)
         {
             attackTrigger.transform.position = parentTransform.position + triggerOffset;
         }
+
+        base.OnAttackState(attackState, attacker, timeSinceStateStart);
     }
 
     public override void OnAttackStateEnd<T>(AttackState attackState, T attacker)

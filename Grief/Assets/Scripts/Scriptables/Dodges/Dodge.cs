@@ -5,7 +5,7 @@ public abstract class Dodge : ScriptableObject
 {
     // dodgeSpeed will probably be changed to dodgeDistance
     [Header("Dodge Variables")]
-    [SerializeField] protected float dodgeSpeed;
+    [SerializeField] private float dodgeDistance;
     [SerializeField] private float dodgeTime;
     [SerializeField] private float dodgeCooldown;
 
@@ -18,7 +18,7 @@ public abstract class Dodge : ScriptableObject
 
     protected RigidTransform parentRigidTransform;
 
-    public float DodgeSpeed { get { return dodgeSpeed; } }
+    public float DodgeSpeed { get { return dodgeDistance; } }
     public float DodgeTime { get { return dodgeTime; } }
     public float DodgeCooldown { get { return dodgeCooldown; } }
 
@@ -29,7 +29,7 @@ public abstract class Dodge : ScriptableObject
             clone = CreateInstance(GetType()) as Dodge;
         }
 
-        clone.dodgeSpeed = dodgeSpeed;
+        clone.dodgeDistance = dodgeDistance;
         clone.dodgeTime = dodgeTime;
         clone.dodgeCooldown = dodgeCooldown;
 
@@ -38,7 +38,7 @@ public abstract class Dodge : ScriptableObject
         return clone;
     }
 
-    public virtual void InitiateDodge<T>(Vector3 dodgeDirection, T dodger, RigidTransform rigidTransform) where T : IDodge
+    public virtual void InitiateDodge<T>(Vector3 dodgeDirection, Vector3 directionInput, T dodger, RigidTransform rigidTransform) where T : IDodge
     {
         if (CanInitiateDodge())
         {
@@ -52,7 +52,7 @@ public abstract class Dodge : ScriptableObject
             parentRigidTransform = rigidTransform;
             isDodging = true;
 
-            OnDodgeStart(dodgeDirection, dodger);
+            OnDodgeStart(dodgeDirection, directionInput, dodger);
 
             dodgeCoroutine = DodgeCoroutine(dodgeDirection, dodger);
             CoroutineRunner.Instance.StartCoroutine(dodgeCoroutine);
@@ -69,7 +69,7 @@ public abstract class Dodge : ScriptableObject
         return (Time.timeSinceLevelLoad - timeLastDodgeEnded >= dodgeCooldown || timeLastDodgeEnded == 0);
     }
 
-    public virtual void OnDodgeStart<T>(Vector3 dodgeDirection, T dodger) where T : IDodge
+    public virtual void OnDodgeStart<T>(Vector3 dodgeDirection, Vector3 directionInput, T dodger) where T : IDodge
     {
         dodger.OnDodgeStart();
     }
@@ -113,5 +113,10 @@ public abstract class Dodge : ScriptableObject
             yield return new WaitForFixedUpdate();
             OnDodge(dodgeDirection, dodger, Time.timeSinceLevelLoad - timeDodgeStarted);
         }
+    }
+
+    public float GetDodgeSpeed()
+    {
+        return dodgeDistance / dodgeTime;
     }
 }

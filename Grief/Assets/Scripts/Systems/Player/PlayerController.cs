@@ -75,10 +75,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     private void OnEnable()
     {
-        if (playerInputControls == null)
-        {
-            playerInputControls = new PlayerInputControls();
-        }
+        playerInputControls ??= new PlayerInputControls();
 
         leftJoystick = playerInputControls.Player.Movement;
         leftJoystick.Enable();
@@ -116,16 +113,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     private void Start()
     {
         CameraManager.Instance.TransferCameraTo(transform);
-    }
-
-    private void Update()
-    {
-
-    }
-
-    private void FixedUpdate()
-    {
-
     }
 
     private void LateUpdate()
@@ -175,18 +162,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         return GetMovementInput();
     }
 
-    public bool TransferToAttackState(AttackState attackState)
+    public void TransferToAttackState(AttackState attackState)
     {
-        if (CanInitiateAttackState(attackState))
-        {
-            this.attackState = attackState;
-
-            rigidTrans.SetCanMove(attackState == AttackState.Idle);
-
-            return true;
-        }
-
-        return false;
+        this.attackState = attackState;
     }
 
     public void InitiateAttackState(AttackState attackState)
@@ -195,10 +173,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             attack.TransferToAttackState(attackState, this, transform);
         } 
-        else
-        {
-            Debug.Log($"Cannot Enter State {attackState}");
-        }
     }
 
     public bool CanInitiateAttackState(AttackState attackState)
@@ -226,9 +200,20 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public void OnAttackStateStart(AttackState attackState)
     {
         // Actions to do when the state has first started
+        if (attackState == AttackState.Aiming || attackState == AttackState.Attacking)
+        {
+            rigidTrans.SetCanMove(false);
+        }
+
         if (attackState == AttackState.Attacking)
         {
+            rigidTrans.SetCanRotate(false);
             StartCoroutine(CancelAttack());
+        }
+        else if (attackState == AttackState.Idle)
+        {
+            rigidTrans.SetCanMove(true);
+            rigidTrans.SetCanRotate(true);
         }
     }
 
@@ -244,6 +229,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public void OnAttackStateEnd(AttackState attackState)
     {
         // Actions to do when the state has ended
+        StopCoroutine(CancelAttack());
+        rigidTrans.SetCanMove(true);
+        rigidTrans.SetCanRotate(true);
     }
 
     public void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled)
@@ -263,19 +251,16 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     {
         if (CanInitiateDodge())
         {
-            Vector3 dodgeDirection = RigidTransform.MovementAxis * GetMovementInput().normalized;
+            Vector3 dodgeDirection = GetRotationInput().normalized;
 
             if (dodgeDirection == Vector3.zero)
             {
-                dodgeDirection = transform.forward;
+                Quaternion qInverse = Quaternion.Inverse(RigidTransform.MovementAxis);
+                dodgeDirection = qInverse * transform.forward;
             }
 
-            dodge.InitiateDodge(dodgeDirection, this, rigidTrans);
+            dodge.InitiateDodge(dodgeDirection, GetRotationInput().normalized, this, rigidTrans);
         } 
-        else
-        {
-            Debug.Log($"Cannot Dodge");
-        }
     }
 
     public bool CanInitiateDodge()
@@ -294,7 +279,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public void OnDodgeStart()
     {
         // Actions to do when the dodge has first started
-
+        isDodging = true;
         rigidTrans.SetCanMove(false);
         rigidTrans.SetCanRotate(false);
     }
@@ -332,8 +317,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         if (targetDirection.magnitude > 0)
         {
-            playerTransform.forward = targetDirection;
-            
+            rigidTrans.ForceRotation(GetRotationInput());
+
             return currentDirection == targetDirection;
         }
         
@@ -350,7 +335,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public IEnumerator CancelAttack()
     {
         // For Debugging Purposes
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(99f);
         OnAttackStateCancel(attackState, false);
     }
 }

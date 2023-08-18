@@ -24,7 +24,8 @@ public class RigidTransform : MonoBehaviour
     private CharacterController characterController;
     private IMove inputProvider;
 
-    private Vector2 previousInput = Vector2.zero;
+    private Vector2 previousMovementInput = Vector2.zero;
+    private Vector3 previousRotationInput = Vector3.zero;
 
     public float Speed { get { return speed; } }
     public Vector3 Velocity { get { return velocity; } set { velocity = value; } }
@@ -48,26 +49,40 @@ public class RigidTransform : MonoBehaviour
     {
         UpdateMovement();
         UpdateRotation();
-        //ApplyGravity(); - Has some bugs
+        //ApplyGravity(); - Currently has some bugs
         CheckCollisions();
     }
 
     private void UpdateMovement()
     {
-        Vector3 input = Vector3.zero;
+        Vector3 movementInput = Vector3.zero;
+        Vector3 rotationInput = previousRotationInput;
 
         speed = velocity.magnitude;
 
-        if (canMove && inputProvider != null)
+        if (inputProvider != null)
         {
-            input = inputProvider.GetMovementInput();
+            if (canMove)
+            {
+                movementInput = inputProvider.GetMovementInput();
+            }
+
+            Vector3 tempRotationInput = inputProvider.GetRotationInput();
+
+            if (canRotate && tempRotationInput != Vector3.zero)
+            {
+                rotationInput = tempRotationInput;
+            }
         }
 
-        Vector2 smoothedInput = Vector2.Lerp(previousInput, input, Time.deltaTime * inputSmoothMultiplier);
-        previousInput = smoothedInput;
+        Vector2 smoothedMovementInput = Vector2.Lerp(previousMovementInput, movementInput, Time.deltaTime * inputSmoothMultiplier);
+        previousMovementInput = smoothedMovementInput;
 
-        Vector3 targetDirection = MovementAxis * smoothedInput.normalized;
-        Vector3 targetVelocity = maxSpeed * smoothedInput.magnitude * targetDirection;
+        Vector3 smoothedRotationInput = Vector3.Lerp(previousRotationInput, rotationInput, Time.deltaTime * inputSmoothMultiplier);
+        previousRotationInput = smoothedRotationInput;
+
+        Vector3 targetDirection = MovementAxis * smoothedRotationInput.normalized;
+        Vector3 targetVelocity = maxSpeed * smoothedMovementInput.magnitude * targetDirection;
         float targetSpeed = targetVelocity.magnitude;
 
         Vector3 velocityDifference = targetVelocity - velocity;
@@ -123,8 +138,8 @@ public class RigidTransform : MonoBehaviour
 
     public void ForceRotation(Vector3 rotation)
     {
-        this.rotation = rotation;
-        transform.forward = rotation;
+        previousRotationInput = rotation;
+        transform.forward = MovementAxis * rotation;
     }
 
     private void ApplyGravity()

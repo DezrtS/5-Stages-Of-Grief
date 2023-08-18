@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackEffects: 
   attackCooldown: 0
+  attackCancelCooldown: 0
   attackChargeUpTime: 0
   hasAimingStage: 1
   hasAttackStage: 1
-  maxAimTime: 0
-  maxAttackTime: 0
+  maxAimTime: 99
+  maxAttackTime: 1
