@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4210801239728939437}
   - component: {fileID: 8117647116770759147}
   - component: {fileID: 7176632205177670944}
+  - component: {fileID: 2792360646895841563}
   - component: {fileID: 6105866216252825740}
   m_Layer: 0
   m_Name: Attack Trigger
@@ -84,6 +85,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2792360646895841563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6240561615398202094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb370d7fcf8064342b22be2b88f53073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &6105866216252825740
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -6,30 +6,30 @@ public class BasicPlayerAttack : Attack
     private GameObject attackTrigger;
     private Vector3 triggerOffset;
 
-    public override void OnAttackStateStart<T>(AttackState attackState, T attacker)
+    public override void OnAttackStateStart(AttackState attackState)
     {
-        base.OnAttackStateStart<T>(attackState, attacker);
+        base.OnAttackStateStart(attackState);
 
         if (attackState == AttackState.Attacking)
         {
-            attackTrigger = CombatManager.Instance.CreateCircleTrigger(parentTransform.position + parentTransform.forward * 2, 3);
+            attackTrigger = CombatManager.Instance.CreateCircleTrigger(this, parentTransform.position + parentTransform.forward * 2, 3);
             triggerOffset = attackTrigger.transform.position - parentTransform.position;
         }
     }
 
-    public override void OnAttackState<T>(AttackState attackState, T attacker, float timeSinceStateStart)
+    public override void OnAttackState(AttackState attackState, float timeSinceStateStart)
     {
         if (attackState == AttackState.Attacking)
         {
             attackTrigger.transform.position = parentTransform.position + triggerOffset;
         }
 
-        base.OnAttackState(attackState, attacker, timeSinceStateStart);
+        base.OnAttackState(attackState, timeSinceStateStart);
     }
 
-    public override void OnAttackStateEnd<T>(AttackState attackState, T attacker)
+    public override void OnAttackStateEnd(AttackState attackState)
     {
-        base.OnAttackStateEnd(attackState, attacker);
+        base.OnAttackStateEnd(attackState);
 
         if (attackState == AttackState.Attacking)
         {
@@ -37,9 +37,9 @@ public class BasicPlayerAttack : Attack
         }
     }
 
-    public override void OnAttackStateCancel<T>(AttackState attackState, T attacker, bool otherHasCancelled)
+    public override void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled)
     {
-        base.OnAttackStateCancel(attackState, attacker, otherHasCancelled);
+        base.OnAttackStateCancel(attackState, otherHasCancelled);
 
         if (attackState == AttackState.Attacking)
         {

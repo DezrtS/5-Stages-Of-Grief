@@ -11,17 +11,17 @@ TagManager:
   - 
   - Water
   - UI
+  - Player
+  - Enemy
+  - Object
   - 
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player Attack
+  - Enemy Attack
+  - Object Attack
   - 
   - 
   - 

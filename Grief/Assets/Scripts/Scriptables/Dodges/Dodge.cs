@@ -5,6 +5,8 @@ public abstract class Dodge : ScriptableObject
 {
     // dodgeSpeed will probably be changed to dodgeDistance
     [Header("Dodge Variables")]
+    [SerializeField] private string dodgeId;
+
     [SerializeField] private float dodgeDistance;
     [SerializeField] private float dodgeTime;
     [SerializeField] private float dodgeCooldown;
@@ -16,13 +18,12 @@ public abstract class Dodge : ScriptableObject
 
     private bool isDodging;
 
+    protected IDodge dodger;
     protected RigidTransform parentRigidTransform;
 
-    public float DodgeSpeed { get { return dodgeDistance; } }
-    public float DodgeTime { get { return dodgeTime; } }
-    public float DodgeCooldown { get { return dodgeCooldown; } }
+    public string DodgeId { get { return dodgeId; } }
 
-    public virtual Dodge Clone(Dodge clone)
+    public virtual Dodge Clone(Dodge clone, IDodge dodger, RigidTransform parentRigidTransform)
     {
         if (clone == null)
         {
@@ -33,12 +34,15 @@ public abstract class Dodge : ScriptableObject
         clone.dodgeTime = dodgeTime;
         clone.dodgeCooldown = dodgeCooldown;
 
+        clone.dodger = dodger;
+        clone.parentRigidTransform = parentRigidTransform;
+
         clone.isClone = true;
 
         return clone;
     }
 
-    public virtual void InitiateDodge<T>(Vector3 dodgeDirection, Vector3 directionInput, T dodger, RigidTransform rigidTransform) where T : IDodge
+    public virtual void InitiateDodge(Vector3 dodgeDirection, Vector3 directionInput)
     {
         if (CanInitiateDodge())
         {
@@ -46,15 +50,14 @@ public abstract class Dodge : ScriptableObject
             if (isDodging)
             {
                 // May Alter This Later
-                OnDodgeCancel(dodger, false);
+                OnDodgeCancel(false);
             }
 
-            parentRigidTransform = rigidTransform;
             isDodging = true;
 
-            OnDodgeStart(dodgeDirection, directionInput, dodger);
+            OnDodgeStart(dodgeDirection, directionInput);
 
-            dodgeCoroutine = DodgeCoroutine(dodgeDirection, dodger);
+            dodgeCoroutine = DodgeCoroutine(dodgeDirection);
             CoroutineRunner.Instance.StartCoroutine(dodgeCoroutine);
         }
     }
@@ -69,22 +72,22 @@ public abstract class Dodge : ScriptableObject
         return (Time.timeSinceLevelLoad - timeLastDodgeEnded >= dodgeCooldown || timeLastDodgeEnded == 0);
     }
 
-    public virtual void OnDodgeStart<T>(Vector3 dodgeDirection, Vector3 directionInput, T dodger) where T : IDodge
+    public virtual void OnDodgeStart(Vector3 dodgeDirection, Vector3 directionInput)
     {
         dodger.OnDodgeStart();
     }
 
-    public virtual void OnDodge<T>(Vector3 dodgeDirection, T dodger, float timeSinceDodgeStarted) where T : IDodge
+    public virtual void OnDodge(Vector3 dodgeDirection, float timeSinceDodgeStarted)
     {
         dodger.OnDodge();
 
         if (timeSinceDodgeStarted > dodgeTime)
         {
-            OnDodgeEnd(dodgeDirection, dodger);
+            OnDodgeEnd(dodgeDirection);
         }
     }
 
-    public virtual void OnDodgeEnd<T>(Vector3 dodgeDirection, T dodger) where T : IDodge
+    public virtual void OnDodgeEnd(Vector3 dodgeDirection)
     {
         dodger.OnDodgeEnd();
         isDodging = false;
@@ -92,7 +95,7 @@ public abstract class Dodge : ScriptableObject
         timeLastDodgeEnded = Time.timeSinceLevelLoad;
     }
  
-    public virtual void OnDodgeCancel<T>(T dodger, bool otherHasCancelled) where T : IDodge
+    public virtual void OnDodgeCancel(bool otherHasCancelled)
     {
         if (!otherHasCancelled)
         {
@@ -104,14 +107,14 @@ public abstract class Dodge : ScriptableObject
         timeLastDodgeEnded = Time.timeSinceLevelLoad;
     }
 
-    public IEnumerator DodgeCoroutine<T>(Vector3 dodgeDirection, T dodger) where T : IDodge
+    public IEnumerator DodgeCoroutine(Vector3 dodgeDirection)
     {
         timeDodgeStarted = Time.timeSinceLevelLoad;
 
         while (true)
         {
             yield return new WaitForFixedUpdate();
-            OnDodge(dodgeDirection, dodger, Time.timeSinceLevelLoad - timeDodgeStarted);
+            OnDodge(dodgeDirection, Time.timeSinceLevelLoad - timeDodgeStarted);
         }
     }
 

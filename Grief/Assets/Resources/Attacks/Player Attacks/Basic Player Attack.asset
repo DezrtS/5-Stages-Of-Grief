@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a1af6b6a04f1a048b4f04d56f1f4eaa, type: 3}
   m_Name: Basic Player Attack
   m_EditorClassIdentifier: 
+  attackId: basic_player_attack
+  damage: 3
+  knockbackPower: 12
   attackEffects: 
   attackCooldown: 0
   attackCancelCooldown: 0

@@ -14,6 +14,11 @@ public enum AttackEffectType
 public abstract class Attack : ScriptableObject
 {
     [Header("Attack Variables")]
+
+    [SerializeField] private string attackId;
+    [SerializeField] private float damage = 3;
+    [SerializeField] private float knockbackPower;
+
     [SerializeField] private List<AttackEffectType> attackEffects = new List<AttackEffectType>();
     
     [SerializeField] private float attackCooldown;
@@ -31,18 +36,27 @@ public abstract class Attack : ScriptableObject
 
     private bool isClone = false;
 
+    protected IAttack attacker;
     protected Transform parentTransform;
     private IEnumerator attackStateCoroutine;
 
     private AttackState attackState = AttackState.Idle;
+
+    public string AttackId { get { return attackId; } }
+    public float Damage { get { return damage; } }
+    public float KnockbackPower { get { return knockbackPower; } }
     public AttackState AttackState { get { return attackState; } }
 
-    public virtual Attack Clone(Attack clone)
+    public virtual Attack Clone(Attack clone, IAttack attacker, Transform parentTransform)
     {
         if (clone == null)
         {
             clone = CreateInstance(GetType()) as Attack;
         }
+
+        clone.attackId = attackId;
+        clone.damage = damage;
+        clone.knockbackPower = knockbackPower;
 
         clone.attackEffects = attackEffects;
         clone.attackCooldown = attackCooldown;
@@ -52,6 +66,9 @@ public abstract class Attack : ScriptableObject
         clone.hasAttackStage = hasAttackStage;
         clone.maxAimTime = maxAimTime;
         clone.maxAttackTime = maxAttackTime;
+
+        clone.attacker = attacker;
+        clone.parentTransform = parentTransform;
 
         clone.isClone = true;
 
@@ -63,11 +80,11 @@ public abstract class Attack : ScriptableObject
         Destroy(this);
     }
 
-    public virtual void TransferToAttackState<T>(AttackState attackState, T attacker, Transform attackingTransform) where T : IAttack
+    public virtual void TransferToAttackState(AttackState attackState)
     {
         if (CanInitiateAttackState(attackState))
         {
-            OnAttackStateEnd(this.attackState, attacker);
+            OnAttackStateEnd(this.attackState);
 
             if (!hasAimingStage && attackState == AttackState.Aiming)
             {
@@ -80,31 +97,29 @@ public abstract class Attack : ScriptableObject
             }
 
             this.attackState = attackState;
-            InitiateAttackState(attackState, attacker, attackingTransform);
+            InitiateAttackState(attackState);
         } 
         else
         {
             if (this.attackState == AttackState.Aiming && attackState == AttackState.Attacking)
             {
-                OnAttackStateCancel(this.attackState, attacker, false);
+                OnAttackStateCancel(this.attackState, false);
             }
         }
     }
 
-    public virtual void InitiateAttackState<T>(AttackState attackState, T attacker, Transform attackingTransform) where T : IAttack
+    public virtual void InitiateAttackState(AttackState attackState)
     {
         attacker.TransferToAttackState(attackState);
 
-        parentTransform = attackingTransform;
-
-        OnAttackStateStart(attackState, attacker);
+        OnAttackStateStart(attackState);
 
         if (attackState == AttackState.Idle)
         {
             return;
         }
 
-        attackStateCoroutine = AttackStateCoroutine(attackState, attacker);
+        attackStateCoroutine = AttackStateCoroutine(attackState);
         CoroutineRunner.Instance.StartCoroutine(attackStateCoroutine);
     }
 
@@ -127,7 +142,7 @@ public abstract class Attack : ScriptableObject
         return true;
     }
 
-    public virtual void OnAttackStateStart<T>(AttackState attackState, T attacker) where T : IAttack
+    public virtual void OnAttackStateStart(AttackState attackState)
     {
         attacker.OnAttackStateStart(attackState);
 
@@ -137,27 +152,26 @@ public abstract class Attack : ScriptableObject
         }
     }
 
-    public virtual void OnAttackState<T>(AttackState attackState, T attacker, float timeSinceStateStarted) where T : IAttack
+    public virtual void OnAttackState(AttackState attackState, float timeSinceStateStarted)
     {
         attacker.OnAttackState(attackState);
 
         if (attackState == AttackState.Aiming && maxAimTime < timeSinceStateStarted)
         {
-            TransferToAttackState(AttackState.Attacking, attacker, parentTransform);
+            TransferToAttackState(AttackState.Attacking);
         } 
         else if (attackState == AttackState.Attacking && maxAttackTime < timeSinceStateStarted)
         {
-            OnAttackStateEnd(attackState, attacker);
+            OnAttackStateEnd(attackState);
         }
     }
 
-    public virtual void OnAttackStateEnd<T>(AttackState attackState, T attacker) where T : IAttack
+    public virtual void OnAttackStateEnd(AttackState attackState)
     {
         attacker.OnAttackStateEnd(attackState);
 
         this.attackState = AttackState.Idle;
         CoroutineRunner.Instance.StopCoroutine(attackStateCoroutine);
-        parentTransform = null;
 
         if (attackState == AttackState.Attacking)
         {
@@ -167,7 +181,7 @@ public abstract class Attack : ScriptableObject
         attacker.TransferToAttackState(AttackState.Idle);
     }
 
-    public virtual void OnAttackStateCancel<T>(AttackState attackState, T attacker, bool otherHasCancelled) where T : IAttack
+    public virtual void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled)
     {
         if (!otherHasCancelled)
         {
@@ -176,7 +190,6 @@ public abstract class Attack : ScriptableObject
 
         this.attackState = AttackState.Idle;
         CoroutineRunner.Instance.StopCoroutine(attackStateCoroutine);
-        parentTransform = null;
 
         if (attackState == AttackState.Attacking)
         {
@@ -184,14 +197,30 @@ public abstract class Attack : ScriptableObject
         }
     }
 
-    public IEnumerator AttackStateCoroutine<T>(AttackState attackState, T attacker) where T : IAttack 
+    public IEnumerator AttackStateCoroutine(AttackState attackState) 
     {
         float timeStateStarted = Time.timeSinceLevelLoad;
 
         while (true)
         {
             yield return new WaitForFixedUpdate();
-            OnAttackState(attackState, attacker, Time.timeSinceLevelLoad - timeStateStarted);
+            OnAttackState(attackState, Time.timeSinceLevelLoad - timeStateStarted);
         }
+    }
+
+    public virtual void OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
+    {
+        CombatManager.Instance.DamageEntity(this, attacker, entity);
+        CombatManager.Instance.ApplyKnockback(this, parentTransform, entityTransform);
+    }
+
+    public virtual void OnAttackTriggerStay(IHealth entity)
+    {
+
+    }
+
+    public virtual void OnAttackTriggerExit(IHealth entity)
+    {
+
     }
 }

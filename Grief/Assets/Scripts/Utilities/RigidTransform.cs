@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(CharacterController))]
 public class RigidTransform : MonoBehaviour
@@ -20,9 +22,13 @@ public class RigidTransform : MonoBehaviour
 
     private bool canMove = true;
     private bool canRotate = true;
+    private bool isPathfinding;
 
     private CharacterController characterController;
     private IMove inputProvider;
+
+    private NavMeshAgent agent;
+    private IPathfind pathfinder;
 
     private Vector2 previousMovementInput = Vector2.zero;
     private Vector3 previousRotationInput = Vector3.zero;
@@ -43,14 +49,25 @@ public class RigidTransform : MonoBehaviour
         {
             Debug.LogWarning($"{name} does not provide input");
         }
+
+        TryGetComponent(out agent);
+        TryGetComponent(out pathfinder);
     }
 
     private void FixedUpdate()
     {
-        UpdateMovement();
-        UpdateRotation();
+        if (!isPathfinding)
+        {
+            UpdateMovement();
+            UpdateRotation();
+            //CheckCollisions();
+        }
+        else
+        {
+            CheckPathfindingState();
+        }
+
         //ApplyGravity(); - Currently has some bugs
-        CheckCollisions();
     }
 
     private void UpdateMovement()
@@ -188,5 +205,72 @@ public class RigidTransform : MonoBehaviour
     public void SetCanRotate(bool canRotate)
     {
         this.canRotate = canRotate;
+    }
+
+    public void InitiatePathfinding(Vector3 destination, Transform transform)
+    {
+        if (CanInitiatePathfinding(transform.position))
+        {
+            pathfinder.TransferToPathfindingState(true);
+
+            agent.enabled = true;
+            characterController.enabled = false;
+
+            isPathfinding = true;
+            agent.isStopped = false;
+            agent.destination = destination;
+            agent.velocity = velocity;
+            velocity = Vector3.zero;
+            previousMovementInput = Vector2.zero;
+
+            SetCanRotate(false);
+            SetCanMove(false);
+        }
+    }
+
+    public bool CanInitiatePathfinding(Vector3 position)
+    {
+        if (agent == null)
+        {
+            Debug.LogWarning($"{name} does not have a NavMeshAgent component");
+            return false;
+        } 
+        else if (pathfinder == null)
+        {
+            Debug.LogWarning($"{name} cannot pathfind");
+            return false;
+        }
+
+        return NavMesh.SamplePosition(position, out _, 2f, NavMesh.AllAreas) && !isPathfinding;
+    }
+
+    private void CheckPathfindingState()
+    {
+        if (agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.remainingDistance <= agent.stoppingDistance)
+        {
+            StopPathfinding();
+        }
+    }
+
+    public void StopPathfinding()
+    {
+        if (!isPathfinding)
+        {
+            return;
+        }
+
+        pathfinder.TransferToPathfindingState(false);
+
+        ForceRotation(Quaternion.Inverse(MovementAxis) * transform.forward);
+        velocity = agent.velocity;
+        agent.isStopped = true;
+
+        agent.enabled = false;
+        characterController.enabled = true;
+
+        isPathfinding = false;
+
+        SetCanRotate(true);
+        SetCanMove(true);
     }
 }

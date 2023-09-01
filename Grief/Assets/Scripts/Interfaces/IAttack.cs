@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum AttackState
@@ -14,14 +15,15 @@ public interface IAttack
 
     AttackState AttackState { get; }
 
-    Vector3 AimDirection { get; }
+    List<HealthType> DamageTypes { get; }
+
     float RotationSpeed { get; }
 
     void TransferToAttackState(AttackState attackState);
 
     void InitiateAttackState(AttackState attackState);
 
-    bool CanInitiateAttackState(AttackState attackState);
+    bool CanInitiateAttackState(AttackState attackState, string attackId);
 
     void OnAttackStateStart(AttackState attackState);
 

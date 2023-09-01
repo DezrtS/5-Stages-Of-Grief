@@ -5,17 +5,17 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/Dodges/Basic Player Dodge")]
 public class BasicPlayerDodge : Dodge
 {
-    public override void OnDodgeStart<T>(Vector3 dodgeDirection, Vector3 directionInput, T dodger)
+    public override void OnDodgeStart(Vector3 dodgeDirection, Vector3 directionInput)
     {
-        base.OnDodgeStart(dodgeDirection, directionInput, dodger);
+        base.OnDodgeStart(dodgeDirection, directionInput);
 
         parentRigidTransform.Velocity = Vector3.zero;
         parentRigidTransform.ForceRotation(dodgeDirection);
     }
 
-    public override void OnDodge<T>(Vector3 dodgeDirection, T dodger, float timeSinceDodgeStarted)
+    public override void OnDodge(Vector3 dodgeDirection, float timeSinceDodgeStarted)
     {
-        base.OnDodge(dodgeDirection, dodger, timeSinceDodgeStarted);
+        base.OnDodge(dodgeDirection, timeSinceDodgeStarted);
 
         parentRigidTransform.Velocity = RigidTransform.MovementAxis * dodgeDirection * GetDodgeSpeed();
     }

@@ -2,7 +2,11 @@ using UnityEngine;
 
 public interface IPathfind
 {
-    Vector3 PathfindPosition { get; set; }
+    bool IsPathfinding { get; }
+    Vector3 PathfindDestination { get; set; }
 
-    bool Pathfind();
+    void TransferToPathfindingState(bool isPathfinding);
+    void InitiatePathfinding();
+    bool CanInitiatePathfinding();
+    void CancelPathfinding();
 }
