@@ -7,11 +7,11 @@ public class ApplyVelocity : MonoBehaviour
     [SerializeField] private Vector3 force;
     [SerializeField] private bool applyForce;
 
-    private RigidTransform rigidTrans;
+    private MovementController movementController;
 
     void Start()
     {
-        rigidTrans = GetComponent<RigidTransform>();
+        movementController = GetComponent<MovementController>();
     }
 
     void FixedUpdate()
@@ -25,6 +25,6 @@ public class ApplyVelocity : MonoBehaviour
 
     public void ApplyForce()
     {
-        rigidTrans.Velocity += force;
+        movementController.ApplyForce(force);
     }
 }

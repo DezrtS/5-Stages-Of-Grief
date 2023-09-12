@@ -7,11 +7,20 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAttack, IDodge, IPathfind
 {
-    private Transform playerTransform;
-    private CharacterController characterController;
-    private NavMeshAgent agent;
+    // ---------------------------------------------------------------------------------------------------------
+    // Player Variables
+    // ---------------------------------------------------------------------------------------------------------
+
+    [Header("Pathfinding Debugging")]
     [SerializeField] private GameObject pathfindObject;
-    //[SerializeField] private Transform modelTransform;
+
+    [Header("Camera Panning")]
+    [SerializeField] private float panStrength = 5;
+    [Range(0.1f, 100)]
+    [SerializeField] private float panTimeMultiplier = 10;
+
+    private Transform playerTransform;
+    private CharAgent charAgent;
 
     private PlayerLook playerLook;
 
@@ -19,55 +28,54 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     private InputAction leftJoystick;
     private InputAction rightJoystick;
 
-    private RigidTransform rigidTrans;
-
-    [Header("Camera Panning")]
-    [SerializeField] private float panStrength = 5;
-    [Range(0.1f, 100)]
-    [SerializeField] private float panTimeMultiplier = 10;
-
-    private Attack attack;
-    private Dodge dodge;
-
-    // Interface Variables
     // ---------------------------------------------------------------------------------------------------------
+    // Interface Related Variables
+    // ---------------------------------------------------------------------------------------------------------
+
     [Space(10)]
     [Header("Health")]
-    private readonly HealthType healthType = HealthType.Player;
     [SerializeField] private float maxHealth;
+    private readonly EntityType entityType = EntityType.Player;
     private float health;
     private bool isInvincible;
 
     [Space(10)]
-    [Header("Attack and Dodging")]
-    [SerializeField] private List<HealthType> damageTypes;
+    [Header("Attacking")]
+    [SerializeField] private List<EntityType> damageableEntities;
     [SerializeField] private Attack attackTemplate;
+    private Attack attack;
     private AttackState attackState;
-
-    [SerializeField] private Dodge dodgeTemplate;
-    private bool isDodging;
+    private bool isAttacking;
 
     [Space(10)]
-    [Header("Aiming")]
-    [SerializeField] private float rotationSpeed;
+    [Header("Dodging")]
+    [SerializeField] private Dodge dodgeTemplate;
+    private Dodge dodge;
+    private bool isDodging;
 
     private bool isPathfinding;
     private Vector3 pathfindDestination;
+    private NavMeshAgent navMeshAgent;
 
+    // ---------------------------------------------------------------------------------------------------------
     // Interface Implementation Fields
     // ---------------------------------------------------------------------------------------------------------
-    public HealthType HealthType { get { return healthType; } }
+    
+    public EntityType EntityType { get { return entityType; } }
     public float MaxHealth { get { return maxHealth; } }
     public float Health { get { return health; } }
     public bool IsInvincible { get { return isInvincible; } }
     public Attack Attack { get { return attackTemplate; } }
+    public bool IsAttacking { get { return isAttacking; } }
     public AttackState AttackState { get { return attackState; } }
-    public List<HealthType> DamageTypes { get { return damageTypes; } }
+    public List<EntityType> DamageableEntities { get { return damageableEntities; } }
     public Dodge Dodge { get { return dodgeTemplate; } }
     public bool IsDodging { get { return isDodging; } }
-    public float RotationSpeed { get { return rotationSpeed; } }
     public bool IsPathfinding { get { return isPathfinding; } }
     public Vector3 PathfindDestination { get { return pathfindDestination; } set { pathfindDestination = value; } }
+
+    // ---------------------------------------------------------------------------------------------------------
+    // Default Unity Methods
     // ---------------------------------------------------------------------------------------------------------
 
     protected override void Awake()
@@ -75,15 +83,25 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         base.Awake();
 
         playerTransform = transform;
-        characterController = GetComponent<CharacterController>();
-        agent = GetComponent<NavMeshAgent>();
-        rigidTrans = GetComponent<RigidTransform>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        charAgent = GetComponent<CharAgent>();
         playerLook = transform.AddComponent<PlayerLook>();
 
-        dodge = dodgeTemplate.Clone(dodge, this, rigidTrans);
+        dodge = dodgeTemplate.Clone(dodge, this, charAgent);
         attack = attackTemplate.Clone(attack, this, transform);
 
         health = maxHealth;
+    }
+
+    private void Start()
+    {
+        //navMeshAgent.enabled = false;
+        CameraManager.Instance.TransferCameraTo(transform);
+    }
+
+    private void LateUpdate()
+    {
+        playerLook.PanTowards(rightJoystick.ReadValue<Vector2>(), panStrength, panTimeMultiplier);
     }
 
     private void OnEnable()
@@ -103,40 +121,52 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     private void OnActionPerformed(InputAction.CallbackContext obj)
     {
-        //Debug.Log($"Action Button Pressed {obj.action.activeControl.name}");
-        if (obj.action.activeControl.name == "buttonEast")
+        string buttonName = obj.action.activeControl.name;
+
+        switch (buttonName)
         {
-            InitiateDodge();
-        } 
-        else if (obj.action.activeControl.name == "buttonWest")
-        {
-            InitiateAttackState(AttackState.Aiming);
-        } 
-        else if (obj.action.activeControl.name == "buttonNorth")
-        {
-            pathfindDestination = (new Vector3(pathfindObject.transform.position.x, transform.position.y, pathfindObject.transform.position.z));
-            InitiatePathfinding();
+            case "buttonNorth":
+                pathfindDestination = (new Vector3(pathfindObject.transform.position.x, transform.position.y, pathfindObject.transform.position.z));
+                InitiatePathfinding();
+                return;
+            case "buttonEast":
+
+                return;
+            case "buttonSouth":
+                InitiateDodge();
+                return;
+            case "buttonWest":
+                InitiateAttackState(AttackState.Aiming);
+                return;
+            default:
+                return;
         }
     }
 
     private void OnActionCancelled(InputAction.CallbackContext obj)
     {
-        //Debug.Log($"Action Button Cancelled {obj.action.activeControl.name}");
-        if (obj.action.activeControl.name == "buttonWest" && attackState == AttackState.Aiming)
+        string buttonName = obj.action.activeControl.name;
+
+        switch (buttonName)
         {
-            InitiateAttackState(AttackState.Attacking);
+            case "buttonNorth":
+
+                return;
+            case "buttonEast":
+
+                return;
+            case "buttonSouth":
+
+                return;
+            case "buttonWest":
+                if (attackState == AttackState.Aiming)
+                {
+                    InitiateAttackState(AttackState.ChargingUp);
+                }
+                return;
+            default:
+                return;
         }
-    }
-
-    private void Start()
-    {
-        agent.enabled = false;
-        CameraManager.Instance.TransferCameraTo(transform);
-    }
-
-    private void LateUpdate()
-    {
-        playerLook.PanTowards(rightJoystick.ReadValue<Vector2>(), panStrength, panTimeMultiplier);
     }
 
     private void OnDisable()
@@ -149,8 +179,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         playerInputControls.Player.Action.Disable();
     }
 
+    // ---------------------------------------------------------------------------------------------------------
     // Interface Implementation Methods
     // ---------------------------------------------------------------------------------------------------------
+
     public void Damage(float damage)
     {
         if (isInvincible)
@@ -179,10 +211,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public Vector3 GetMovementInput()
     {
-        if (isPathfinding)
-        {
-
-        }
         return leftJoystick.ReadValue<Vector2>();
     }
 
@@ -200,49 +228,66 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     {
         if (CanInitiateAttackState(attackState, attack.AttackId))
         {
+            if (attackState != AttackState.Idle)
+            {
+                isAttacking = true;
+            }
             attack.TransferToAttackState(attackState);
-        } 
+        }
     }
 
     public bool CanInitiateAttackState(AttackState attackState, string attackId)
     {
         // Specific requirements to the class rather than the attack
-
         if (attack == null)
         {
             Debug.LogWarning($"{name} Does Not Have An Attack");
             return false;
         }
-
-        if (this.attackState == attackState)
+        else if (attackState == AttackState.Aiming && (isAttacking || isDodging || isPathfinding))
         {
             return false;
         } 
-        else if (this.attackState == AttackState.Attacking && attackState == AttackState.Aiming)
+        else if (this.attackState == attackState)
         {
             return false;
         }
 
-        return (!isDodging && !isPathfinding);
+        return true;
     }
 
     public void OnAttackStateStart(AttackState attackState)
     {
+        // Can be Simplified
+
         // Actions to do when the state has first started
         if (attackState == AttackState.Aiming || attackState == AttackState.Attacking)
         {
-            rigidTrans.SetCanMove(false);
+            charAgent.SetAllowMovementInput(false);
         }
 
-        if (attackState == AttackState.Attacking)
+        if (attackState == AttackState.ChargingUp)
         {
-            rigidTrans.SetCanRotate(false);
+            charAgent.SetAllowMovementInput(false);
+            charAgent.SetAllowRotationInput(false);
+        }
+        else if (attackState == AttackState.Attacking)
+        {
+            charAgent.SetAllowMovementInput(false);
+            charAgent.SetAllowRotationInput(false);
             StartCoroutine(CancelAttack());
+        } 
+        else if (attackState == AttackState.CoolingDown)
+        {
+            charAgent.SetAllowMovementInput(false);
+            charAgent.SetAllowRotationInput(false);
         }
         else if (attackState == AttackState.Idle)
         {
-            rigidTrans.SetCanMove(true);
-            rigidTrans.SetCanRotate(true);
+            charAgent.SetAllowMovementInput(true);
+            charAgent.SetAllowRotationInput(true);
+
+            isAttacking = false;
         }
     }
 
@@ -259,8 +304,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     {
         // Actions to do when the state has ended
         StopCoroutine(CancelAttack());
-        rigidTrans.SetCanMove(true);
-        rigidTrans.SetCanRotate(true);
+        charAgent.SetAllowMovementInput(true);
+        charAgent.SetAllowRotationInput(true);
     }
 
     public void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled)
@@ -272,8 +317,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
 
         this.attackState = AttackState.Idle;
-        rigidTrans.SetCanMove(true);
-        rigidTrans.SetCanRotate(true);
+        charAgent.SetAllowMovementInput(true);
+        charAgent.SetAllowRotationInput(true);
+        isAttacking = false;
     }
 
     public void InitiateDodge()
@@ -284,7 +330,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
             if (dodgeDirection == Vector3.zero)
             {
-                Quaternion qInverse = Quaternion.Inverse(RigidTransform.MovementAxis);
+                Quaternion qInverse = Quaternion.Inverse(MovementController.MovementAxis);
                 dodgeDirection = qInverse * transform.forward;
             }
 
@@ -295,7 +341,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public bool CanInitiateDodge()
     {
         // Specific requirements to the class rather than the dodge
-
         if (dodge == null)
         {
             Debug.LogWarning($"{name} Does Not Have An Dodge");
@@ -309,8 +354,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     {
         // Actions to do when the dodge has first started
         isDodging = true;
-        rigidTrans.SetCanMove(false);
-        rigidTrans.SetCanRotate(false);
+        charAgent.SetAllowMovementInput(false);
+        charAgent.SetAllowRotationInput(false);
     }
 
     public void OnDodge()
@@ -322,8 +367,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     {
         // Actions to do when the dodge has ended
         isDodging = false;
-        rigidTrans.SetCanMove(true);
-        rigidTrans.SetCanRotate(true);
+        charAgent.SetAllowMovementInput(true);
+        charAgent.SetAllowRotationInput(true);
     }
 
     public void OnDodgeCancel(bool otherHasCancelled)
@@ -335,35 +380,27 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
 
         isDodging = false;
-        rigidTrans.SetCanMove(true);
-        rigidTrans.SetCanRotate(true);
+        charAgent.SetAllowMovementInput(true);
+        charAgent.SetAllowRotationInput(true);
     }
 
-    public bool Aim()
+    public void TransferToPathfindingState(PathingState pathingState)
     {
-        Vector3 currentDirection = playerTransform.forward;
-        Vector3 targetDirection = RigidTransform.MovementAxis * leftJoystick.ReadValue<Vector2>().normalized;
-
-        if (targetDirection.magnitude > 0)
+        if (pathingState == PathingState.Idle)
         {
-            rigidTrans.ForceRotation(GetRotationInput());
-
-            return currentDirection == targetDirection;
+            isPathfinding = false;
+        } 
+        else
+        {
+            isPathfinding = true;
         }
-        
-        return true;
-    }
-
-    public void TransferToPathfindingState(bool isPathfinding)
-    {
-        this.isPathfinding = isPathfinding;
     }
 
     public void InitiatePathfinding()
     {
         if (CanInitiatePathfinding())
         {
-            rigidTrans.InitiatePathfinding(pathfindDestination, transform);
+            charAgent.InitiatePathfinding(transform, pathfindDestination);
         }
     }
 
@@ -372,10 +409,37 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         return (!isDodging && attackState == AttackState.Idle);
     }
 
+    public void OnPathfinding()
+    {
+
+    }
+
     public void CancelPathfinding()
     {
-        rigidTrans.StopPathfinding();
+        charAgent.StopPathfinding();
     }
+
+    // ---------------------------------------------------------------------------------------------------------
+    // Class Specific Methods
+    // ---------------------------------------------------------------------------------------------------------
+
+    public bool Aim()
+    {
+        Vector3 currentDirection = playerTransform.forward;
+        Vector3 targetDirection = MovementController.MovementAxis * leftJoystick.ReadValue<Vector2>().normalized;
+
+        if (targetDirection.magnitude > 0)
+        {
+            charAgent.SetRotation(GetRotationInput());
+
+            return currentDirection == targetDirection;
+        }
+
+        return true;
+    }
+
+    // ---------------------------------------------------------------------------------------------------------
+    // Coroutines
     // ---------------------------------------------------------------------------------------------------------
 
     public IEnumerator CancelAttack()

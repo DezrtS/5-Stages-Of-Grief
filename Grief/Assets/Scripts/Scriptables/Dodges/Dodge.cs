@@ -3,7 +3,6 @@ using UnityEngine;
 
 public abstract class Dodge : ScriptableObject
 {
-    // dodgeSpeed will probably be changed to dodgeDistance
     [Header("Dodge Variables")]
     [SerializeField] private string dodgeId;
 
@@ -19,11 +18,11 @@ public abstract class Dodge : ScriptableObject
     private bool isDodging;
 
     protected IDodge dodger;
-    protected RigidTransform parentRigidTransform;
+    protected MovementController parentMovementController;
 
     public string DodgeId { get { return dodgeId; } }
 
-    public virtual Dodge Clone(Dodge clone, IDodge dodger, RigidTransform parentRigidTransform)
+    public virtual Dodge Clone(Dodge clone, IDodge dodger, MovementController parentMovementController)
     {
         if (clone == null)
         {
@@ -35,11 +34,16 @@ public abstract class Dodge : ScriptableObject
         clone.dodgeCooldown = dodgeCooldown;
 
         clone.dodger = dodger;
-        clone.parentRigidTransform = parentRigidTransform;
+        clone.parentMovementController = parentMovementController;
 
         clone.isClone = true;
 
         return clone;
+    }
+
+    public virtual void DestroyClone()
+    {
+        Destroy(this);
     }
 
     public virtual void InitiateDodge(Vector3 dodgeDirection, Vector3 directionInput)

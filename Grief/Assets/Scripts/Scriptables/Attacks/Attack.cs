@@ -19,17 +19,27 @@ public abstract class Attack : ScriptableObject
     [SerializeField] private float damage = 3;
     [SerializeField] private float knockbackPower;
 
+    [Space(10)]
     [SerializeField] private List<AttackEffectType> attackEffects = new List<AttackEffectType>();
-    
+
+    [Space(10)]
     [SerializeField] private float attackCooldown;
     [SerializeField] private float attackCancelCooldown;
-    [SerializeField] private float attackChargeUpTime;
+    [SerializeField] private float attackRequiredChargeUpTime;
 
+    [Space(10)]
     [SerializeField] private bool hasAimingStage = true;
     [SerializeField] private bool hasAttackStage = true;
 
+    [Space(10)]
     [SerializeField] private float maxAimTime = 99;
     [SerializeField] private float maxAttackTime = 99;
+
+    [Space(10)]
+    [Header("Specifically for Charging Up Stage")]
+    [SerializeField] private float chargingUpTime = 0;
+    [Header("Specifically for Cooling Down Stage")]
+    [SerializeField] private float coolingDownTime = 0;
 
     private float timeAimingStateStarted = int.MinValue;
     private float timeAttackingStateEnded = int.MinValue;
@@ -61,11 +71,13 @@ public abstract class Attack : ScriptableObject
         clone.attackEffects = attackEffects;
         clone.attackCooldown = attackCooldown;
         clone.attackCancelCooldown = attackCancelCooldown;
-        clone.attackChargeUpTime = attackChargeUpTime;
+        clone.attackRequiredChargeUpTime = attackRequiredChargeUpTime;
         clone.hasAimingStage = hasAimingStage;
         clone.hasAttackStage = hasAttackStage;
         clone.maxAimTime = maxAimTime;
         clone.maxAttackTime = maxAttackTime;
+        clone.chargingUpTime = chargingUpTime;
+        clone.coolingDownTime = coolingDownTime;
 
         clone.attacker = attacker;
         clone.parentTransform = parentTransform;
@@ -88,12 +100,12 @@ public abstract class Attack : ScriptableObject
 
             if (!hasAimingStage && attackState == AttackState.Aiming)
             {
-                attacker.InitiateAttackState(AttackState.Attacking);
+                attacker.InitiateAttackState(AttackState.ChargingUp);
                 return;
             } 
             else if (!hasAttackStage && attackState == AttackState.Attacking)
             {
-                attackState = AttackState.Idle;
+                attackState = AttackState.CoolingDown;
             }
 
             this.attackState = attackState;
@@ -101,7 +113,7 @@ public abstract class Attack : ScriptableObject
         } 
         else
         {
-            if (this.attackState == AttackState.Aiming && attackState == AttackState.Attacking)
+            if (this.attackState == AttackState.ChargingUp && attackState == AttackState.Attacking)
             {
                 OnAttackStateCancel(this.attackState, false);
             }
@@ -130,14 +142,14 @@ public abstract class Attack : ScriptableObject
             return false;
         }
 
-        if (attackState == AttackState.Attacking)
+        if (attackState == AttackState.ChargingUp)
         {
-            return (Time.timeSinceLevelLoad - timeAimingStateStarted >= attackChargeUpTime);
+            return (Time.timeSinceLevelLoad - timeAimingStateStarted >= attackRequiredChargeUpTime);
         } 
         else if (attackState == AttackState.Aiming)
         {
             return (Time.timeSinceLevelLoad - timeAttackingStateEnded >= attackCooldown);
-        }
+        } 
 
         return true;
     }
@@ -156,13 +168,34 @@ public abstract class Attack : ScriptableObject
     {
         attacker.OnAttackState(attackState);
 
-        if (attackState == AttackState.Aiming && maxAimTime < timeSinceStateStarted)
+        switch (attackState)
         {
-            TransferToAttackState(AttackState.Attacking);
-        } 
-        else if (attackState == AttackState.Attacking && maxAttackTime < timeSinceStateStarted)
-        {
-            OnAttackStateEnd(attackState);
+            case AttackState.Idle:
+                break;
+            case AttackState.Aiming:
+                if (maxAimTime < timeSinceStateStarted)
+                {
+                    TransferToAttackState(AttackState.ChargingUp);
+                }
+                break;
+            case AttackState.ChargingUp:
+                if (chargingUpTime < timeSinceStateStarted)
+                {
+                    TransferToAttackState(AttackState.Attacking);
+                }
+                break;
+            case AttackState.Attacking:
+                if (maxAttackTime < timeSinceStateStarted)
+                {
+                    TransferToAttackState(AttackState.CoolingDown);
+                }
+                break;
+            case AttackState.CoolingDown:
+                if (coolingDownTime < timeSinceStateStarted)
+                {
+                    TransferToAttackState(AttackState.Idle);
+                }
+                break;
         }
     }
 
@@ -177,8 +210,6 @@ public abstract class Attack : ScriptableObject
         {
             timeAttackingStateEnded = Time.timeSinceLevelLoad;
         }
-
-        attacker.TransferToAttackState(AttackState.Idle);
     }
 
     public virtual void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled)
@@ -208,6 +239,7 @@ public abstract class Attack : ScriptableObject
         }
     }
 
+    // Currently Unfinished
     public virtual void OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
     {
         CombatManager.Instance.DamageEntity(this, attacker, entity);
@@ -223,4 +255,9 @@ public abstract class Attack : ScriptableObject
     {
 
     }
+}
+
+public class AttackEffect
+{
+
 }

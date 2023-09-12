@@ -11,17 +11,17 @@ TagManager:
   - 
   - Water
   - UI
-  - Player
-  - Enemy
-  - Object
+  - Entity
+  - Entity Trigger
   - 
   - 
   - 
   - 
   - 
-  - Player Attack
-  - Enemy Attack
-  - Object Attack
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

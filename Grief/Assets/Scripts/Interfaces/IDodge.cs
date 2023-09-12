@@ -4,14 +4,9 @@ public interface IDodge
     bool IsDodging { get; }
 
     void InitiateDodge();
-
     bool CanInitiateDodge();
-
     void OnDodgeStart();
-
     void OnDodge();
-
     void OnDodgeEnd();
-
     void OnDodgeCancel(bool otherHasCancelled);
 }

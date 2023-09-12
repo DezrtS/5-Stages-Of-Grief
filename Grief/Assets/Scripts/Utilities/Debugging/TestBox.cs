@@ -5,12 +5,12 @@ using UnityEngine;
 public class TestBox : MonoBehaviour, IHealth
 {
     [Header("Health")]
-    private readonly HealthType healthType = HealthType.Enemy;
+    private readonly EntityType entityType = EntityType.Object;
     [SerializeField] private float maxHealth;
     private float health;
     private bool isInvincible;
 
-    public HealthType HealthType { get { return healthType; } }
+    public EntityType EntityType { get { return entityType; } }
     public float MaxHealth { get { return maxHealth; } }
     public float Health { get { return health; } }
     public bool IsInvincible { get { return isInvincible; } }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6068135384013212515}
   - component: {fileID: 6068135384013212446}
   - component: {fileID: 6068135384013212513}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Box Visualizer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6068135384982008665}
   - component: {fileID: 6068135384982008675}
   - component: {fileID: 3404998208361296595}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Test Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}

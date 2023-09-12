@@ -18,7 +18,7 @@ public class CombatManager : Singleton<CombatManager>
     // Consider making this method static
     public void DamageEntity(Attack attack, IAttack attacker, IHealth reciever)
     {
-        if (attacker.DamageTypes.Contains(reciever.HealthType))
+        if (attacker.DamageableEntities.Contains(reciever.EntityType))
         {
             reciever.Damage(attack.Damage);
         }
@@ -28,9 +28,9 @@ public class CombatManager : Singleton<CombatManager>
     {
         Vector3 knockback = (reciever.position - attacker.position).normalized * attack.KnockbackPower;
         knockback = new Vector3(knockback.x, 0, knockback.z);
-        if (reciever.TryGetComponent(out RigidTransform rigidTransform))
+        if (reciever.TryGetComponent(out MovementController movementController))
         {
-            rigidTransform.Velocity += knockback;
+            movementController.ApplyForce(knockback);
         } 
         else if (reciever.TryGetComponent(out Rigidbody rigidbody))
         {

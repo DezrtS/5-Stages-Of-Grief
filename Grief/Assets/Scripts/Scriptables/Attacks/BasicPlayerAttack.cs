@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Attacks/Basic Player Attack")]
-public class BasicPlayerAttack : Attack
+public class BasicPlayerAttack : PhysicalAttack
 {
     private GameObject attackTrigger;
     private Vector3 triggerOffset;
@@ -12,7 +12,7 @@ public class BasicPlayerAttack : Attack
 
         if (attackState == AttackState.Attacking)
         {
-            attackTrigger = CombatManager.Instance.CreateCircleTrigger(this, parentTransform.position + parentTransform.forward * 2, 3);
+            attackTrigger = CombatManager.Instance.CreateCircleTrigger(this, parentTransform.position + parentTransform.forward * attackTriggerSpawnDistance, attackTriggerScale);
             triggerOffset = attackTrigger.transform.position - parentTransform.position;
         }
     }

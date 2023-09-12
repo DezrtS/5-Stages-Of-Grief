@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7176632205177670944}
   - component: {fileID: 2792360646895841563}
   - component: {fileID: 6105866216252825740}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Attack Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

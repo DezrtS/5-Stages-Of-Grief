@@ -9,14 +9,14 @@ public class BasicPlayerDodge : Dodge
     {
         base.OnDodgeStart(dodgeDirection, directionInput);
 
-        parentRigidTransform.Velocity = Vector3.zero;
-        parentRigidTransform.ForceRotation(dodgeDirection);
+        parentMovementController.SetVelocity(Vector3.zero);
+        parentMovementController.SetRotation(dodgeDirection);
     }
 
     public override void OnDodge(Vector3 dodgeDirection, float timeSinceDodgeStarted)
     {
         base.OnDodge(dodgeDirection, timeSinceDodgeStarted);
 
-        parentRigidTransform.Velocity = RigidTransform.MovementAxis * dodgeDirection * GetDodgeSpeed();
+        parentMovementController.SetVelocity(MovementController.MovementAxis * dodgeDirection * GetDodgeSpeed());
     }
 }
