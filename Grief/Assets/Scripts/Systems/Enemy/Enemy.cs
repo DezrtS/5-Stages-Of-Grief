@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -18,21 +17,17 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     [SerializeField] private float chanceToWander = 50;
     [SerializeField] private float wanderRange = 5;
     [SerializeField] private float attackRange = 4;
+    [SerializeField] private float stoppingRange = 3;
     [SerializeField] private float maxTotalWanderRange = 10;
     [SerializeField] private float lostPlayerRecoverTime = 4;
-    [SerializeField] private List<PatrolSpot> patrolSpots = new List<PatrolSpot>();
 
     private PlayerController player;
     private RigidAgent rigidAgent;
 
     private float timeSinceLastWander = 0;
     private float timeSinceLostPlayer = 0;
-    private float timeSinceArrivedAtPatrolSpot = 0;
-    private int patrolSpotIndex = 0;
-    private PatrolSpot patrolSpot = null;
-    private bool selectedPatrolSpot = false;
+
     private Vector3 spawnPosition;
-    private bool hasArrivedAtPatrolSpot = false;
 
     // ---------------------------------------------------------------------------------------------------------
     // Interface Related Variables
@@ -101,8 +96,6 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         player = PlayerController.Instance;
 
-        //navMeshAgent.enabled = false;
-
         spawnPosition = transform.position;
 
         InitiateEnemyState(EnemyState.Idle);
@@ -143,8 +136,8 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         // Destroy Attacks and Dodges on death
 
-        attack.DestroyClone();
-        dodge.DestroyClone();
+        //attack.DestroyClone();
+        //dodge.DestroyClone();
     }
 
     public virtual void TransferToEnemyState(EnemyState enemyState)
@@ -173,22 +166,19 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         switch (enemyState)
         {
+            case EnemyState.Deciding:
+
+                break;
             case EnemyState.Idle:
-                if (patrolSpots.Count > 0)
-                {
-                    InitiateEnemyState(EnemyState.Patrolling);
-                }
+
                 break;
             case EnemyState.Patrolling:
-                patrolSpot = null;
-                selectedPatrolSpot = false;
-                hasArrivedAtPatrolSpot = false;
+                pathfindDestination = spawnPosition;
+                InitiatePathfinding();
                 break;
             case EnemyState.Chasing:
-
                 break;
             case EnemyState.Attacking:
-
                 break;
             case EnemyState.Fleeing:
 
@@ -206,6 +196,8 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         switch (enemyState)
         {
+            case EnemyState.Deciding:
+                break;
             case EnemyState.Idle:
                 OnIdle();
                 break;
@@ -234,6 +226,9 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         switch (enemyState)
         {
+            case EnemyState.Deciding:
+
+                break;
             case EnemyState.Idle:
 
                 break;
@@ -290,91 +285,26 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
             return;
         }
 
-        if (!isPathfinding && !selectedPatrolSpot)
-        {
-            if (patrolSpots.Count == 0)
-            {
-                pathfindDestination = spawnPosition;
-                InitiatePathfinding();
-            } 
-            else
-            {
-                float closestDistance = int.MaxValue;
-
-                for (int i = 0; i < patrolSpots.Count; i++)
-                {
-                    float distance = (patrolSpots[i].PatrolPosition - transform.position).magnitude;
-                    if (distance < closestDistance)
-                    {
-                        closestDistance = distance;
-                        patrolSpotIndex = i;
-                        patrolSpot = patrolSpots[i];
-                    }
-                }
-
-                selectedPatrolSpot = true;
-                pathfindDestination = patrolSpot.PatrolPosition;
-                InitiatePathfinding();
-            }
-        }
-
-        if (isPathfinding && !hasArrivedAtPatrolSpot && selectedPatrolSpot)
+        if (isPathfinding)
         {
             if ((pathfindDestination - transform.position).magnitude <= Mathf.Min(wanderRange / 2f, maxTotalWanderRange / 2f))
             {
                 CancelPathfinding();
-
-                if (!selectedPatrolSpot)
-                {
-                    InitiateEnemyState(EnemyState.Idle);
-                    return;
-                }
-
-                hasArrivedAtPatrolSpot = true;
-
-                timeSinceArrivedAtPatrolSpot = Time.timeSinceLevelLoad;
-            }
-        }
-
-        if (selectedPatrolSpot && !isPathfinding)
-        {
-            if (patrolSpot.WanderOnPause)
-            {
-                if (Time.timeSinceLevelLoad - timeSinceLastWander >= timeBetweenWanders)
-                {
-                    InitiateWander();
-
-                    timeSinceLastWander = Time.timeSinceLevelLoad;
-                }
-            }
-
-            if (Time.timeSinceLevelLoad - timeSinceArrivedAtPatrolSpot >= patrolSpot.PauseTime)
-            {
-                patrolSpotIndex++;
-
-                if (patrolSpotIndex >= patrolSpots.Count)
-                {
-                    patrolSpotIndex = 0;
-                }
-
-                hasArrivedAtPatrolSpot = false;
-
-                patrolSpot = patrolSpots[patrolSpotIndex];
-                pathfindDestination = patrolSpot.PatrolPosition;
-                InitiatePathfinding();
+                InitiateEnemyState(EnemyState.Idle);
+                return;
             }
         }
     }
 
     public virtual void OnChasing()
     {
-        pathfindDestination = player.transform.position;
+        pathfindDestination = player.transform.position - transform.forward * stoppingRange;
 
         if (isPathfinding)
         {
             if (navMeshAgent.remainingDistance < attackRange)
             {
-                CancelPathfinding();
+                //CancelPathfinding();
                 InitiateEnemyState(EnemyState.Attacking);
             }
         }
@@ -395,9 +325,15 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         if (GetVectorToPlayer().magnitude > attackRange)
         {
             InitiateEnemyState(EnemyState.Chasing);
+            return;
         }
 
+        Aim();
 
+        if (!isPathfinding && !isAttacking)
+        {
+            //InitiateAttackState(AttackState.Aiming);
+        }
     }
 
     public virtual void OnFleeing()
@@ -570,16 +506,9 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         rigidAgent.SetAllowRotationInput(true);
     }
 
-    public void TransferToPathfindingState(PathingState pathingState)
+    public void TransferToPathfindingState(bool isPathfinding)
     {
-        if (pathingState == PathingState.Idle)
-        {
-            isPathfinding = false;
-        }
-        else
-        {
-            isPathfinding = true;
-        }
+        this.isPathfinding = isPathfinding;
     }
 
     public virtual void InitiatePathfinding()
@@ -609,10 +538,11 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     // Extra Methods
     // ---------------------------------------------------------------------------------------------------------
 
-    public virtual bool Aim()
+    public virtual void Aim()
     {
+        Vector3 targetDirection = GetVectorToPlayer();
 
-        return true;
+        rigidAgent.SetRotation(Quaternion.Inverse(MovementController.MovementAxis) * targetDirection);
     }
 
     public virtual void InitiateWander()
@@ -651,16 +581,4 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         return chance <= UnityEngine.Random.Range(0, 100);
     }
-}
-
-[Serializable]
-public class PatrolSpot
-{
-    [SerializeField] private Vector3 patrolPosition;
-    [SerializeField] private float pauseTime = 2;
-    [SerializeField] private bool wanderOnPause = false;
-
-    public Vector3 PatrolPosition { get { return patrolPosition; } }
-    public float PauseTime { get { return pauseTime; } }
-    public bool WanderOnPause { get { return wanderOnPause; } }
 }

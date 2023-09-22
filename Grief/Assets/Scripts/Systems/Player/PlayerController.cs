@@ -384,16 +384,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         charAgent.SetAllowRotationInput(true);
     }
 
-    public void TransferToPathfindingState(PathingState pathingState)
+    public void TransferToPathfindingState(bool isPathfinding)
     {
-        if (pathingState == PathingState.Idle)
-        {
-            isPathfinding = false;
-        } 
-        else
-        {
-            isPathfinding = true;
-        }
+        this.isPathfinding = isPathfinding;
     }
 
     public void InitiatePathfinding()
@@ -423,19 +416,14 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     // Class Specific Methods
     // ---------------------------------------------------------------------------------------------------------
 
-    public bool Aim()
+    public void Aim()
     {
-        Vector3 currentDirection = playerTransform.forward;
-        Vector3 targetDirection = MovementController.MovementAxis * leftJoystick.ReadValue<Vector2>().normalized;
+        Vector3 targetDirection = GetRotationInput();
 
         if (targetDirection.magnitude > 0)
         {
-            charAgent.SetRotation(GetRotationInput());
-
-            return currentDirection == targetDirection;
+            charAgent.SetRotation(targetDirection);
         }
-
-        return true;
     }
 
     // ---------------------------------------------------------------------------------------------------------

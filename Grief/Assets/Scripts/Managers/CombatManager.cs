@@ -30,6 +30,7 @@ public class CombatManager : Singleton<CombatManager>
         knockback = new Vector3(knockback.x, 0, knockback.z);
         if (reciever.TryGetComponent(out MovementController movementController))
         {
+            Debug.Log(movementController.transform.name);
             movementController.ApplyForce(knockback);
         } 
         else if (reciever.TryGetComponent(out Rigidbody rigidbody))

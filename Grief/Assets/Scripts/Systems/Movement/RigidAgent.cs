@@ -39,7 +39,6 @@ public class RigidAgent : MovementController
 
         if (navMeshAgent != null)
         {
-            navMeshAgent.enabled = false;
             navMeshAgent.updatePosition = false;
         }
     }
@@ -49,7 +48,11 @@ public class RigidAgent : MovementController
         if (isPathfinding)
         {
             UpdatePathfinding();
-        }
+        } 
+        //else
+        //{
+        //    rig.velocity = velocity;
+        //}
     }
 
     // ---------------------------------------------------------------------------------------------------------
@@ -58,22 +61,12 @@ public class RigidAgent : MovementController
 
     public override Vector3 GetVelocity()
     {
-        if (isPathfinding)
-        {
-            return navMeshAgent.velocity;
-        }
-
-        return rig.velocity;
+        return navMeshAgent.velocity;
     }
 
     public override void SetVelocity(Vector3 velocity)
     {
-        if (isPathfinding)
-        {
-            navMeshAgent.velocity = velocity;
-        }
-
-        rig.velocity = velocity;
+        navMeshAgent.velocity = velocity;
     }
 
     public override Vector3 GetRotation()
@@ -83,7 +76,7 @@ public class RigidAgent : MovementController
 
     public override void SetRotation(Vector3 rotation)
     {
-        transform.forward = MovementAxis * rotation;
+        transform.forward = MovementAxis * rotation.normalized;
     }
 
     public override void SetAllowMovementInput(bool isAllowed)
@@ -98,27 +91,22 @@ public class RigidAgent : MovementController
 
     public override void ApplyForce(Vector3 force)
     {
-        if (isPathfinding)
-        {
-            navMeshAgent.velocity += force;
-        }
-
-        rig.velocity += force;
+        navMeshAgent.velocity += force;
+        //velocity += force;
     }
 
     public override void InitiatePathfinding(Transform transform, Vector3 destination)
     {
         if (CanInitiatePathfinding(transform.position))
         {
-            pathfinder.TransferToPathfindingState(PathingState.Pathfinding);
+            pathfinder.TransferToPathfindingState(true);
 
-            navMeshAgent.enabled = true;
+            navMeshAgent.updatePosition = false;
+            //navMeshAgent.enabled = true;
 
             isPathfinding = true;
             navMeshAgent.isStopped = false;
             navMeshAgent.destination = destination;
-            navMeshAgent.velocity = GetVelocity();
-            SetVelocity(Vector3.zero);
 
             SetAllowMovementInput(false);
             SetAllowRotationInput(false);
@@ -149,7 +137,7 @@ public class RigidAgent : MovementController
     {
         pathfinder.OnPathfinding();
 
-        transform.position = Vector3.SmoothDamp(transform.position, navMeshAgent.nextPosition, ref velocity, 0.1f);
+        transform.position = Vector3.SmoothDamp(navMeshAgent.nextPosition, navMeshAgent.nextPosition + navMeshAgent.velocity * Time.deltaTime, ref velocity, 0.1f);
 
         navMeshAgent.destination = pathfinder.PathfindDestination;
 
@@ -171,48 +159,17 @@ public class RigidAgent : MovementController
             return;
         }
 
-        pathfinder.TransferToPathfindingState(PathingState.Stopping);
-
         navMeshAgent.isStopped = true;
+        navMeshAgent.updatePosition = true;
 
-        StartCoroutine(EndPathfinding());
-    }
+        pathfinder.TransferToPathfindingState(false);
 
-    protected override IEnumerator EndPathfinding()
-    {
-        // Optimize This Method
+        SetRotation(Quaternion.Inverse(MovementAxis) * transform.forward);
+        //velocity = navMeshAgent.velocity;
 
-        Vector3 originalDestination = pathfinder.PathfindDestination;
+        isPathfinding = false;
 
-        while (true)
-        {
-            yield return new WaitForFixedUpdate();
-
-            Vector2 entityPosition = new(transform.position.x, transform.position.z);
-            Vector2 targetPosition = new(navMeshAgent.nextPosition.x, navMeshAgent.nextPosition.z);
-
-            if (originalDestination != pathfinder.PathfindDestination)
-            {
-                navMeshAgent.isStopped = false;
-                break;
-            }
-
-            if (entityPosition == targetPosition)
-            {
-                pathfinder.TransferToPathfindingState(PathingState.Idle);
-
-                SetRotation(Quaternion.Inverse(MovementAxis) * transform.forward);
-                SetVelocity(navMeshAgent.velocity);
-
-                navMeshAgent.enabled = false;
-
-                isPathfinding = false;
-
-                SetAllowMovementInput(true);
-                SetAllowRotationInput(true);
-
-                break;
-            }
-        }
+        SetAllowMovementInput(true);
+        SetAllowRotationInput(true);
     }
 }

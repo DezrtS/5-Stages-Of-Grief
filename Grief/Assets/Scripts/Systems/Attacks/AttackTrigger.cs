@@ -13,7 +13,7 @@ public class AttackTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.transform.name);
+        //Debug.Log(other.gameObject.transform.name);
 
         if (other.TryGetComponent(out IHealth entityHealth))
         {

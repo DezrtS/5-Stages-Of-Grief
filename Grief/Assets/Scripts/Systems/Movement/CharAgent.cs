@@ -256,7 +256,7 @@ public class CharAgent : MovementController
     {
         if (CanInitiatePathfinding(transform.position))
         {
-            pathfinder.TransferToPathfindingState(PathingState.Pathfinding);
+            pathfinder.TransferToPathfindingState(true);
 
             navMeshAgent.enabled = true;
             characterController.enabled = false;
@@ -299,7 +299,7 @@ public class CharAgent : MovementController
 
         navMeshAgent.destination = pathfinder.PathfindDestination;
 
-        transform.position = Vector3.SmoothDamp(transform.position, navMeshAgent.nextPosition, ref velocity, 0.1f);
+        transform.position = Vector3.SmoothDamp(navMeshAgent.nextPosition, navMeshAgent.nextPosition + navMeshAgent.velocity * Time.deltaTime, ref velocity, 0.1f);
 
         CheckPathfindingState();
     }
@@ -319,47 +319,19 @@ public class CharAgent : MovementController
             return;
         }
 
-        pathfinder.TransferToPathfindingState(PathingState.Stopping);
-
         navMeshAgent.isStopped = true;
 
-        StartCoroutine(EndPathfinding());
-    }
+        pathfinder.TransferToPathfindingState(false);
 
-    protected override IEnumerator EndPathfinding()
-    {
-        Vector3 originalDestination = pathfinder.PathfindDestination;
+        SetRotation(Quaternion.Inverse(MovementAxis) * transform.forward);
+        velocity = navMeshAgent.velocity;
 
-        while (true)
-        {
-            yield return new WaitForFixedUpdate();
+        navMeshAgent.enabled = false;
+        characterController.enabled = true;
 
-            Vector2 entityPosition = new(transform.position.x, transform.position.z);
-            Vector2 targetPosition = new(navMeshAgent.nextPosition.x, navMeshAgent.nextPosition.z);
+        isPathfinding = false;
 
-            if (originalDestination != pathfinder.PathfindDestination)
-            {
-                navMeshAgent.isStopped = false;
-                break;
-            }
-
-            if (entityPosition == targetPosition)
-            {
-                pathfinder.TransferToPathfindingState(PathingState.Idle);
-
-                SetRotation(Quaternion.Inverse(MovementAxis) * transform.forward);
-                velocity = navMeshAgent.velocity;
-
-                navMeshAgent.enabled = false;
-                characterController.enabled = true;
-
-                isPathfinding = false;
-
-                SetAllowMovementInput(true);
-                SetAllowRotationInput(true);
-
-                break;
-            }
-        }
+        SetAllowMovementInput(true);
+        SetAllowRotationInput(true);
     }
 }

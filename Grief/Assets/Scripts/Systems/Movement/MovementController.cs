@@ -22,5 +22,5 @@ public abstract class MovementController : MonoBehaviour
     protected abstract void CheckPathfindingState();
     public abstract void StopPathfinding();
 
-    protected abstract IEnumerator EndPathfinding();
+    //protected abstract IEnumerator EndPathfinding();
 }
