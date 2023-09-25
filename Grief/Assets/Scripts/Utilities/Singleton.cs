@@ -13,17 +13,13 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         // Destroys the current instance that runs this Awake() function if there is another instance of this class in the scene
         if (instance != null)
         {
+            Debug.LogWarning($"There were multiple instances of {name} in the scene");
+
             Destroy(gameObject);
             return;
         }
 
         instance = this as T;
-    }
-
-    protected virtual void OnApplicationQuit()
-    {
-        instance = null;
-        Destroy(gameObject);
     }
 }
 

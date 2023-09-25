@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAttack, IDodge, IPathfind
 {
@@ -75,6 +76,14 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public Vector3 PathfindDestination { get { return pathfindDestination; } set { pathfindDestination = value; } }
 
     // ---------------------------------------------------------------------------------------------------------
+    // Class Events
+    // ---------------------------------------------------------------------------------------------------------
+
+    public delegate void PlayerHealthEventHandler(float health);
+
+    public event PlayerHealthEventHandler OnPlayerHealthEvent;
+
+    // ---------------------------------------------------------------------------------------------------------
     // Default Unity Methods
     // ---------------------------------------------------------------------------------------------------------
 
@@ -95,7 +104,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     private void Start()
     {
-        //navMeshAgent.enabled = false;
         CameraManager.Instance.TransferCameraTo(transform);
     }
 
@@ -192,6 +200,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         health = Mathf.Max(health - damage, 0);
 
+        OnPlayerHealthEvent(health);
+
         if (health == 0)
         {
             Die();
@@ -201,12 +211,46 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public void Heal(float healing)
     {
         health = Mathf.Min(health + healing, maxHealth);
+
+        OnPlayerHealthEvent(health);
     }
 
     public void Die()
     {
         // Destroy Attacks and Dodges on death (Mostly for enemies and not player)
-        Debug.Log("Player Has Died");
+        //Debug.Log("Player Has Died");
+
+        if (isAttacking)
+        {
+            OnAttackStateCancel(attackState, false);
+        }
+        if (isDodging)
+        {
+            OnDodgeCancel(false);
+        }
+
+        CancelPathfinding();
+
+        CharacterController characterController = GetComponent<CharacterController>();
+
+        characterController.enabled = false;
+        transform.position = Vector3.up;
+        transform.rotation = Quaternion.identity;
+        characterController.enabled = true;
+
+        charAgent.SetVelocity(Vector3.zero);
+        charAgent.SetRotation(Quaternion.Inverse(MovementController.MovementAxis) * transform.forward);
+
+        Heal(MaxHealth);
+
+        isInvincible = true;
+
+        StartCoroutine(InvincibilityTimer());
+
+        //attack.DestroyClone();
+        //dodge.DestroyClone();
+
+        //SceneManager.Instance.ResetScene();
     }
 
     public Vector3 GetMovementInput()
@@ -435,5 +479,11 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         // For Debugging Purposes
         yield return new WaitForSeconds(99f);
         OnAttackStateCancel(attackState, false);
+    }
+
+    public IEnumerator InvincibilityTimer()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isInvincible = false;
     }
 }

@@ -242,16 +242,16 @@ public abstract class Attack : ScriptableObject
     // Currently Unfinished
     public virtual void OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
     {
-        CombatManager.Instance.DamageEntity(this, attacker, entity);
-        CombatManager.Instance.ApplyKnockback(this, parentTransform, entityTransform);
+        CombatManager.Instance.DamageEntity(this, attacker, entity, parentTransform, entityTransform);
+        //CombatManager.Instance.ApplyKnockback(this, parentTransform, entityTransform);
     }
 
-    public virtual void OnAttackTriggerStay(IHealth entity)
+    public virtual void OnAttackTriggerStay(IHealth entity, Transform entityTransform)
     {
 
     }
 
-    public virtual void OnAttackTriggerExit(IHealth entity)
+    public virtual void OnAttackTriggerExit(IHealth entity, Transform entityTransform)
     {
 
     }

@@ -20,11 +20,4 @@ public interface IEnemy
     public void OnEnemyStateStart(EnemyState enemyState);
     public void OnEnemyState(EnemyState enemyState);
     public void OnEnemyStateEnd(EnemyState enemyState);
-    public void OnIdle();
-    public void OnPatrolling();
-    public void OnChasing();
-    public void OnAttacking();
-    public void OnFleeing();
-    public void OnStunned();
-    public void OnDead();
 }

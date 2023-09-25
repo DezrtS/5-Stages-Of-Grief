@@ -135,9 +135,19 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     public virtual void Die()
     {
         // Destroy Attacks and Dodges on death
+        if (isAttacking)
+        {
+            OnAttackStateCancel(attackState, false);
+        }
+        if (isDodging)
+        {
+            OnDodgeCancel(false);
+        }
 
-        //attack.DestroyClone();
-        //dodge.DestroyClone();
+        attack.DestroyClone();
+        dodge.DestroyClone();
+
+        Destroy(gameObject);
     }
 
     public virtual void TransferToEnemyState(EnemyState enemyState)
@@ -251,104 +261,6 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
 
                 break;
         }
-    }
-
-    public virtual void OnIdle()
-    {
-        if (IsWithinChasingDistance())
-        {
-            InitiateEnemyState(EnemyState.Chasing);
-            return;
-        }
-
-        if ((spawnPosition - transform.position).magnitude > maxTotalWanderRange)
-        {
-            if (Time.timeSinceLevelLoad - timeSinceLostPlayer >= lostPlayerRecoverTime)
-            {
-                InitiateEnemyState(EnemyState.Patrolling);
-                return;
-            }
-        }
-
-        if (Time.timeSinceLevelLoad - timeSinceLastWander >= timeBetweenWanders)
-        {
-            InitiateWander();
-            timeSinceLastWander = Time.timeSinceLevelLoad;
-        }
-    }
-
-    public virtual void OnPatrolling()
-    {
-        if (IsWithinChasingDistance())
-        {
-            InitiateEnemyState(EnemyState.Chasing);
-            return;
-        }
-
-        if (isPathfinding)
-        {
-            if ((pathfindDestination - transform.position).magnitude <= Mathf.Min(wanderRange / 2f, maxTotalWanderRange / 2f))
-            {
-                CancelPathfinding();
-                InitiateEnemyState(EnemyState.Idle);
-                return;
-            }
-        }
-    }
-
-    public virtual void OnChasing()
-    {
-        pathfindDestination = player.transform.position - transform.forward * stoppingRange;
-
-        if (isPathfinding)
-        {
-            if (navMeshAgent.remainingDistance < attackRange)
-            {
-                //CancelPathfinding();
-                InitiateEnemyState(EnemyState.Attacking);
-            }
-        }
-        else
-        {
-            InitiatePathfinding();
-        }
-
-        if (!IsWithinChasingDistance())
-        {
-            timeSinceLostPlayer = Time.timeSinceLevelLoad;
-            InitiateEnemyState(EnemyState.Idle);
-        }
-    }
-
-    public virtual void OnAttacking()
-    {
-        if (GetVectorToPlayer().magnitude > attackRange)
-        {
-            InitiateEnemyState(EnemyState.Chasing);
-            return;
-        }
-
-        Aim();
-
-        if (!isPathfinding && !isAttacking)
-        {
-            //InitiateAttackState(AttackState.Aiming);
-        }
-    }
-
-    public virtual void OnFleeing()
-    {
-
-    }
-
-    public virtual void OnStunned()
-    {
-
-    }
-
-    public virtual void OnDead()
-    {
-
     }
 
     public virtual void TransferToAttackState(AttackState attackState)
@@ -537,6 +449,107 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     // ---------------------------------------------------------------------------------------------------------
     // Extra Methods
     // ---------------------------------------------------------------------------------------------------------
+
+    public virtual void OnIdle()
+    {
+        if (IsWithinChasingDistance())
+        {
+            InitiateEnemyState(EnemyState.Chasing);
+            return;
+        }
+
+        if ((spawnPosition - transform.position).magnitude > maxTotalWanderRange)
+        {
+            if (Time.timeSinceLevelLoad - timeSinceLostPlayer >= lostPlayerRecoverTime)
+            {
+                InitiateEnemyState(EnemyState.Patrolling);
+                return;
+            }
+        }
+
+        if (Time.timeSinceLevelLoad - timeSinceLastWander >= timeBetweenWanders)
+        {
+            InitiateWander();
+            timeSinceLastWander = Time.timeSinceLevelLoad;
+        }
+    }
+
+    public virtual void OnPatrolling()
+    {
+        if (IsWithinChasingDistance())
+        {
+            InitiateEnemyState(EnemyState.Chasing);
+            return;
+        }
+
+        if (isPathfinding)
+        {
+            if ((pathfindDestination - transform.position).magnitude <= Mathf.Min(wanderRange / 2f, maxTotalWanderRange / 2f))
+            {
+                CancelPathfinding();
+                InitiateEnemyState(EnemyState.Idle);
+                return;
+            }
+        }
+    }
+
+    public virtual void OnChasing()
+    {
+        Vector3 vectorToPlayer = GetVectorToPlayer();
+
+        pathfindDestination = player.transform.position - vectorToPlayer.normalized * stoppingRange;
+
+        // If stopping distance is greater than 0, player will no longer be pathfinding when this needs to trigger
+
+        if (isPathfinding)
+        {
+            if (vectorToPlayer.magnitude < attackRange)
+            {
+                CancelPathfinding();
+                InitiateEnemyState(EnemyState.Attacking);
+            }
+        }
+        else
+        {
+            InitiatePathfinding();
+        }
+
+        if (!IsWithinChasingDistance())
+        {
+            timeSinceLostPlayer = Time.timeSinceLevelLoad;
+            InitiateEnemyState(EnemyState.Idle);
+        }
+    }
+
+    public virtual void OnAttacking()
+    {
+        if (GetVectorToPlayer().magnitude > attackRange && !isAttacking)
+        {
+            InitiateEnemyState(EnemyState.Chasing);
+            return;
+        }
+
+        if (!isAttacking)
+        {
+            Aim();
+            InitiateAttackState(AttackState.Aiming);
+        }
+    }
+
+    public virtual void OnFleeing()
+    {
+
+    }
+
+    public virtual void OnStunned()
+    {
+
+    }
+
+    public virtual void OnDead()
+    {
+
+    }
 
     public virtual void Aim()
     {

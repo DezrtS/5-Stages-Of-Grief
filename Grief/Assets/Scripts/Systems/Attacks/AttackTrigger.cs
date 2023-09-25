@@ -13,8 +13,6 @@ public class AttackTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log(other.gameObject.transform.name);
-
         if (other.TryGetComponent(out IHealth entityHealth))
         {
             parentAttack.OnAttackTriggerEnter(entityHealth, other.transform);
@@ -23,17 +21,17 @@ public class AttackTrigger : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.TryGetComponent(out IHealth entityHealth))
-        {
-            parentAttack.OnAttackTriggerStay(entityHealth);
-        }
+        //if (other.TryGetComponent(out IHealth entityHealth))
+        //{
+        //    parentAttack.OnAttackTriggerStay(entityHealth, other.transform);
+        //}
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent(out IHealth entityHealth))
-        {
-            parentAttack.OnAttackTriggerExit(entityHealth);
-        }
+        //if (other.TryGetComponent(out IHealth entityHealth))
+        //{
+        //    parentAttack.OnAttackTriggerExit(entityHealth, other.transform);
+        //}
     }
 }

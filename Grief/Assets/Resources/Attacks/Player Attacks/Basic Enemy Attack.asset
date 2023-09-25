@@ -16,14 +16,14 @@ MonoBehaviour:
   damage: 3
   knockbackPower: 12
   attackEffects: 
-  attackCooldown: 0
+  attackCooldown: 1
   attackCancelCooldown: 0
   attackRequiredChargeUpTime: 0
   hasAimingStage: 0
   hasAttackStage: 1
   maxAimTime: 99
   maxAttackTime: 0.5
-  chargingUpTime: 0
-  coolingDownTime: 0.5
+  chargingUpTime: 0.5
+  coolingDownTime: 1
   attackTriggerScale: 4
   attackTriggerSpawnDistance: 2.5

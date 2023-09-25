@@ -142,7 +142,7 @@ MonoBehaviour:
   maxTotalWanderRange: 10
   lostPlayerRecoverTime: 5
   maxHealth: 12
-  damageableEntities: 
+  damageableEntities: 0000000003000000
   attackTemplate: {fileID: 11400000, guid: a1711bb62f1696844abb441bef105df6, type: 2}
   dodgeTemplate: {fileID: 11400000, guid: 6b740cb68397ebf4cb7fd863654f2bcc, type: 2}
 --- !u!114 &2518368392112422290
@@ -185,7 +185,7 @@ NavMeshAgent:
   m_Acceleration: 30
   avoidancePriority: 50
   m_AngularSpeed: 360
-  m_StoppingDistance: 2
+  m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -202,12 +202,12 @@ Rigidbody:
   m_GameObject: {fileID: 6919339057877188736}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 4
   m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!1 &6919339059106232510
 GameObject:

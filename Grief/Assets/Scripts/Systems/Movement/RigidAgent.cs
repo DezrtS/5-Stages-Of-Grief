@@ -49,10 +49,6 @@ public class RigidAgent : MovementController
         {
             UpdatePathfinding();
         } 
-        //else
-        //{
-        //    rig.velocity = velocity;
-        //}
     }
 
     // ---------------------------------------------------------------------------------------------------------
@@ -61,12 +57,26 @@ public class RigidAgent : MovementController
 
     public override Vector3 GetVelocity()
     {
-        return navMeshAgent.velocity;
+        if (isPathfinding)
+        {
+            return navMeshAgent.velocity;
+        }
+        else
+        {
+            return rig.velocity;
+        }
     }
 
     public override void SetVelocity(Vector3 velocity)
     {
-        navMeshAgent.velocity = velocity;
+        if (isPathfinding)
+        {
+            navMeshAgent.velocity = velocity;
+        }
+        else
+        {
+            rig.velocity = velocity;
+        }
     }
 
     public override Vector3 GetRotation()
@@ -91,8 +101,14 @@ public class RigidAgent : MovementController
 
     public override void ApplyForce(Vector3 force)
     {
-        navMeshAgent.velocity += force;
-        //velocity += force;
+        if (isPathfinding)
+        {
+            navMeshAgent.velocity += force;
+        }
+        else
+        {
+            rig.velocity += force;
+        }
     }
 
     public override void InitiatePathfinding(Transform transform, Vector3 destination)
@@ -102,11 +118,15 @@ public class RigidAgent : MovementController
             pathfinder.TransferToPathfindingState(true);
 
             navMeshAgent.updatePosition = false;
-            //navMeshAgent.enabled = true;
+            navMeshAgent.enabled = true;
 
             isPathfinding = true;
             navMeshAgent.isStopped = false;
             navMeshAgent.destination = destination;
+            navMeshAgent.velocity = velocity;
+            rig.velocity = Vector3.zero;
+
+            rig.isKinematic = true;
 
             SetAllowMovementInput(false);
             SetAllowRotationInput(false);
@@ -146,7 +166,7 @@ public class RigidAgent : MovementController
 
     protected override void CheckPathfindingState()
     {
-        if (navMeshAgent.pathStatus == NavMeshPathStatus.PathInvalid || navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        if (navMeshAgent.pathStatus == NavMeshPathStatus.PathInvalid || (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance && !navMeshAgent.pathPending))
         {
             StopPathfinding();
         }
@@ -164,8 +184,12 @@ public class RigidAgent : MovementController
 
         pathfinder.TransferToPathfindingState(false);
 
+        rig.isKinematic = false;
+
         SetRotation(Quaternion.Inverse(MovementAxis) * transform.forward);
-        //velocity = navMeshAgent.velocity;
+        rig.velocity = navMeshAgent.velocity;
+
+        navMeshAgent.enabled = false;
 
         isPathfinding = false;
 

@@ -215,8 +215,8 @@ public class CharAgent : MovementController
         {
             navMeshAgent.velocity = velocity;
             return;
-        }
-
+        } 
+        
         this.velocity = velocity;
     }
 
@@ -306,7 +306,7 @@ public class CharAgent : MovementController
 
     protected override void CheckPathfindingState()
     {
-        if (navMeshAgent.pathStatus == NavMeshPathStatus.PathInvalid || navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        if (navMeshAgent.pathStatus == NavMeshPathStatus.PathInvalid || (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance && !navMeshAgent.pathPending))
         {
             StopPathfinding();
         }
