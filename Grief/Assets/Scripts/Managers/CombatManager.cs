@@ -18,6 +18,7 @@ public class CombatManager : Singleton<CombatManager>
     // Consider making this method static
     public void DamageEntity(Attack attack, IAttack attacker, IHealth reciever, Transform attackerTransform, Transform recieverTransform)
     {
+
         if (attacker.DamageableEntities.Contains(reciever.EntityType))
         {
             ApplyKnockback(attack, attackerTransform, recieverTransform);

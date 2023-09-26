@@ -45,7 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c91dd5de9492084aa6a1f49bfaebc15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSamples: []
+  audioSamples:
+  - audioId: player_attack1
+    audioClip: {fileID: 8300000, guid: cb8c4a7a61924c641a05267eae0b78da, type: 3}
+  - audioId: player_die1
+    audioClip: {fileID: 8300000, guid: ddbcbc5b7771edd49b7f4c5393fc44f3, type: 3}
 --- !u!82 &9047562593852355088
 AudioSource:
   m_ObjectHideFlags: 0

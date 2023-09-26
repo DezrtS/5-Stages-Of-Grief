@@ -8,6 +8,8 @@ using UnityEngine.Rendering;
 
 public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAttack, IDodge, IPathfind
 {
+    [SerializeField] private PlayerAnimation playerAnimation;
+
     // ---------------------------------------------------------------------------------------------------------
     // Player Variables
     // ---------------------------------------------------------------------------------------------------------
@@ -28,6 +30,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     private PlayerInputControls playerInputControls;
     private InputAction leftJoystick;
     private InputAction rightJoystick;
+
+    private bool useMouseForRotation;
 
     // ---------------------------------------------------------------------------------------------------------
     // Interface Related Variables
@@ -107,6 +111,29 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         CameraManager.Instance.TransferCameraTo(transform);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            InitiateDodge();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking)
+        {
+            useMouseForRotation = true;
+
+            InitiateAttackState(AttackState.Aiming);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            if (attackState == AttackState.Aiming)
+            {
+                InitiateAttackState(AttackState.ChargingUp);
+            }
+        }
+    }
+
     private void LateUpdate()
     {
         playerLook.PanTowards(rightJoystick.ReadValue<Vector2>(), panStrength, panTimeMultiplier);
@@ -129,13 +156,20 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     private void OnActionPerformed(InputAction.CallbackContext obj)
     {
+        if (GameManager.Instance.IsPaused)
+        {
+            return;
+        }
+
+        useMouseForRotation = false;
+
         string buttonName = obj.action.activeControl.name;
 
         switch (buttonName)
         {
             case "buttonNorth":
-                pathfindDestination = (new Vector3(pathfindObject.transform.position.x, transform.position.y, pathfindObject.transform.position.z));
-                InitiatePathfinding();
+                //pathfindDestination = (new Vector3(pathfindObject.transform.position.x, transform.position.y, pathfindObject.transform.position.z));
+                //InitiatePathfinding();
                 return;
             case "buttonEast":
 
@@ -247,6 +281,11 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         StartCoroutine(InvincibilityTimer());
 
+        EnemySpawning.Instance.KillAllEnemies();
+        EnemySpawning.Instance.ResetSpawner();
+
+        AudioManager.Instance.PlaySound("player_die1");
+
         //attack.DestroyClone();
         //dodge.DestroyClone();
 
@@ -260,6 +299,11 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public Vector3 GetRotationInput()
     {
+        if (useMouseForRotation)
+        {
+            return ((Vector2)Input.mousePosition - new Vector2(Screen.width, Screen.height) * 0.5f).normalized;
+        }
+
         return GetMovementInput();
     }
 
@@ -272,10 +316,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     {
         if (CanInitiateAttackState(attackState, attack.AttackId))
         {
-            if (attackState != AttackState.Idle)
-            {
-                isAttacking = true;
-            }
             attack.TransferToAttackState(attackState);
         }
     }
@@ -304,6 +344,11 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     {
         // Can be Simplified
 
+        if (attackState != AttackState.Idle)
+        {
+            isAttacking = true;
+        }
+
         // Actions to do when the state has first started
         if (attackState == AttackState.Aiming || attackState == AttackState.Attacking)
         {
@@ -314,6 +359,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
+            playerAnimation.Swing();
         }
         else if (attackState == AttackState.Attacking)
         {
@@ -397,6 +443,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public void OnDodgeStart()
     {
         // Actions to do when the dodge has first started
+        playerAnimation.Dodge();
+
         isDodging = true;
         charAgent.SetAllowMovementInput(false);
         charAgent.SetAllowRotationInput(false);

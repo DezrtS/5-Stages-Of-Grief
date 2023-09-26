@@ -21,6 +21,11 @@ public class CharAgent : MovementController
     [SerializeField] private float movementInputSmoothMultiplier = 6;
     [SerializeField] private float rotationInputSmoothMultiplier = 6;
 
+    [Space(10)]
+    [Header("Gravity")]
+    [SerializeField] private LayerMask groundLayerMask;
+    [SerializeField] private float groundCheckDistance;
+
     private Vector3 velocity = Vector3.zero;
     private Vector3 rotation = Vector3.right;
 
@@ -70,7 +75,7 @@ public class CharAgent : MovementController
             UpdateMovement();
             UpdateRotation();
             //CheckCollisions();
-            //ApplyGravity();
+            ApplyGravity();
         }
         else
         {
@@ -162,7 +167,7 @@ public class CharAgent : MovementController
 
     private void ApplyGravity()
     {
-        if (characterController.isGrounded)
+        if (Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayerMask, QueryTriggerInteraction.Ignore))
         {
             gravityVelocity = 0.5f;
         }

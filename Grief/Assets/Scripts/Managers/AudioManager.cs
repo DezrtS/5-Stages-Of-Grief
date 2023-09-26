@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AudioManager : Singleton<AudioManager>
@@ -13,15 +14,26 @@ public class AudioManager : Singleton<AudioManager>
 
     private AudioSource musicAudioSource;
 
+    private AudioSource audioSource;
+
     protected override void Awake()
     {
         base.Awake();
 
         musicAudioSource = GetComponent<AudioSource>();
+        audioSource = transform.AddComponent<AudioSource>();
 
         foreach (AudioSample audioSample in audioSamples)
         {
             idAudioClipPairs.Add(audioSample.AudioId, audioSample.AudioClip);
+        }
+    }
+
+    public void PlaySound(string id)
+    {
+        if (idAudioClipPairs.TryGetValue(id, out AudioClip clip))
+        {
+            audioSource.PlayOneShot(clip);
         }
     }
 

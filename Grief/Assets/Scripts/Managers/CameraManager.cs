@@ -61,4 +61,9 @@ public class CameraManager : Singleton<CameraManager>
             cinemachineTransposer.m_FollowOffset = offset;
         }
     }
+
+    public Vector3 ConvertScreenToWorld(Vector3 screenPosition)
+    {
+        return Camera.main.ScreenToWorldPoint(screenPosition);
+    }
 }

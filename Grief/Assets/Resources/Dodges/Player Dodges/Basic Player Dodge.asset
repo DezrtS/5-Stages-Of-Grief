@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Basic Player Dodge
   m_EditorClassIdentifier: 
   dodgeId: basic_player_dodge
-  dodgeDistance: 15
-  dodgeTime: 1
-  dodgeCooldown: 2
+  dodgeDistance: 7
+  dodgeTime: 0.4
+  dodgeCooldown: 1

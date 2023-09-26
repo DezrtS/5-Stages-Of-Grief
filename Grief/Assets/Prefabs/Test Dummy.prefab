@@ -133,7 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b76e4b651e680224fb9f0a62c305d69f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseActivationDistance: 10
+  chaseActivationDistance: 100
   timeBetweenWanders: 3
   chanceToWander: 80
   wanderRange: 5
