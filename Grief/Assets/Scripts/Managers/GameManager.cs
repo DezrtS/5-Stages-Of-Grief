@@ -10,7 +10,7 @@ public class GameManager : SingletonPersistent<GameManager>
 
     private void Start()
     {
-        StartCoroutine(GameStateWatcher());
+
     }
 
     private void Update()
@@ -27,26 +27,6 @@ public class GameManager : SingletonPersistent<GameManager>
         }
     }
 
-    public IEnumerator GameStateWatcher()
-    {
-        while (true)
-        {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                if (isPaused)
-                {
-                    UnPauseGame();
-                }
-                else
-                {
-                    PauseGame();
-                }
-            }
-
-            yield return null;
-        }
-    }
-
     public void PauseGame()
     {
         if (isPaused)
@@ -56,7 +36,7 @@ public class GameManager : SingletonPersistent<GameManager>
 
         isPaused = true;
         TempUI.Instance.PauseGame();
-        EnemySpawning.Instance.PauseSpawning();
+        //EnemySpawning.Instance.PauseSpawning();
         Time.timeScale = 0;
     }
 
@@ -69,7 +49,7 @@ public class GameManager : SingletonPersistent<GameManager>
 
         isPaused = false;
         TempUI.Instance.UnPauseGame();
-        EnemySpawning.Instance.UnPauseSpawning();
+        //EnemySpawning.Instance.UnPauseSpawning();
         Time.timeScale = 1;
     }
 }

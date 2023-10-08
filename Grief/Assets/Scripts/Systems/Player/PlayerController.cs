@@ -4,7 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 
 public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAttack, IDodge, IPathfind
 {
@@ -30,6 +29,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     private PlayerInputControls playerInputControls;
     private InputAction leftJoystick;
     private InputAction rightJoystick;
+    private InputAction dPad;
+    private Vector2 lastDPadInput = Vector2.up;
 
     private bool useMouseForRotation;
 
@@ -47,8 +48,18 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     [Space(10)]
     [Header("Attacking")]
     [SerializeField] private List<EntityType> damageableEntities;
-    [SerializeField] private Attack attackTemplate;
-    private Attack attack;
+    [SerializeField] private Attack basicAttackTemplate;
+    [SerializeField] private Attack iceShardAttackTemplate;
+    [SerializeField] private Attack firePunchAttackTemplate;
+    [SerializeField] private Attack teleportingKunaiAttackTemplate;
+    [SerializeField] private Attack lightBeamAttackTemplate;
+    private Attack basicAttack;
+    private Attack iceShardAttack;
+    private Attack firePunchAttack;
+    private Attack teleportingKunaiAttack;
+    private Attack lightBeamAttack;
+
+    private Attack activeAttack;
     private AttackState attackState;
     private bool isAttacking;
 
@@ -70,7 +81,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public float MaxHealth { get { return maxHealth; } }
     public float Health { get { return health; } }
     public bool IsInvincible { get { return isInvincible; } }
-    public Attack Attack { get { return attackTemplate; } }
+    public Attack ActiveAttack { get { return activeAttack; } }
     public bool IsAttacking { get { return isAttacking; } }
     public AttackState AttackState { get { return attackState; } }
     public List<EntityType> DamageableEntities { get { return damageableEntities; } }
@@ -87,6 +98,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public event PlayerHealthEventHandler OnPlayerHealthEvent;
 
+    public delegate void AbilitySelectEventHandler(int ability);
+
+    public event AbilitySelectEventHandler OnAbilitySelectEvent;
+
     // ---------------------------------------------------------------------------------------------------------
     // Default Unity Methods
     // ---------------------------------------------------------------------------------------------------------
@@ -101,7 +116,15 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         playerLook = transform.AddComponent<PlayerLook>();
 
         dodge = dodgeTemplate.Clone(dodge, this, charAgent);
-        attack = attackTemplate.Clone(attack, this, transform);
+
+        basicAttack = basicAttackTemplate.Clone(basicAttack, this, transform);
+        iceShardAttack = iceShardAttackTemplate.Clone(iceShardAttack, this, transform);
+        firePunchAttack = firePunchAttackTemplate.Clone(firePunchAttack, this, transform);
+        teleportingKunaiAttack = teleportingKunaiAttackTemplate.Clone(teleportingKunaiAttack, this, transform);
+        lightBeamAttack = lightBeamAttackTemplate.Clone(lightBeamAttack, this, transform);
+
+
+        activeAttack = basicAttack;
 
         health = maxHealth;
     }
@@ -134,6 +157,11 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
     }
 
+    private void FixedUpdate()
+    {
+
+    }
+
     private void LateUpdate()
     {
         playerLook.PanTowards(rightJoystick.ReadValue<Vector2>(), panStrength, panTimeMultiplier);
@@ -152,6 +180,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         playerInputControls.Player.Action.performed += OnActionPerformed;
         playerInputControls.Player.Action.canceled += OnActionCancelled;
         playerInputControls.Player.Action.Enable();
+
+        dPad = playerInputControls.Player.AbilitySelection;
+        dPad.performed += OnSelectAbility;
+        dPad.Enable();
     }
 
     private void OnActionPerformed(InputAction.CallbackContext obj)
@@ -168,6 +200,30 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         switch (buttonName)
         {
             case "buttonNorth":
+
+                if (lastDPadInput == Vector2.up)
+                {
+                    SwitchActiveAttack(iceShardAttack);
+                }
+                else if (lastDPadInput == Vector2.left)
+                {
+                    SwitchActiveAttack(firePunchAttack);
+                }
+                else if (lastDPadInput == Vector2.right)
+                {
+                    SwitchActiveAttack(teleportingKunaiAttack);
+                }
+                else if (lastDPadInput == Vector2.down)
+                {
+                    //SwitchActiveAttack(lightBeamAttack);
+                } 
+                else
+                {
+                    return;
+                }
+
+                InitiateAttackState(AttackState.Aiming);
+
                 //pathfindDestination = (new Vector3(pathfindObject.transform.position.x, transform.position.y, pathfindObject.transform.position.z));
                 //InitiatePathfinding();
                 return;
@@ -178,6 +234,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                 InitiateDodge();
                 return;
             case "buttonWest":
+                SwitchActiveAttack(basicAttack);
+
                 InitiateAttackState(AttackState.Aiming);
                 return;
             default:
@@ -192,7 +250,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         switch (buttonName)
         {
             case "buttonNorth":
-
+                if (attackState == AttackState.Aiming)
+                {
+                    InitiateAttackState(AttackState.ChargingUp);
+                }
                 return;
             case "buttonEast":
 
@@ -211,6 +272,38 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
     }
 
+    private void OnSelectAbility(InputAction.CallbackContext obj)
+    {
+        if (GameManager.Instance.IsPaused)
+        {
+            return;
+        }
+
+        Vector2 dPadInput = dPad.ReadValue<Vector2>();
+        int selectedAbility = -1;
+
+        if (dPadInput == Vector2.up)
+        {
+            selectedAbility = 0;
+        }
+        else if (dPadInput == Vector2.left)
+        {
+            selectedAbility = 1;
+        }
+        else if (dPadInput == Vector2.right)
+        {
+            selectedAbility = 2;
+        }
+        else if (dPadInput == Vector2.down)
+        {
+            //selectedAbility = 3;
+        }
+
+        OnAbilitySelectEvent.Invoke(selectedAbility);
+
+        lastDPadInput = dPadInput;
+    }
+
     private void OnDisable()
     {
         leftJoystick.Disable();
@@ -219,6 +312,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         playerInputControls.Player.Action.performed -= OnActionPerformed;
         playerInputControls.Player.Action.canceled -= OnActionCancelled;
         playerInputControls.Player.Action.Disable();
+
+        dPad.performed -= OnSelectAbility;
+        dPad.Disable();
     }
 
     // ---------------------------------------------------------------------------------------------------------
@@ -265,15 +361,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         CancelPathfinding();
 
-        CharacterController characterController = GetComponent<CharacterController>();
-
-        characterController.enabled = false;
-        transform.position = Vector3.up;
-        transform.rotation = Quaternion.identity;
-        characterController.enabled = true;
-
+        charAgent.Teleport(Vector3.up);
         charAgent.SetVelocity(Vector3.zero);
-        charAgent.SetRotation(Quaternion.Inverse(MovementController.MovementAxis) * transform.forward);
+        charAgent.SetRotation(Quaternion.Inverse(MovementController.MovementAxis) * Vector3.right);
 
         Heal(MaxHealth);
 
@@ -281,15 +371,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         StartCoroutine(InvincibilityTimer());
 
-        EnemySpawning.Instance.KillAllEnemies();
-        EnemySpawning.Instance.ResetSpawner();
+        //EnemySpawning.Instance.KillAllEnemies();
+        //EnemySpawning.Instance.ResetSpawner();
 
         AudioManager.Instance.PlaySound("player_die1");
-
-        //attack.DestroyClone();
-        //dodge.DestroyClone();
-
-        //SceneManager.Instance.ResetScene();
     }
 
     public Vector3 GetMovementInput()
@@ -307,6 +392,27 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         return GetMovementInput();
     }
 
+    public virtual void SwitchActiveAttack(Attack activeAttack)
+    {
+        if (CanSwitchActiveAttack(activeAttack))
+        {
+            //Debug.Log($"Switching from {this.activeAttack.AttackId} to {activeAttack.AttackId}");
+
+            isAttacking = false;
+            this.activeAttack = activeAttack;
+        }
+    }
+
+    public virtual bool CanSwitchActiveAttack(Attack activeAttack)
+    {
+        if (this.activeAttack == activeAttack)
+        {
+            return false;
+        }
+
+        return attackState == AttackState.Idle;
+    }
+
     public void TransferToAttackState(AttackState attackState)
     {
         this.attackState = attackState;
@@ -314,16 +420,16 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public void InitiateAttackState(AttackState attackState)
     {
-        if (CanInitiateAttackState(attackState, attack.AttackId))
+        if (CanInitiateAttackState(attackState, activeAttack.AttackId))
         {
-            attack.TransferToAttackState(attackState);
+            activeAttack.TransferToAttackState(attackState);
         }
     }
 
     public bool CanInitiateAttackState(AttackState attackState, string attackId)
     {
         // Specific requirements to the class rather than the attack
-        if (attack == null)
+        if (activeAttack == null)
         {
             Debug.LogWarning($"{name} Does Not Have An Attack");
             return false;
@@ -359,7 +465,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
-            playerAnimation.Swing();
+            //playerAnimation.Swing();
         }
         else if (attackState == AttackState.Attacking)
         {
@@ -400,10 +506,20 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled)
     {
+        Debug.Log("Attack Cancelled"); // There is a bug that is cancelling the players attacks when there are many enemies or the player dies a lot
+
+        // It is being called when the attack is idle constantly
+
         // Actions to do when the state is cancelled
         if (!otherHasCancelled)
         {
-            attack.OnAttackStateCancel(attackState, true);
+            if (attackState ==  AttackState.Idle)
+            {
+                Debug.Log($"Canceling Attack on Idle,\nIsAttacking: {isAttacking}\nActive Attack: {activeAttack.AttackId}\nActive Attack State: {activeAttack.AttackState}");
+                return;
+            }
+
+            activeAttack.OnAttackStateCancel(attackState, true);
         }
 
         this.attackState = AttackState.Idle;
@@ -443,7 +559,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public void OnDodgeStart()
     {
         // Actions to do when the dodge has first started
-        playerAnimation.Dodge();
+        //playerAnimation.Dodge();
 
         isDodging = true;
         charAgent.SetAllowMovementInput(false);

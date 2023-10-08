@@ -111,6 +111,11 @@ public class RigidAgent : MovementController
         }
     }
 
+    public override void Teleport(Vector3 location)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void InitiatePathfinding(Transform transform, Vector3 destination)
     {
         if (CanInitiatePathfinding(transform.position))

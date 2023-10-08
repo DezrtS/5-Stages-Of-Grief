@@ -14,10 +14,7 @@ public enum AttackEffectType
 public abstract class Attack : ScriptableObject
 {
     [Header("Attack Variables")]
-
     [SerializeField] private string attackId;
-    [SerializeField] private float damage = 3;
-    [SerializeField] private float knockbackPower;
 
     [Space(10)]
     [SerializeField] private List<AttackEffectType> attackEffects = new List<AttackEffectType>();
@@ -53,8 +50,7 @@ public abstract class Attack : ScriptableObject
     private AttackState attackState = AttackState.Idle;
 
     public string AttackId { get { return attackId; } }
-    public float Damage { get { return damage; } }
-    public float KnockbackPower { get { return knockbackPower; } }
+    public Transform ParentTransform { get { return parentTransform; } }
     public AttackState AttackState { get { return attackState; } }
 
     public virtual Attack Clone(Attack clone, IAttack attacker, Transform parentTransform)
@@ -65,8 +61,6 @@ public abstract class Attack : ScriptableObject
         }
 
         clone.attackId = attackId;
-        clone.damage = damage;
-        clone.knockbackPower = knockbackPower;
 
         clone.attackEffects = attackEffects;
         clone.attackCooldown = attackCooldown;
@@ -92,6 +86,8 @@ public abstract class Attack : ScriptableObject
         Destroy(this);
     }
 
+    public abstract float GetDamage();
+
     public virtual void TransferToAttackState(AttackState attackState)
     {
         if (CanInitiateAttackState(attackState))
@@ -114,6 +110,10 @@ public abstract class Attack : ScriptableObject
         else
         {
             if (this.attackState == AttackState.ChargingUp && attackState == AttackState.Attacking)
+            {
+                OnAttackStateCancel(this.attackState, false);
+            } 
+            else if (this.attackState == AttackState.Aiming && attackState == AttackState.ChargingUp)
             {
                 OnAttackStateCancel(this.attackState, false);
             }
@@ -171,6 +171,7 @@ public abstract class Attack : ScriptableObject
         switch (attackState)
         {
             case AttackState.Idle:
+                Debug.LogWarning("Idle On Attack State");
                 break;
             case AttackState.Aiming:
                 if (maxAimTime < timeSinceStateStarted)
@@ -203,7 +204,6 @@ public abstract class Attack : ScriptableObject
     {
         attacker.OnAttackStateEnd(attackState);
 
-        this.attackState = AttackState.Idle;
         CoroutineRunner.Instance.StopCoroutine(attackStateCoroutine);
 
         if (attackState == AttackState.Attacking)
@@ -240,9 +240,9 @@ public abstract class Attack : ScriptableObject
     }
 
     // Currently Unfinished
-    public virtual void OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
+    public virtual bool OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
     {
-        CombatManager.Instance.DamageEntity(this, attacker, entity, parentTransform, entityTransform);
+        return CombatManager.Instance.DamageEntity(this, attacker, entity, parentTransform, entityTransform);
         //CombatManager.Instance.ApplyKnockback(this, parentTransform, entityTransform);
     }
 
@@ -254,6 +254,46 @@ public abstract class Attack : ScriptableObject
     public virtual void OnAttackTriggerExit(IHealth entity, Transform entityTransform)
     {
 
+    }
+
+    public void PlayAudio(string audioId)
+    {
+        if (audioId != "")
+        {
+            AudioManager.Instance.PlaySound(audioId);
+        }
+    }
+
+    public void DamageEntity(IHealth entity)
+    {
+        CombatManager.Instance.DamageEntity(this, attacker, entity);
+    }
+
+    public virtual GameObject SpawnProjectile(Projectile projectileData, Vector3 position, Vector3 rotation)
+    {
+        GameObject spawnedProjectile = Instantiate(projectileData.ProjectilePrefab, position, Quaternion.Euler(rotation));
+        BasicProjectile basicProjectile = spawnedProjectile.GetComponent<BasicProjectile>();
+
+        if (basicProjectile == null)
+        {
+            Debug.LogWarning($"{spawnedProjectile.name} is missing a basic projectile script");
+        } 
+        else
+        {
+            basicProjectile.SetProjectileData(projectileData);
+            basicProjectile.SetParentAttack(this);
+        }
+
+        return spawnedProjectile;
+    }
+
+    public virtual void FireProjectile(Projectile projectileData, GameObject projectile, Vector3 direction)
+    {
+        Rigidbody rig = projectile.GetComponent<Rigidbody>();
+
+        rig.AddForce(projectileData.FireSpeed * direction.normalized, ForceMode.Impulse);
+
+        projectile.GetComponent<BasicProjectile>().OnFireProjectile();
     }
 }
 

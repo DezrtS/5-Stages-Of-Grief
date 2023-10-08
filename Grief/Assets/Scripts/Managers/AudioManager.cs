@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public enum AudioType
+{
+    Environment,
+    Misc
+}
+
 public class AudioManager : Singleton<AudioManager>
 {
     [SerializeField] private List<AudioSample> audioSamples = new List<AudioSample>();
@@ -118,9 +124,11 @@ public class AudioManager : Singleton<AudioManager>
 [Serializable]
 public class AudioSample
 {
+    //[SerializeField] private AudioType audioType;
     [SerializeField] private string audioId;
     [SerializeField] private AudioClip audioClip;
 
+    //public AudioType AudioType { get { return audioType; } }
     public string AudioId { get { return audioId; } }
     public AudioClip AudioClip { get { return audioClip; } }
 }

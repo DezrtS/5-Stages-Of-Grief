@@ -16,11 +16,13 @@ public abstract class MovementController : MonoBehaviour
 
     public abstract void ApplyForce(Vector3 force);
 
+    public abstract void Teleport(Vector3 location);
+
     public abstract void InitiatePathfinding(Transform transform, Vector3 destination);
     public abstract bool CanInitiatePathfinding(Vector3 position);
     protected abstract void UpdatePathfinding();
     protected abstract void CheckPathfindingState();
     public abstract void StopPathfinding();
 
-    //protected abstract IEnumerator EndPathfinding();
+
 }

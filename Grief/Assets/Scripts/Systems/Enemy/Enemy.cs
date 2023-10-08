@@ -45,7 +45,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     [Header("Attacking")]
     [SerializeField] private List<EntityType> damageableEntities;
     [SerializeField] private Attack attackTemplate;
-    private Attack attack;
+    private Attack activeAttack;
     private bool isAttacking;
     private AttackState attackState;
 
@@ -68,7 +68,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     public float Health { get { return health; } }
     public bool IsInvincible { get { return isInvincible; } }
     public EnemyState EnemyState { get { return enemyState; } }
-    public Attack Attack { get { return attackTemplate; } }
+    public Attack ActiveAttack { get { return attackTemplate; } }
     public bool IsAttacking { get { return isAttacking; } }
     public AttackState AttackState { get { return attackState; } }
     public List<EntityType> DamageableEntities { get { return damageableEntities; } }
@@ -86,8 +86,8 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         navMeshAgent = GetComponent<NavMeshAgent>();
         rigidAgent = GetComponent<RigidAgent>();
 
-        dodge = dodgeTemplate.Clone(dodge, this, rigidAgent);
-        attack = attackTemplate.Clone(attack, this, transform);
+        //dodge = dodgeTemplate.Clone(dodge, this, rigidAgent);
+        activeAttack = attackTemplate.Clone(activeAttack, this, transform);
 
         health = maxHealth;
     }
@@ -144,8 +144,8 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
             OnDodgeCancel(false);
         }
 
-        attack.DestroyClone();
-        dodge.DestroyClone();
+        activeAttack.DestroyClone();
+        //dodge.DestroyClone();
 
         Destroy(gameObject);
     }
@@ -263,6 +263,25 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         }
     }
 
+    public virtual void SwitchActiveAttack(Attack activeAttack)
+    {
+        if (CanSwitchActiveAttack(activeAttack))
+        {
+            isAttacking = false;
+            this.activeAttack = activeAttack;
+        }
+    }
+
+    public virtual bool CanSwitchActiveAttack(Attack activeAttack)
+    {
+        if (this.activeAttack == activeAttack)
+        {
+            return false;
+        }
+
+        return attackState == AttackState.Idle;
+    }
+
     public virtual void TransferToAttackState(AttackState attackState)
     {
         this.attackState = attackState;
@@ -270,13 +289,9 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
 
     public virtual void InitiateAttackState(AttackState attackState)
     {
-        if (CanInitiateAttackState(attackState, attack.AttackId))
+        if (CanInitiateAttackState(attackState, activeAttack.AttackId))
         {
-            if (attackState != AttackState.Idle)
-            {
-                isAttacking = true;
-            }
-            attack.TransferToAttackState(attackState);
+            activeAttack.TransferToAttackState(attackState);
         }
     }
 
@@ -284,7 +299,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         // Specific requirements to the class rather than the attack
 
-        if (attack == null)
+        if (activeAttack == null)
         {
             Debug.LogWarning($"{name} Does Not Have An Attack");
             return false;
@@ -304,6 +319,11 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     public virtual void OnAttackStateStart(AttackState attackState)
     {
         // Actions to do when the state has first started
+        if (attackState != AttackState.Idle)
+        {
+            isAttacking = true;
+        }
+
         if (attackState == AttackState.Aiming || attackState == AttackState.Attacking)
         {
             rigidAgent.SetAllowMovementInput(false);
@@ -354,7 +374,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         // Actions to do when the state is cancelled
         if (!otherHasCancelled)
         {
-            attack.OnAttackStateCancel(attackState, true);
+            activeAttack.OnAttackStateCancel(attackState, true);
         }
 
         this.attackState = AttackState.Idle;

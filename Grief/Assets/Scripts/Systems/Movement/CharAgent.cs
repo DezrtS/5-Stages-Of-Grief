@@ -257,6 +257,21 @@ public class CharAgent : MovementController
         velocity += force;
     }
 
+    public override void Teleport(Vector3 location)
+    {
+        if (isPathfinding)
+        {
+            transform.position = location;
+            navMeshAgent.Warp(location);
+        } 
+        else
+        {
+            characterController.enabled = false;
+            transform.position = location;
+            characterController.enabled = true;
+        }
+    }
+
     public override void InitiatePathfinding(Transform transform, Vector3 destination)
     {
         if (CanInitiatePathfinding(transform.position))

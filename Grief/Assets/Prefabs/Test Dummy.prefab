@@ -143,8 +143,8 @@ MonoBehaviour:
   lostPlayerRecoverTime: 5
   maxHealth: 12
   damageableEntities: 0000000003000000
-  attackTemplate: {fileID: 11400000, guid: a1711bb62f1696844abb441bef105df6, type: 2}
-  dodgeTemplate: {fileID: 11400000, guid: 6b740cb68397ebf4cb7fd863654f2bcc, type: 2}
+  attackTemplate: {fileID: 11400000, guid: 4c7b676a0a13d0f4ab21bc7ea71813ba, type: 2}
+  dodgeTemplate: {fileID: 0}
 --- !u!114 &2518368392112422290
 MonoBehaviour:
   m_ObjectHideFlags: 0

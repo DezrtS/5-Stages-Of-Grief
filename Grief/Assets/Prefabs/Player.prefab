@@ -14,10 +14,9 @@ GameObject:
   - component: {fileID: 6919339057877188737}
   - component: {fileID: 6919339057877188746}
   - component: {fileID: 1771805454121511238}
-  - component: {fileID: 7287209182904060480}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,13 +50,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd64b24da9081d41b6943f146f38516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnimation: {fileID: 0}
   pathfindObject: {fileID: 0}
   panStrength: 5
   panTimeMultiplier: 10
   maxHealth: 10
   damageableEntities: 01000000020000000300000004000000
-  attackTemplate: {fileID: 11400000, guid: f6cea25dee6a23c45947d8009d51682a, type: 2}
-  dodgeTemplate: {fileID: 11400000, guid: 6b740cb68397ebf4cb7fd863654f2bcc, type: 2}
+  basicAttackTemplate: {fileID: 11400000, guid: 27a07e89ace09844ea96408c7ce84be4,
+    type: 2}
+  iceShardAttackTemplate: {fileID: 11400000, guid: d58e85d156ed2e345b094d27a86098fd,
+    type: 2}
+  firePunchAttackTemplate: {fileID: 11400000, guid: eb1a04b170ad6194798d146ed3548e75,
+    type: 2}
+  teleportingKunaiAttackTemplate: {fileID: 11400000, guid: d41c841728287eb44b900b54d828b88a,
+    type: 2}
+  lightBeamAttackTemplate: {fileID: 11400000, guid: 27a07e89ace09844ea96408c7ce84be4,
+    type: 2}
+  dodgeTemplate: {fileID: 11400000, guid: 4bbca63ffbabf48489a376a71ab7f29a, type: 2}
 --- !u!114 &2110388311948640262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,6 +84,10 @@ MonoBehaviour:
   totalDeaccelerationTime: 0.5
   movementInputSmoothMultiplier: 6
   rotationInputSmoothMultiplier: 6
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  groundCheckDistance: 0
 --- !u!136 &6919339057877188737
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -103,7 +116,7 @@ CharacterController:
   m_Height: 2
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0.15
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
@@ -129,22 +142,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!54 &7287209182904060480
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6919339057877188736}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
 --- !u!1 &6919339059106232510
 GameObject:
   m_ObjectHideFlags: 0

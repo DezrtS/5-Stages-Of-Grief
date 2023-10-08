@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+// Add different dodge stages like in attacks
 public abstract class Dodge : ScriptableObject
 {
     [Header("Dodge Variables")]

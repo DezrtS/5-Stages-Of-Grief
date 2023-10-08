@@ -16,20 +16,37 @@ public class CombatManager : Singleton<CombatManager>
     }
 
     // Consider making this method static
-    public void DamageEntity(Attack attack, IAttack attacker, IHealth reciever, Transform attackerTransform, Transform recieverTransform)
+    public bool DamageEntity(Attack attack, IAttack attacker, IHealth reciever, Transform attackerTransform, Transform recieverTransform)
     {
 
         if (attacker.DamageableEntities.Contains(reciever.EntityType))
         {
             ApplyKnockback(attack, attackerTransform, recieverTransform);
 
-            reciever.Damage(attack.Damage);
+            reciever.Damage(attack.GetDamage());
+
+            return true;
         }
+
+        return false;
+    }
+
+    public bool DamageEntity(Attack attack, IAttack attacker, IHealth reciever)
+    {
+
+        if (attacker.DamageableEntities.Contains(reciever.EntityType))
+        {
+            reciever.Damage(attack.GetDamage());
+
+            return true;
+        }
+
+        return false;
     }
 
     public void ApplyKnockback(Attack attack, Transform attacker, Transform reciever)
     {
-        Vector3 knockback = (reciever.position - attacker.position).normalized * attack.KnockbackPower;
+        Vector3 knockback = (reciever.position - attacker.position).normalized * 3; //attack.KnockbackPower;
         knockback = new Vector3(knockback.x, 0, knockback.z);
         if (reciever.TryGetComponent(out MovementController movementController))
         {
