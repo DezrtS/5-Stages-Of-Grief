@@ -2,41 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum AttackEffectType
-{
-    Burning,
-    Frozen,
-    Poisoned,
-    Regenerating,
-    Stunned
-}
-
 public abstract class Attack : ScriptableObject
 {
     [Header("Attack Variables")]
     [SerializeField] private string attackId;
 
     [Space(10)]
-    [SerializeField] private List<AttackEffectType> attackEffects = new List<AttackEffectType>();
+    [SerializeField] private List<StatusEffect> attackStatusEffects = new List<StatusEffect>();
 
-    [Space(10)]
-    [SerializeField] private float attackCooldown;
-    [SerializeField] private float attackCancelCooldown;
-    [SerializeField] private float attackRequiredChargeUpTime;
-
-    [Space(10)]
+    [Space(15)]
+    [Header("Attack Stages")]
+    
+    [Space(5)]
+    [Header("Aiming")]
     [SerializeField] private bool hasAimingStage = true;
-    [SerializeField] private bool hasAttackStage = true;
-
-    [Space(10)]
     [SerializeField] private float maxAimTime = 99;
+    [SerializeField] private float attackRequiredChargeUpTime;
+    [SerializeField] private float attackCancelCooldown;
+    
+    [Space(5)]
+    [Header("Charging Up")]
+    [SerializeField] private float chargingUpTime = 0;
+
+    [Space(5)]
+    [Header("Attacking")]
+    [SerializeField] private bool hasAttackStage = true;
     [SerializeField] private float maxAttackTime = 99;
 
-    [Space(10)]
-    [Header("Specifically for Charging Up Stage")]
-    [SerializeField] private float chargingUpTime = 0;
-    [Header("Specifically for Cooling Down Stage")]
+    [Space(5)]
+    [Header("Cooling Down")]
     [SerializeField] private float coolingDownTime = 0;
+
+    [Space(5)]
+    [Header("Cooldown")]
+    [SerializeField] private float attackCooldown;
 
     private float timeAimingStateStarted = int.MinValue;
     private float timeAttackingStateEnded = int.MinValue;
@@ -62,7 +61,7 @@ public abstract class Attack : ScriptableObject
 
         clone.attackId = attackId;
 
-        clone.attackEffects = attackEffects;
+        clone.attackStatusEffects = attackStatusEffects;
         clone.attackCooldown = attackCooldown;
         clone.attackCancelCooldown = attackCancelCooldown;
         clone.attackRequiredChargeUpTime = attackRequiredChargeUpTime;
@@ -239,7 +238,7 @@ public abstract class Attack : ScriptableObject
         }
     }
 
-    // Currently Unfinished
+    // All Code Below Needs Tweaking
     public virtual bool OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
     {
         return CombatManager.Instance.DamageEntity(this, attacker, entity, parentTransform, entityTransform);
