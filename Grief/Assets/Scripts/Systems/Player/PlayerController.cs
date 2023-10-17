@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
-public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAttack, IDodge, IPathfind
+public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAttack, IDodge, IPathfind, IStatusEffectTarget
 {
     [SerializeField] private PlayerAnimation playerAnimation;
 
@@ -73,6 +73,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     private Vector3 pathfindDestination;
     private NavMeshAgent navMeshAgent;
 
+    private List<StatusEffect> statusEffects = new List<StatusEffect>();
+    private bool isStunned;
+
     // ---------------------------------------------------------------------------------------------------------
     // Interface Implementation Fields
     // ---------------------------------------------------------------------------------------------------------
@@ -89,6 +92,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public bool IsDodging { get { return isDodging; } }
     public bool IsPathfinding { get { return isPathfinding; } }
     public Vector3 PathfindDestination { get { return pathfindDestination; } set { pathfindDestination = value; } }
+    public List<StatusEffect> StatusEffects { get { return statusEffects; } }
+    public bool IsStunned { get { return isStunned; } }
 
     // ---------------------------------------------------------------------------------------------------------
     // Class Events
@@ -122,7 +127,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         firePunchAttack = firePunchAttackTemplate.Clone(firePunchAttack, this, transform);
         teleportingKunaiAttack = teleportingKunaiAttackTemplate.Clone(teleportingKunaiAttack, this, transform);
         lightBeamAttack = lightBeamAttackTemplate.Clone(lightBeamAttack, this, transform);
-
 
         activeAttack = basicAttack;
 
@@ -358,6 +362,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             OnDodgeCancel(false);
         }
+
+        ClearStatusEffects();
 
         CancelPathfinding();
 
@@ -618,6 +624,36 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public void CancelPathfinding()
     {
         charAgent.StopPathfinding();
+    }
+
+    public void AddStatusEffect(StatusEffect statusEffect)
+    {
+        statusEffects.Add(statusEffect);
+    }
+
+    public void RemoveStatusEffect(StatusEffect statusEffect)
+    {
+        statusEffects.Remove(statusEffect);
+    }
+
+    public void ClearStatusEffects()
+    {
+        StatusEffectManager.RemoveAllStatusEffectFromObject(this);
+    }
+
+    public void Stun(bool isStunned)
+    {
+        if (this.isStunned == isStunned)
+        {
+            return;
+        }
+        
+        this.isStunned = isStunned;
+
+        if (isStunned)
+        {
+            // Activate
+        }
     }
 
     // ---------------------------------------------------------------------------------------------------------

@@ -241,6 +241,11 @@ public abstract class Attack : ScriptableObject
     // All Code Below Needs Tweaking
     public virtual bool OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
     {
+        if (attackStatusEffects.Count > 0 && entityTransform.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
+        {
+            StatusEffectManager.AddStatusEffectToObject(attackStatusEffects, statusEffectTarget, entityTransform);
+        }
+
         return CombatManager.Instance.DamageEntity(this, attacker, entity, parentTransform, entityTransform);
         //CombatManager.Instance.ApplyKnockback(this, parentTransform, entityTransform);
     }

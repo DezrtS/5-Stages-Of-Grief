@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Test Dummy Attack
   m_EditorClassIdentifier: 
   attackId: test_dummy_attack
-  attackEffects: 
-  attackCooldown: 1
-  attackCancelCooldown: 0
-  attackRequiredChargeUpTime: 0
+  attackStatusEffects:
+  - {fileID: 11400000, guid: 72bf344e4b56f0c43815edf95b49e637, type: 2}
   hasAimingStage: 0
-  hasAttackStage: 1
   maxAimTime: 99
-  maxAttackTime: 0.5
+  attackRequiredChargeUpTime: 0
+  attackCancelCooldown: 0
   chargingUpTime: 0.5
+  hasAttackStage: 1
+  maxAttackTime: 0.5
   coolingDownTime: 0
+  attackCooldown: 1
   damage: 3
   knockbackPower: 12
   attackTriggerScale: 4
