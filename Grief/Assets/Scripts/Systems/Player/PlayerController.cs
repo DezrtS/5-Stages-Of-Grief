@@ -34,6 +34,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     private bool useMouseForRotation;
 
+
     // ---------------------------------------------------------------------------------------------------------
     // Interface Related Variables
     // ---------------------------------------------------------------------------------------------------------
@@ -330,6 +331,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         health = Mathf.Max(health - damage, 0);
 
+        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerHurt, transform.position);
+
         OnPlayerHealthEvent(health);
 
         if (health == 0)
@@ -373,8 +376,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         //EnemySpawning.Instance.KillAllEnemies();
         //EnemySpawning.Instance.ResetSpawner();
-
-        AudioManager.Instance.PlaySound("player_die1");
     }
 
     public Vector3 GetMovementInput()
@@ -465,6 +466,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
+
+            AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerSwing, transform.position);
             //playerAnimation.Swing();
         }
         else if (attackState == AttackState.Attacking)

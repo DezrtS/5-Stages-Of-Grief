@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,6 +41,8 @@ public class CharAgent : MovementController
 
     private float gravityVelocity = 0;
 
+    private EventInstance footsteps;
+
     // ---------------------------------------------------------------------------------------------------------
     // Pathfinding Variables
     // ---------------------------------------------------------------------------------------------------------
@@ -66,6 +69,9 @@ public class CharAgent : MovementController
             navMeshAgent.updatePosition = false;
             navMeshAgent.enabled = false;
         }
+
+        footsteps = AudioManager.Instance.CreateInstance(FMODEventsManager.Instance.playerFootsteps);
+        FMODUnity.RuntimeManager.AttachInstanceToGameObject(footsteps, transform);
     }
 
     private void FixedUpdate()
@@ -81,6 +87,8 @@ public class CharAgent : MovementController
         {
             UpdatePathfinding();
         }
+
+        UpdateSound();
     }
 
     // ---------------------------------------------------------------------------------------------------------
@@ -353,5 +361,23 @@ public class CharAgent : MovementController
 
         SetAllowMovementInput(true);
         SetAllowRotationInput(true);
+    }
+
+    private void UpdateSound()
+    {
+        if (velocity.magnitude > 0.75f)
+        {
+            PLAYBACK_STATE playbackState;
+            footsteps.getPlaybackState(out playbackState);
+            if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
+            {
+                footsteps.start();
+                FMODUnity.RuntimeManager.AttachInstanceToGameObject(footsteps, transform);
+            }
+        } 
+        else
+        {
+            footsteps.stop(STOP_MODE.ALLOWFADEOUT);
+        }
     }
 }

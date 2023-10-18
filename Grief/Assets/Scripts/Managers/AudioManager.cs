@@ -1,134 +1,77 @@
-using System;
+using FMOD.Studio;
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-
-public enum AudioType
-{
-    Environment,
-    Misc
-}
 
 public class AudioManager : Singleton<AudioManager>
 {
-    [SerializeField] private List<AudioSample> audioSamples = new List<AudioSample>();
-    
-    private Dictionary<string, AudioClip> idAudioClipPairs = new Dictionary<string, AudioClip>();
+    private List<EventInstance> eventInstances;
+    private List<StudioEventEmitter> eventEmitters;
 
-    private static List<AudioSource> activeAudioSources;
-
-    private AudioSource musicAudioSource;
-
-    private AudioSource audioSource;
+    private EventInstance ambienceEventInstance;
 
     protected override void Awake()
     {
         base.Awake();
 
-        musicAudioSource = GetComponent<AudioSource>();
-        audioSource = transform.AddComponent<AudioSource>();
+        eventInstances = new List<EventInstance>();
+        eventEmitters = new List<StudioEventEmitter>();
+    }
 
-        foreach (AudioSample audioSample in audioSamples)
+    private void Start()
+    {
+        InitializeAmbience(FMODEventsManager.Instance.ambience);
+    }
+
+    private void InitializeAmbience(EventReference ambienceEventReference)
+    {
+        ambienceEventInstance = CreateInstance(ambienceEventReference);
+        ambienceEventInstance.start();
+    }
+
+    public void SetAmbienceParameter(string parameterName, float parameterValue)
+    {
+        ambienceEventInstance.setParameterByName(parameterName, parameterValue);
+    }
+
+    public void PlayOneShot(EventReference sound, Vector3 worldPosition)
+    {
+        RuntimeManager.PlayOneShot(sound, worldPosition);
+    }
+
+    public EventInstance CreateInstance(EventReference eventReference)
+    {
+        EventInstance eventInstance = RuntimeManager.CreateInstance(eventReference);
+        eventInstances.Add(eventInstance);
+        return eventInstance;
+    }
+
+    public StudioEventEmitter InitializeEventEmitter(EventReference eventReference, GameObject emitterGameObject)
+    {
+        StudioEventEmitter emitter = emitterGameObject.GetComponent<StudioEventEmitter>();
+        emitter.EventReference = eventReference;
+        eventEmitters.Add(emitter);
+        return emitter;
+    }
+
+    private void CleanUp()
+    {
+        foreach (EventInstance eventInstance in eventInstances)
         {
-            idAudioClipPairs.Add(audioSample.AudioId, audioSample.AudioClip);
+            eventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            eventInstance.release();
+        }
+
+        foreach (StudioEventEmitter emitter in eventEmitters)
+        {
+            emitter.Stop();
         }
     }
 
-    public void PlaySound(string id)
+    private void OnDestroy()
     {
-        if (idAudioClipPairs.TryGetValue(id, out AudioClip clip))
-        {
-            audioSource.PlayOneShot(clip);
-        }
+        CleanUp();
     }
 
-    public void PlayAudioAt(string id, Vector3 position)
-    {
-
-    }
-
-    public void PlayAudioOn(string id, Transform transform)
-    {
-
-    }
-
-    public void PlayMusic(string id)
-    {
-        StopMusic();
-
-        AudioClip clip = idAudioClipPairs[id];
-
-        if (clip == null)
-        {
-            Debug.LogError($"Music of Id [{id}] does not exist");
-            return;
-        }
-
-        musicAudioSource.clip = clip;
-
-        musicAudioSource.Play();
-    }
-
-    public void PauseAllSounds(bool pause)
-    {
-        if (pause)
-        {
-            foreach (AudioSource audioSource in activeAudioSources)
-            {
-                if (audioSource.isPlaying)
-                {
-                    audioSource.Pause();
-                }
-            }
-        } 
-        else
-        {
-            foreach (AudioSource audioSource in activeAudioSources)
-            {
-                if (!audioSource.isPlaying)
-                {
-                    audioSource.UnPause();
-                }
-            }
-        }
-    }
-
-    public void PauseMusic(bool pause)
-    {
-        if (pause && musicAudioSource.isPlaying)
-        {
-            musicAudioSource.Pause();
-        } 
-        else if (!musicAudioSource.isPlaying)
-        {
-            musicAudioSource.UnPause();
-        }
-    }
-
-    public void StopAllSounds()
-    {
-        foreach (AudioSource audioSource in activeAudioSources)
-        {
-            audioSource.Stop();
-            Destroy(audioSource);
-        }
-    }
-
-    public void StopMusic()
-    {
-        musicAudioSource.Stop();
-    }
-}
-
-[Serializable]
-public class AudioSample
-{
-    //[SerializeField] private AudioType audioType;
-    [SerializeField] private string audioId;
-    [SerializeField] private AudioClip audioClip;
-
-    //public AudioType AudioType { get { return audioType; } }
-    public string AudioId { get { return audioId; } }
-    public AudioClip AudioClip { get { return audioClip; } }
 }

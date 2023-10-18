@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3822813662450610712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3822813662450610718}
+  - component: {fileID: 3822813662450610719}
+  m_Layer: 0
+  m_Name: FMODEventsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3822813662450610718
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3822813662450610712}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3822813662450610719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3822813662450610712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4061028c55eee644e8b24cb488852942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <ambience>k__BackingField:
+    Guid:
+      Data1: 1155922249
+      Data2: 1225195686
+      Data3: -127649608
+      Data4: 718933337
+    Path: event:/Ambience/Wind
+  <playerHurt>k__BackingField:
+    Guid:
+      Data1: 2130559376
+      Data2: 1229179963
+      Data3: 246479765
+      Data4: 2084110762
+    Path: event:/SFX/Player/PlayerHurt
+  <playerFootsteps>k__BackingField:
+    Guid:
+      Data1: 395596340
+      Data2: 1313608852
+      Data3: -958807653
+      Data4: 1197719863
+    Path: event:/SFX/Player/PlayerFootsteps
+  <playerSwing>k__BackingField:
+    Guid:
+      Data1: -2074651602
+      Data2: 1316148225
+      Data3: -305748817
+      Data4: 1512994757
+    Path: event:/SFX/Player/PlayerSwing

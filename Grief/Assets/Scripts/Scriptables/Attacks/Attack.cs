@@ -260,7 +260,7 @@ public abstract class Attack : ScriptableObject
     {
         if (audioId != "")
         {
-            AudioManager.Instance.PlaySound(audioId);
+
         }
     }
 
