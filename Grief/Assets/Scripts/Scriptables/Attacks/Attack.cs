@@ -44,6 +44,7 @@ public abstract class Attack : ScriptableObject
 
     protected IAttack attacker;
     protected Transform parentTransform;
+    protected MovementController movementController;
     private IEnumerator attackStateCoroutine;
 
     private AttackState attackState = AttackState.Idle;
@@ -301,7 +302,11 @@ public abstract class Attack : ScriptableObject
     }
 }
 
-public class AttackEffect
+public class StateMovement
 {
+    private AttackState state;
+    private StateMovementData movementData;
 
+    public AttackState State { get { return state; } }
+    public StateMovementData MovementData { get { return movementData; } }
 }

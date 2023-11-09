@@ -3,10 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/State Movement Data")]
 public class StateMovementData : ScriptableObject
 {
-    [Header("Velocity Variables")]
-    public float defaultVelocity = 0;
-    public float activeStartVelocity;
-    public float activeEndVelocity;
+    [Header("Speed Variables")]
+    public float defaultSpeed = 0;
+    public float activeStartSpeed;
+    public float activeEndSpeed;
 
     [Header("Direction Variables")]
     public Vector3 defaultDirection = Vector3.forward;
@@ -22,4 +22,23 @@ public class StateMovementData : ScriptableObject
     [Header("Acceleration Variables")]
     public bool useAcceleration;
     public float totalAccelerationTime;
+
+    public Vector3 GetStateCurrentVelocity(float timeSinceStateStart, float stateTimeLength)
+    {
+        if (stateTimeLength == 0)
+        {
+            return defaultDirection * defaultSpeed;
+        }
+
+        float stateCompletionPercentage = timeSinceStateStart / stateTimeLength;
+
+        float speed = defaultSpeed;
+
+        if (true)
+        {
+            return Vector3.zero;
+        }
+
+
+    }
 }
