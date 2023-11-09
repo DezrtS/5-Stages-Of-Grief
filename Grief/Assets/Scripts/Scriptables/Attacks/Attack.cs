@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public abstract class Attack : ScriptableObject
 
     [Space(15)]
     [Header("Attack Stages")]
+    [SerializeField] private List<StateMovement> stateMovements = new List<StateMovement>();
     
     [Space(5)]
     [Header("Aiming")]
@@ -44,6 +46,8 @@ public abstract class Attack : ScriptableObject
 
     protected IAttack attacker;
     protected Transform parentTransform;
+
+    // Put in proper place
     protected MovementController movementController;
     private IEnumerator attackStateCoroutine;
 
@@ -77,6 +81,10 @@ public abstract class Attack : ScriptableObject
         clone.parentTransform = parentTransform;
 
         clone.isClone = true;
+
+        // Reorganize in proper places
+        clone.stateMovements = stateMovements;
+        clone.parentTransform.TryGetComponent(out clone.movementController);
 
         return clone;
     }
@@ -232,9 +240,51 @@ public abstract class Attack : ScriptableObject
     {
         float timeStateStarted = Time.timeSinceLevelLoad;
 
+        bool useMovementState = false;
+        StateMovementData stateMovementData = null;
+        float stateTimeLength = 0;
+
+        if (movementController != null)
+        {
+            foreach (StateMovement stateMovement in stateMovements)
+            {
+                if (stateMovement.State == attackState)
+                {
+                    useMovementState = true;
+                    stateMovementData = stateMovement.MovementData;
+
+                    switch (attackState)
+                    {
+                        case AttackState.Aiming:
+                            stateTimeLength = maxAimTime;
+                            break;
+                        case AttackState.ChargingUp:
+                            stateTimeLength = chargingUpTime;
+                            break;
+                        case AttackState.Attacking:
+                            stateTimeLength = maxAttackTime;
+                            break;
+                        case AttackState.CoolingDown:
+                            stateTimeLength = coolingDownTime;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                }
+            }
+        }
+
         while (true)
         {
             yield return new WaitForFixedUpdate();
+
+            if (useMovementState)
+            {
+                movementController.SetVelocity(stateMovementData.GetStateCurrentVelocity(Time.timeSinceLevelLoad - timeStateStarted, stateTimeLength, parentTransform, movementController.GetVelocity()));
+            }
+
             OnAttackState(attackState, Time.timeSinceLevelLoad - timeStateStarted);
         }
     }
@@ -302,10 +352,11 @@ public abstract class Attack : ScriptableObject
     }
 }
 
+[Serializable]
 public class StateMovement
 {
-    private AttackState state;
-    private StateMovementData movementData;
+    [SerializeField] private AttackState state;
+    [SerializeField] private StateMovementData movementData;
 
     public AttackState State { get { return state; } }
     public StateMovementData MovementData { get { return movementData; } }

@@ -1760,6 +1760,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3431233386260837471, guid: ca1545ab85d4ae347b825935a6de4994,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3431233386260837471, guid: ca1545ab85d4ae347b825935a6de4994,
+        type: 3}
       propertyPath: patrolSpots.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -1841,7 +1846,7 @@ PrefabInstance:
     - target: {fileID: 6919339057877188736, guid: ca1545ab85d4ae347b825935a6de4994,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6919339057877188740, guid: ca1545ab85d4ae347b825935a6de4994,
         type: 3}
@@ -3347,7 +3352,7 @@ MonoBehaviour:
   panTimeMultiplier: 10
   maxHealth: 10
   damageableEntities: 01000000020000000300000004000000
-  basicAttackTemplate: {fileID: 11400000, guid: 27a07e89ace09844ea96408c7ce84be4,
+  basicAttackTemplate: {fileID: 11400000, guid: 3aefee0bf172bb44a99d7024f22d2a22,
     type: 2}
   iceShardAttackTemplate: {fileID: 11400000, guid: d58e85d156ed2e345b094d27a86098fd,
     type: 2}
