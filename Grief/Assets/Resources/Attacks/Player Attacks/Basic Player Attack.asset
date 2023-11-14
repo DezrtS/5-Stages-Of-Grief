@@ -13,16 +13,19 @@ MonoBehaviour:
   m_Name: Basic Player Attack
   m_EditorClassIdentifier: 
   attackId: basic_player_attack
-  attackEffects: 
-  attackCooldown: 0.2
-  attackCancelCooldown: 0
-  attackRequiredChargeUpTime: 0
+  attackStatusEffects: []
+  stateMovements:
+  - state: 2
+    movementData: {fileID: 11400000, guid: 2240e59b8d5a482478380b147662bbfd, type: 2}
   hasAimingStage: 1
-  hasAttackStage: 1
   maxAimTime: 99
-  maxAttackTime: 0.2
+  attackRequiredChargeUpTime: 0
+  attackCancelCooldown: 0
   chargingUpTime: 0.2
+  hasAttackStage: 1
+  maxAttackTime: 0.2
   coolingDownTime: 0
+  attackCooldown: 0.2
   damage: 3
   knockbackPower: 12
   attackTriggerScale: 3
