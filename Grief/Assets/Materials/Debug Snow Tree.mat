@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Debug Snow
+  m_Name: Debug Snow Tree
   m_Shader: {fileID: -6465566751694194690, guid: c75c62f899b2ed7408fc5a8def6bc8bd,
     type: 3}
   m_ValidKeywords: []
@@ -28,7 +28,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2001
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -104,7 +104,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - SnowNormalAdjuster: 0
+    - SnowNormalAdjuster: 1
     - _AlphaClip: 0
     - _BaseNormal_Strength: 0
     - _Blend: 0
@@ -125,11 +125,11 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
-    - _QueueOffset: 0
+    - _QueueOffset: 1
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
-    - _SnowAmount: 0.6
+    - _SnowAmount: 1
     - _SnowBlend: 0.05
     - _SnowColorNoise_Size: 250
     - _Snow_Color_Noise_Strength: 0.5
@@ -141,7 +141,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseOffset: {r: 0, g: 0, b: 0, a: 0}
-    - _BaseTiling: {r: 10, g: 10, b: 0, a: 0}
+    - _BaseTiling: {r: 1, g: 1, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SnowColor: {r: 1, g: 1, b: 1, a: 1}
