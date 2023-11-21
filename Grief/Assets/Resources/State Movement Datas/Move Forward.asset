@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Move Forward
   m_EditorClassIdentifier: 
   defaultSpeed: 0
-  activeSpeed: 10
+  activeSpeed: 7
   defaultDirection: {x: 0, y: 0, z: 1}
   activeDirection: {x: 0, y: 0, z: 1}
-  activationStart: 0.1
+  activationStart: 0
   activationEnd: 1
   accelerateToDefaultSpeed: 0
   lengthOfDefaultAcceleration: 1

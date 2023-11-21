@@ -13,12 +13,17 @@ public class CharAgent : MovementController
     // ---------------------------------------------------------------------------------------------------------
 
     [Header("Movement")]
+    [Space(5)]
     [SerializeField] private float maxSpeed = 15;
     [Range(0, 100)]
     [SerializeField] private float totalAccelerationTime = 0.25f;
     [Range(0, 100)]
     [SerializeField] private float totalDeaccelerationTime = 0.5f;
+
+    [Space(10)]
+    [SerializeField] private bool useMovementInputSmooth = true;
     [SerializeField] private float movementInputSmoothMultiplier = 6;
+    [SerializeField] private bool useRotationInputSmooth = true;
     [SerializeField] private float rotationInputSmoothMultiplier = 6;
 
     [Space(10)]
@@ -107,10 +112,19 @@ public class CharAgent : MovementController
             }
         }
 
-        Vector2 smoothedMovementInput = Vector2.Lerp(previousMovementInput, movementInput, Time.deltaTime * movementInputSmoothMultiplier);
+
+        Vector2 smoothedMovementInput = movementInput;
+        if (useMovementInputSmooth)
+        {
+            smoothedMovementInput = Vector2.Lerp(previousMovementInput, movementInput, Time.deltaTime * movementInputSmoothMultiplier);
+        }
         previousMovementInput = smoothedMovementInput;
 
-        Vector3 smoothedRotationInput = Vector3.Lerp(previousRotationInput, rotationInput, Time.deltaTime * rotationInputSmoothMultiplier);
+        Vector3 smoothedRotationInput = rotationInput;
+        if (useRotationInputSmooth)
+        {
+            smoothedRotationInput = Vector3.Lerp(previousRotationInput, rotationInput, Time.deltaTime * rotationInputSmoothMultiplier);
+        }
         previousRotationInput = smoothedRotationInput;
 
         Vector3 targetRotation = MovementAxis * smoothedRotationInput.normalized;
@@ -121,32 +135,24 @@ public class CharAgent : MovementController
         Vector3 velocityDifference = targetVelocity - velocity;
         Vector3 differenceDirection = velocityDifference.normalized;
 
-        if (velocity.magnitude < targetSpeed)
+        float accelerationIncrement;
+
+        if (velocity.magnitude <= targetSpeed)
         {
-            float accelerationIncrement = GetAcceleration(maxSpeed, totalAccelerationTime) * Time.deltaTime;
-
-            if (velocityDifference.magnitude < accelerationIncrement)
-            {
-                velocity = targetVelocity;
-            }
-            else
-            {
-                velocity += differenceDirection * accelerationIncrement;
-            }
-
+            accelerationIncrement = GetAcceleration(maxSpeed, totalAccelerationTime) * Time.deltaTime;
+        } 
+        else
+        {
+            accelerationIncrement = GetAcceleration(maxSpeed, totalDeaccelerationTime) * Time.deltaTime;
         }
-        else if (velocity.magnitude > targetSpeed)
-        {
-            float deaccelerationIncrement = GetAcceleration(maxSpeed, totalDeaccelerationTime) * Time.deltaTime;
 
-            if (velocityDifference.magnitude < deaccelerationIncrement)
-            {
-                velocity = targetVelocity;
-            }
-            else
-            {
-                velocity += differenceDirection * deaccelerationIncrement;
-            }
+        if (velocityDifference.magnitude < accelerationIncrement)
+        {
+            velocity = targetVelocity;
+        }
+        else
+        {
+            velocity += differenceDirection * accelerationIncrement;
         }
 
         characterController.Move(velocity * Time.deltaTime);
@@ -197,6 +203,11 @@ public class CharAgent : MovementController
 
     public float GetAcceleration(float maxSpeed, float timeToReachFullSpeed)
     {
+        if (timeToReachFullSpeed == 0)
+        {
+            return maxSpeed;
+        }
+
         return (maxSpeed) / timeToReachFullSpeed;
     }
 

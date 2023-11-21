@@ -139,7 +139,7 @@ public class RigidAgent : MovementController
             rig.isKinematic = true;
 
             SetAllowMovementInput(false);
-            SetAllowRotationInput(false);
+            //SetAllowRotationInput(false);
         }
     }
 

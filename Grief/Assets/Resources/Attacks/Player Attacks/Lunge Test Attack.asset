@@ -17,14 +17,14 @@ MonoBehaviour:
   stateMovements:
   - state: 2
     movementData: {fileID: 11400000, guid: 0076fe7f7c573b04784b8e47d1028c74, type: 2}
-  hasAimingStage: 1
+  hasAimingStage: 0
   maxAimTime: 99
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
-  chargingUpTime: 1
+  chargingUpTime: 0.4
   hasAttackStage: 1
   maxAttackTime: 0.2
-  coolingDownTime: 0
+  coolingDownTime: 1
   attackCooldown: 0.2
   damage: 3
   knockbackPower: 12
