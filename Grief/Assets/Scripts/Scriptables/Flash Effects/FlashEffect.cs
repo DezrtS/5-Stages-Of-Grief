@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class FlashEffect : MonoBehaviour
@@ -81,16 +82,11 @@ public class FlashEffect : MonoBehaviour
 
     public void Deactivate()
     {
-        if (flashStarted)
-        {
-            objectRenderer.materials = originalMaterials;
-        }
+        Material[] materials = objectRenderer.materials;
+        int materialToRemove = materials.Length - 1;
+        ArrayUtility.RemoveAt(ref materials, materialToRemove);
+        objectRenderer.materials = materials;
 
         Destroy(this);
-    }
-
-    void OnDestroy()
-    {
-        Destroy(flashMaterial);
     }
 }

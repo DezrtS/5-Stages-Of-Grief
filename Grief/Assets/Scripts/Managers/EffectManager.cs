@@ -13,7 +13,13 @@ public class EffectManager : Singleton<EffectManager>
     {
         if (Input.GetKeyDown(KeyCode.Y))
         {
-            flashObject.AddComponent<FlashEffect>().Activate(flashEffectData);
+            if (TryGetComponent(out FlashEffect oldFlash))
+            {
+                oldFlash.Deactivate();
+            }
+
+            FlashEffect newFlash = flashObject.AddComponent<FlashEffect>();
+            newFlash.Activate(flashEffectData);
         }
     }
 }

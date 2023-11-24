@@ -135,8 +135,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - FresnalColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
-    - IceColor: {r: 1, g: 1, b: 1, a: 1}
+    - FresnalColor: {r: 1, g: 1, b: 1, a: 1}
+    - IceColor: {r: 2.828427, g: 2.828427, b: 2.828427, a: 1}
     - IceTiling: {r: 2.5, g: 2.5, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
