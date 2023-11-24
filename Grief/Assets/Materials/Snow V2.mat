@@ -53,8 +53,9 @@ Material:
     - SnowNoiseSmooth: 0.04
     - SnowNoiseTiling: 0.01
     - SnowNormalStrength: 0
-    - SnowNormalTiling: 0
+    - SnowNormalTiling: 1
     - SnowSmoothness: 0
+    - UseUVs: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:

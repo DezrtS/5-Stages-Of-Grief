@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-1260707606838993494
+--- !u!114 &-5508559894789075280
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Snow Ground
-  m_Shader: {fileID: -6465566751694194690, guid: 4f31da1f83f3d6d48b4faa3f77c2661f,
+  m_Name: Sword Slash
+  m_Shader: {fileID: -6465566751694194690, guid: 826f215432734ed4c9cfe5c829d75675,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -34,16 +34,12 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - BaseTexture:
-        m_Texture: {fileID: 0}
+    - SlashTexture:
+        m_Texture: {fileID: 2800000, guid: fce8da7eed7358c4685712d179e2fd38, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - SnowNoise:
-        m_Texture: {fileID: 2800000, guid: 3059f5a0be89f9e4fb670f14acf34622, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - SnowNormal:
-        m_Texture: {fileID: 0}
+    - SlashTextureMask:
+        m_Texture: {fileID: 2800000, guid: 6834dda6e7f7eef4ab8bb9a4b8dc65b0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -86,6 +82,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Slash_Texture:
+        m_Texture: {fileID: 2800000, guid: fce8da7eed7358c4685712d179e2fd38, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Slash_Texture_Mask:
+        m_Texture: {fileID: 2800000, guid: 6834dda6e7f7eef4ab8bb9a4b8dc65b0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -104,15 +108,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - BaseSmoothness: 0.5
-    - MaxSnowAngle: 0.5
-    - SnowIntensity: 0.8
-    - SnowNoiseSmooth: 0
-    - SnowNoiseTiling: 1
-    - SnowNormalStrength: 0
-    - SnowNormalTiling: 1
-    - SnowSmoothness: 0
-    - UseUVs: 1
+    - VoronoiPower: 1
+    - VoronoiScale: 5
+    - VoronoiSpeed: 2
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -141,11 +139,10 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - SnowColor: {r: 1, g: 1, b: 1, a: 1}
-    - SnowDirection: {r: 0, g: 1, b: 0, a: 0}
+    - SlashColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Slash_Color: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
