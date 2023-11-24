@@ -97,6 +97,11 @@ public class RigidAgent : MovementController
     public override void SetAllowRotationInput(bool isAllowed)
     {
         allowRotationInput = isAllowed;
+
+        if (navMeshAgent != null)
+        {
+            navMeshAgent.updateRotation = allowRotationInput;
+        }
     }
 
     public override void ApplyForce(Vector3 force)
@@ -134,7 +139,7 @@ public class RigidAgent : MovementController
             rig.isKinematic = true;
 
             SetAllowMovementInput(false);
-            SetAllowRotationInput(false);
+            //SetAllowRotationInput(false);
         }
     }
 

@@ -574,6 +574,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     public virtual void Aim()
     {
         Vector3 targetDirection = GetVectorToPlayer();
+        targetDirection.y = 0;
 
         rigidAgent.SetRotation(Quaternion.Inverse(MovementController.MovementAxis) * targetDirection);
     }

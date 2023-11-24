@@ -10,26 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 47472c27e9766ab429096ba3eaf354d9, type: 3}
-  m_Name: Test Dummy Attack
+  m_Name: Charge Test Attack
   m_EditorClassIdentifier: 
-  attackId: test_dummy_attack
+  attackId: basic_player_attack
   attackStatusEffects: []
   stateMovements:
-  - state: 3
-    movementData: {fileID: 11400000, guid: 2240e59b8d5a482478380b147662bbfd, type: 2}
-  hasAimingStage: 0
-  maxAimTime: 99
+  - state: 1
+    movementData: {fileID: 11400000, guid: 6361b49771be5744680e7013d50baa15, type: 2}
+  hasAimingStage: 1
+  maxAimTime: 5
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
-  chargingUpTime: 0.5
-  hasAttackStage: 1
-  maxAttackTime: 0.5
-  coolingDownTime: 0
-  attackCooldown: 1
+  chargingUpTime: 1
+  hasAttackStage: 0
+  maxAttackTime: 0
+  coolingDownTime: 0.2
+  attackCooldown: 0.2
   damage: 3
   knockbackPower: 12
-  attackTriggerScale: 4
-  attackTriggerSpawnDistance: 2.5
+  attackTriggerScale: 3
+  attackTriggerSpawnDistance: 2
   playAudioIdOnAim: 
   playAudioIdOnAttack: player_attack1
   playAudioIdOnCooldown: 

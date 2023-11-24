@@ -6,6 +6,9 @@ public abstract class MovementController : MonoBehaviour
 {
     public static Quaternion MovementAxis = Quaternion.Euler(90, 0, -45);
 
+    protected bool isDisabled;
+    public bool IsDisabled { get { return isDisabled; } set { isDisabled = value; } }
+
     public abstract Vector3 GetVelocity();
     public abstract void SetVelocity(Vector3 velocity);
     public abstract Vector3 GetRotation();

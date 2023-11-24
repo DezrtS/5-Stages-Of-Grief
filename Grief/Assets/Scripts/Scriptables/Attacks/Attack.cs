@@ -1,15 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public enum AttackEffectType
-{
-    Burning,
-    Frozen,
-    Poisoned,
-    Regenerating,
-    Stunned
-}
 
 public abstract class Attack : ScriptableObject
 {
@@ -17,26 +9,35 @@ public abstract class Attack : ScriptableObject
     [SerializeField] private string attackId;
 
     [Space(10)]
-    [SerializeField] private List<AttackEffectType> attackEffects = new List<AttackEffectType>();
+    [SerializeField] private List<StatusEffect> attackStatusEffects = new List<StatusEffect>();
 
-    [Space(10)]
-    [SerializeField] private float attackCooldown;
-    [SerializeField] private float attackCancelCooldown;
-    [SerializeField] private float attackRequiredChargeUpTime;
-
-    [Space(10)]
+    [Space(15)]
+    [Header("Attack Stages")]
+    [SerializeField] private List<StateMovement> stateMovements = new List<StateMovement>();
+    
+    [Space(5)]
+    [Header("Aiming")]
     [SerializeField] private bool hasAimingStage = true;
-    [SerializeField] private bool hasAttackStage = true;
-
-    [Space(10)]
     [SerializeField] private float maxAimTime = 99;
+    [SerializeField] private float attackRequiredChargeUpTime;
+    [SerializeField] private float attackCancelCooldown;
+    
+    [Space(5)]
+    [Header("Charging Up")]
+    [SerializeField] private float chargingUpTime = 0;
+
+    [Space(5)]
+    [Header("Attacking")]
+    [SerializeField] private bool hasAttackStage = true;
     [SerializeField] private float maxAttackTime = 99;
 
-    [Space(10)]
-    [Header("Specifically for Charging Up Stage")]
-    [SerializeField] private float chargingUpTime = 0;
-    [Header("Specifically for Cooling Down Stage")]
+    [Space(5)]
+    [Header("Cooling Down")]
     [SerializeField] private float coolingDownTime = 0;
+
+    [Space(5)]
+    [Header("Cooldown")]
+    [SerializeField] private float attackCooldown;
 
     private float timeAimingStateStarted = int.MinValue;
     private float timeAttackingStateEnded = int.MinValue;
@@ -45,6 +46,9 @@ public abstract class Attack : ScriptableObject
 
     protected IAttack attacker;
     protected Transform parentTransform;
+
+    // Put in proper place
+    protected MovementController movementController;
     private IEnumerator attackStateCoroutine;
 
     private AttackState attackState = AttackState.Idle;
@@ -62,7 +66,7 @@ public abstract class Attack : ScriptableObject
 
         clone.attackId = attackId;
 
-        clone.attackEffects = attackEffects;
+        clone.attackStatusEffects = attackStatusEffects;
         clone.attackCooldown = attackCooldown;
         clone.attackCancelCooldown = attackCancelCooldown;
         clone.attackRequiredChargeUpTime = attackRequiredChargeUpTime;
@@ -77,6 +81,10 @@ public abstract class Attack : ScriptableObject
         clone.parentTransform = parentTransform;
 
         clone.isClone = true;
+
+        // Reorganize in proper places
+        clone.stateMovements = stateMovements;
+        clone.parentTransform.TryGetComponent(out clone.movementController);
 
         return clone;
     }
@@ -232,16 +240,63 @@ public abstract class Attack : ScriptableObject
     {
         float timeStateStarted = Time.timeSinceLevelLoad;
 
+        bool useMovementState = false;
+        StateMovementData stateMovementData = null;
+        float stateTimeLength = 0;
+
+        if (movementController != null)
+        {
+            foreach (StateMovement stateMovement in stateMovements)
+            {
+                if (stateMovement.State == attackState)
+                {
+                    useMovementState = true;
+                    stateMovementData = stateMovement.MovementData;
+
+                    switch (attackState)
+                    {
+                        case AttackState.Aiming:
+                            stateTimeLength = maxAimTime;
+                            break;
+                        case AttackState.ChargingUp:
+                            stateTimeLength = chargingUpTime;
+                            break;
+                        case AttackState.Attacking:
+                            stateTimeLength = maxAttackTime;
+                            break;
+                        case AttackState.CoolingDown:
+                            stateTimeLength = coolingDownTime;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                }
+            }
+        }
+
         while (true)
         {
             yield return new WaitForFixedUpdate();
+
+            if (useMovementState)
+            {
+                movementController.SetVelocity(stateMovementData.GetStateCurrentVelocity(Time.timeSinceLevelLoad - timeStateStarted, stateTimeLength, parentTransform, movementController.GetVelocity()));
+            }
+
             OnAttackState(attackState, Time.timeSinceLevelLoad - timeStateStarted);
         }
     }
 
-    // Currently Unfinished
+    // All Code Below Needs Tweaking
     public virtual bool OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
     {
+        if (attackStatusEffects.Count > 0 && entityTransform.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
+        {
+            StatusEffectManager.AddStatusEffectToObject(attackStatusEffects, statusEffectTarget, entityTransform);
+        }
+
         return CombatManager.Instance.DamageEntity(this, attacker, entity, parentTransform, entityTransform);
         //CombatManager.Instance.ApplyKnockback(this, parentTransform, entityTransform);
     }
@@ -297,7 +352,12 @@ public abstract class Attack : ScriptableObject
     }
 }
 
-public class AttackEffect
+[Serializable]
+public class StateMovement
 {
+    [SerializeField] private AttackState state;
+    [SerializeField] private StateMovementData movementData;
 
+    public AttackState State { get { return state; } }
+    public StateMovementData MovementData { get { return movementData; } }
 }

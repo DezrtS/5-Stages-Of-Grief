@@ -2,14 +2,14 @@ using UnityEngine;
 
 public abstract class PhysicalAttack : Attack
 {
-    [Space(10)]
+    [Space(15)]
     [Header("Physical Attack Variables")]
     [SerializeField] private float damage = 3;
     [SerializeField] private float knockbackPower;
     [SerializeField] protected float attackTriggerScale = 3;
     [SerializeField] protected float attackTriggerSpawnDistance = 2;
 
-    [Space(10)]
+    [Space(15)]
     [Header("Audio Variables")]
     [SerializeField] protected string playAudioIdOnAim;
     [SerializeField] protected string playAudioIdOnAttack;
