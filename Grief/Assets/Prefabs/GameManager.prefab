@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flashObject: {fileID: 0}
-  flashEffectData: {fileID: 0}
+  flashEffectData: {fileID: 11400000, guid: 4206cd636fddf86459d55cf9eaf09486, type: 2}
   flashMaterial: {fileID: 2100000, guid: a87de172ec36f964db0379ebe53357c3, type: 2}
 --- !u!1 &6408682500121640656
 GameObject:

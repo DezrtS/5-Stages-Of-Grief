@@ -8,6 +8,11 @@ public class CameraManager : Singleton<CameraManager>
     private CinemachineVirtualCamera cinemachineCamera;
     private CinemachineTransposer cinemachineTransposer;
 
+    private CinemachineBasicMultiChannelPerlin channelPerlin;
+
+    private float shakeTimer;
+    private bool isShaking;
+
     private bool foundCamera = false;
 
     protected override void Awake()
@@ -21,6 +26,9 @@ public class CameraManager : Singleton<CameraManager>
         {
             cinemachineCamera = cameraGameObject.GetComponent<CinemachineVirtualCamera>();
             cinemachineTransposer = cinemachineCamera.GetCinemachineComponent<CinemachineTransposer>();
+            channelPerlin = cinemachineCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+            StopShake();
 
             if (cinemachineTransposer == null)
             {
@@ -65,5 +73,38 @@ public class CameraManager : Singleton<CameraManager>
     public Vector3 ConvertScreenToWorld(Vector3 screenPosition)
     {
         return Camera.main.ScreenToWorldPoint(screenPosition);
+    }
+
+    public void Shake(float shakeIntensity, float shakeTime)
+    {
+        if (foundCamera)
+        {
+            isShaking = true;
+            channelPerlin.m_AmplitudeGain = shakeIntensity;
+            shakeTimer = shakeTime;
+        }
+    }
+
+    public void StopShake()
+    {
+        if (foundCamera)
+        {
+            isShaking = false;
+            channelPerlin.m_AmplitudeGain = 0;
+            shakeTimer = 0;
+        }
+    }
+
+    private void Update()
+    {
+        if (isShaking)
+        {
+            shakeTimer -= Time.deltaTime;
+
+            if (shakeTimer <= 0)
+            {
+                StopShake();
+            }
+        }
     }
 }

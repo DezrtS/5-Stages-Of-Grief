@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAttack, IDodge, IPathfind, IStatusEffectTarget
 {
     [SerializeField] private PlayerAnimation playerAnimation;
+    [SerializeField] private ParticleSystem slash;
 
     // ---------------------------------------------------------------------------------------------------------
     // Player Variables
@@ -335,7 +336,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         health = Mathf.Max(health - damage, 0);
 
-        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerHurt, transform.position);
+        //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerHurt, transform.position);
+        CameraManager.Instance.Shake(6, 0.2f);
 
         OnPlayerHealthEvent(health);
 
@@ -473,11 +475,12 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
 
-            AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerSwing, transform.position);
+            //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerSwing, transform.position);
             //playerAnimation.Swing();
         }
         else if (attackState == AttackState.Attacking)
         {
+            slash.Play();
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
             StartCoroutine(CancelAttack());

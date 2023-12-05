@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Lunge Test Attack
   m_EditorClassIdentifier: 
   attackId: basic_player_attack
-  attackStatusEffects: []
+  attackStatusEffects:
+  - {fileID: 11400000, guid: c7245dc7599cec142bcbd5bb15304825, type: 2}
   stateMovements:
   - state: 2
     movementData: {fileID: 11400000, guid: 0076fe7f7c573b04784b8e47d1028c74, type: 2}

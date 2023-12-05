@@ -36,14 +36,12 @@ public class FlashEffect : MonoBehaviour
             hideFlags = HideFlags.HideAndDontSave
         };
 
-        Material[] newMaterials = new Material[originalMaterials.Length + 1];
+        Material[] newMaterials = new Material[originalMaterials.Length];
 
         for (int i = 0; i < originalMaterials.Length; i++)
         {
-            newMaterials[i] = originalMaterials[i];
+            newMaterials[i] = flashMaterial;
         }
-
-        newMaterials[originalMaterials.Length] = flashMaterial;
 
         objectRenderer.materials = newMaterials;
 
@@ -82,10 +80,7 @@ public class FlashEffect : MonoBehaviour
 
     public void Deactivate()
     {
-        Material[] materials = objectRenderer.materials;
-        int materialToRemove = materials.Length - 1;
-        ArrayUtility.RemoveAt(ref materials, materialToRemove);
-        objectRenderer.materials = materials;
+        objectRenderer.materials = originalMaterials;
 
         Destroy(this);
     }

@@ -16,11 +16,11 @@ MonoBehaviour:
   statusEffectType: 0
   duration: 3
   timeBetweenEffectActivations: 1
+  stunEntity: 0
   applyEffectOnStart: 1
   applyEffectOnEnd: 0
   particleEffectOnEffectStart: {fileID: 1196895337536390683, guid: df8669d4de01ac84ca7cd0811748ab1c,
     type: 3}
-  particleEffectOnEffectApply: {fileID: 9176901763896446002, guid: dbd500fa8b823464d9abdb41e0b28276,
-    type: 3}
+  particleEffectOnEffectApply: {fileID: 0}
   healthEffectValue: 1
   isDamage: 1

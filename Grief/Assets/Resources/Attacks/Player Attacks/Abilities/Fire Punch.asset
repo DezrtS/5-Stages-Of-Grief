@@ -13,17 +13,18 @@ MonoBehaviour:
   m_Name: Fire Punch
   m_EditorClassIdentifier: 
   attackId: fire_punch
-  attackEffects: 
-  attackCooldown: 2
-  attackCancelCooldown: 0.5
-  attackRequiredChargeUpTime: 0.4
+  attackStatusEffects: []
+  stateMovements: []
   hasAimingStage: 1
-  hasAttackStage: 1
   maxAimTime: 99
-  maxAttackTime: 0.5
+  attackRequiredChargeUpTime: 0.4
+  attackCancelCooldown: 0.5
   chargingUpTime: 0.2
+  hasAttackStage: 1
+  maxAttackTime: 0.5
   coolingDownTime: 0.4
-  damage: 5
+  attackCooldown: 2
+  damage: 50
   knockbackPower: 20
   attackTriggerScale: 6
   attackTriggerSpawnDistance: 3

@@ -21,7 +21,7 @@ public class AudioManager : Singleton<AudioManager>
 
     private void Start()
     {
-        InitializeAmbience(FMODEventsManager.Instance.ambience);
+        //InitializeAmbience(FMODEventsManager.Instance.ambience);
     }
 
     private void InitializeAmbience(EventReference ambienceEventReference)

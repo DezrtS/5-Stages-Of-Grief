@@ -19,7 +19,7 @@ MonoBehaviour:
     Data3: -958807653
     Data4: 1197719863
   Banks:
-  - {fileID: 6973881273808588558}
+  - {fileID: 7561616249138049272}
   IsStream: 0
   Is3D: 0
   IsOneShot: 0
@@ -46,7 +46,7 @@ MonoBehaviour:
     Data3: 246479765
     Data4: 2084110762
   Banks:
-  - {fileID: 6973881273808588558}
+  - {fileID: 7561616249138049272}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -73,7 +73,7 @@ MonoBehaviour:
     Data3: -127649608
     Data4: 718933337
   Banks:
-  - {fileID: 3990798191322957472}
+  - {fileID: -534576764791880568}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -82,6 +82,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 12000
+--- !u!114 &-8260435118205532706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Grief FMOD/Build/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 638372441977021577
+  FileSizes:
+  - Name: Desktop
+    Value: 1036
+  Exists: 1
 --- !u!114 &-3583667136050282892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,14 +121,34 @@ MonoBehaviour:
     Data3: -305748817
     Data4: 1512994757
   Banks:
-  - {fileID: 6973881273808588558}
+  - {fileID: 7561616249138049272}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 820
+  Length: 0
+--- !u!114 &-534576764791880568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Denial.bank
+  m_EditorClassIdentifier: 
+  Path: Grief FMOD/Build/Desktop/Denial.bank
+  Name: Denial
+  StudioPath: bank:/Denial
+  lastModified: 638372441976934402
+  FileSizes:
+  - Name: Desktop
+    Value: 149536
+  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,10 +162,10 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 3043252526825528634}
-  - {fileID: 3990798191322957472}
-  - {fileID: 8145815654725496463}
-  - {fileID: 6973881273808588558}
+  - {fileID: 5618337765621597603}
+  - {fileID: -534576764791880568}
+  - {fileID: -8260435118205532706}
+  - {fileID: 7561616249138049272}
   EditorEvents:
   - {fileID: -8497120038545462413}
   - {fileID: -3583667136050282892}
@@ -133,12 +173,12 @@ MonoBehaviour:
   - {fileID: -8557064927371499859}
   EditorParameters: []
   MasterBanks:
-  - {fileID: 8145815654725496463}
+  - {fileID: -8260435118205532706}
   StringsBanks:
-  - {fileID: 3043252526825528634}
-  cacheTime: 638331862445457795
+  - {fileID: 5618337765621597603}
+  cacheTime: 638372446673760699
   cacheVersion: 131608
---- !u!114 &3043252526825528634
+--- !u!114 &5618337765621597603
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,35 +190,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
   m_Name: bank:/Master.strings.bank
   m_EditorClassIdentifier: 
-  Path: ../../../FMOD Studio/Grief/Build/Desktop/Master.strings.bank
+  Path: Grief FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638331855255611282
+  lastModified: 638372441977031607
   FileSizes:
   - Name: Desktop
     Value: 1054
   Exists: 1
---- !u!114 &3990798191322957472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Denial.bank
-  m_EditorClassIdentifier: 
-  Path: ../../../FMOD Studio/Grief/Build/Desktop/Denial.bank
-  Name: Denial
-  StudioPath: bank:/Denial
-  lastModified: 638331862445457795
-  FileSizes:
-  - Name: Desktop
-    Value: 149536
-  Exists: 1
---- !u!114 &6973881273808588558
+--- !u!114 &7561616249138049272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -190,13 +210,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
   m_Name: bank:/SFX.bank
   m_EditorClassIdentifier: 
-  Path: ../../../FMOD Studio/Grief/Build/Desktop/SFX.bank
+  Path: Grief FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638331851683740183
+  lastModified: 638372446673760699
   FileSizes:
   - Name: Desktop
-    Value: 70752
+    Value: 48256
   Exists: 1
 --- !u!114 &7829615312821548797
 MonoBehaviour:
@@ -221,24 +241,4 @@ MonoBehaviour:
   Type: 0
   IsGlobal: 0
   Labels: []
-  Exists: 1
---- !u!114 &8145815654725496463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.bank
-  m_EditorClassIdentifier: 
-  Path: ../../../FMOD Studio/Grief/Build/Desktop/Master.bank
-  Name: Master
-  StudioPath: bank:/Master
-  lastModified: 638331855255601386
-  FileSizes:
-  - Name: Desktop
-    Value: 1036
   Exists: 1
