@@ -2521,43 +2521,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Controls:
-
-    ----------------------------------------------------------------------------------
-
-    The
-    game is meant to be played with a controller,
-
-
-    Right Stick -> Move
-
-    Left
-    Stick -> Camera
-
-    West Button -> Attack
-
-    South Button -> Dodge
-
-
-    If
-    you are not playing with a controller,
-
-
-    WASD -> Move
-
-    Mouse -> Aim
-
-    Left
-    Mouse Button -> Attack
-
-    Space Bar -> Dodge
-
-
-    Regardless of the input
-    device,
-
-
-    TAB -> Pause'
+  m_text: "[This Menu Is Solely For Listing Controls] \n\nControls:\n----------------------------------------------------------------------------------\nThe
+    game is meant to be played with a controller,\n\nLeft Stick -> Move\nRight Stick
+    -> Camera\nWest Button -> Attack\nSouth Button -> Dodge\nD-Pad -> Select Ability\nStart
+    -> Pause\n\nIf you are not playing with a controller,\n\nWASD -> Move\nMouse
+    -> Aim\nLeft Mouse Button -> Attack\nSpace Bar -> Dodge\nTAB -> Pause"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3220,7 +3188,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Combat Testing Arena
+  m_text: Untitled Grief Game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
