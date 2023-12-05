@@ -13,19 +13,20 @@ MonoBehaviour:
   m_Name: Teleporting Kunai
   m_EditorClassIdentifier: 
   attackId: teleporting_kunai
-  attackEffects: 
-  attackCooldown: 0
-  attackCancelCooldown: 0
-  attackRequiredChargeUpTime: 0.2
+  attackStatusEffects: []
+  stateMovements: []
   hasAimingStage: 1
-  hasAttackStage: 1
   maxAimTime: 99
-  maxAttackTime: 0
+  attackRequiredChargeUpTime: 0
+  attackCancelCooldown: 0
   chargingUpTime: 0
+  hasAttackStage: 1
+  maxAttackTime: 0
   coolingDownTime: 0.2
-  playAudioIdOnSpawn: 
+  attackCooldown: 0
+  playAudioIdOnAim: 
+  playAudioIdOnAttack: 
   playAudioIdOnCancel: 
-  playAudioIdOnFire: 
   projectileData: {fileID: 11400000, guid: 0f06cb1850ff3174ea88799c3f83a200, type: 2}
   spawnOffset: {x: 0, y: 0, z: 0.5}
   fireProjectileOnAttack: 1
