@@ -47,6 +47,7 @@ public class CharAgent : MovementController
     private float gravityVelocity = 0;
 
     private EventInstance footsteps;
+    private string groundTag;
 
     // ---------------------------------------------------------------------------------------------------------
     // Pathfinding Variables
@@ -75,7 +76,7 @@ public class CharAgent : MovementController
             navMeshAgent.enabled = false;
         }
 
-        footsteps = AudioManager.Instance.CreateInstance(FMODEventsManager.Instance.playerFootsteps);
+        footsteps = AudioManager.Instance.CreateInstance(FMODEventsManager.Instance.footsteps);
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(footsteps, transform);
     }
 
@@ -378,8 +379,30 @@ public class CharAgent : MovementController
     {
         if (velocity.magnitude > 0.75f)
         {
-            PLAYBACK_STATE playbackState;
-            footsteps.getPlaybackState(out playbackState);
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo, groundCheckDistance, groundLayerMask, QueryTriggerInteraction.Ignore))
+            {
+                string tag = hitInfo.collider.tag;
+
+                if (tag != groundTag)
+                {
+                    groundTag = tag;
+
+                    switch (tag)
+                    {
+                        case "Snow":
+                            footsteps.setParameterByName("terrain_material", 1);
+                            break;
+                        case "Ice":
+                            footsteps.setParameterByName("terrain_material", 2);
+                            break;
+                        default:
+                            footsteps.setParameterByName("terrain_material", 0);
+                            break;
+                    }
+                }
+            }
+
+            footsteps.getPlaybackState(out PLAYBACK_STATE playbackState);
             if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
             {
                 footsteps.start();

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="EncodableAsset" id="{0722fe14-c144-4c2f-aaa1-323da8364c7c}">
 		<property name="assetPath">
-			<value>Sounds V1/ZombieSounds/</value>
+			<value>SFX/Zombie Noises/</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{3a5acdd4-29bd-4fa7-9d09-8638563d8c46}</destination>

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{6b6f28a7-f2fb-42fd-8e6b-681f753393cb}">
 		<property name="assetPath">
-			<value>Sounds V1/ZombieSounds/Zombie8.wav</value>
+			<value>SFX/Zombie Noises/Zombie8.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>

@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -9,6 +10,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 {
     [SerializeField] private PlayerAnimation playerAnimation;
     [SerializeField] private ParticleSystem slash;
+
+    public int targeting = 0;
+    public EventInstance dialogue;
 
     // ---------------------------------------------------------------------------------------------------------
     // Player Variables
@@ -137,6 +141,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     private void Start()
     {
+        dialogue = AudioManager.Instance.CreateInstance(FMODEventsManager.Instance.dialogue);
         CameraManager.Instance.TransferCameraTo(transform);
     }
 
@@ -161,11 +166,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                 InitiateAttackState(AttackState.ChargingUp);
             }
         }
-    }
-
-    private void FixedUpdate()
-    {
-
     }
 
     private void LateUpdate()
@@ -336,7 +336,21 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         health = Mathf.Max(health - damage, 0);
 
-        //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerHurt, transform.position);
+        if (Random.Range(0, 10) == 1)
+        {
+            dialogue.getPlaybackState(out PLAYBACK_STATE playbackState);
+            if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
+            {
+                dialogue.setParameterByName("dialogue_option", 0);
+                dialogue.start();
+            }
+        }
+        else
+        {
+            AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerHurt, transform.position);
+        }
+
+        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, transform.position);
         CameraManager.Instance.Shake(6, 0.2f);
 
         OnPlayerHealthEvent(health);
@@ -475,7 +489,18 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
 
-            //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerSwing, transform.position);
+            if (Random.Range(0, 10) == 1)
+            {
+                dialogue.getPlaybackState(out PLAYBACK_STATE playbackState);
+                if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
+                {
+                    dialogue.setParameterByName("dialogue_option", 1);
+                    dialogue.start();
+                }
+            }
+  
+
+            AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerSwing, transform.position);
             //playerAnimation.Swing();
         }
         else if (attackState == AttackState.Attacking)
@@ -483,7 +508,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             slash.Play();
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
-            StartCoroutine(CancelAttack());
         } 
         else if (attackState == AttackState.CoolingDown)
         {
@@ -511,17 +535,12 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public void OnAttackStateEnd(AttackState attackState)
     {
         // Actions to do when the state has ended
-        StopCoroutine(CancelAttack());
         charAgent.SetAllowMovementInput(true);
         charAgent.SetAllowRotationInput(true);
     }
 
     public void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled)
     {
-        Debug.Log("Attack Cancelled"); // There is a bug that is cancelling the players attacks when there are many enemies or the player dies a lot
-
-        // It is being called when the attack is idle constantly
-
         // Actions to do when the state is cancelled
         if (!otherHasCancelled)
         {
@@ -679,13 +698,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     // ---------------------------------------------------------------------------------------------------------
     // Coroutines
     // ---------------------------------------------------------------------------------------------------------
-
-    public IEnumerator CancelAttack()
-    {
-        // For Debugging Purposes
-        yield return new WaitForSeconds(99f);
-        OnAttackStateCancel(attackState, false);
-    }
 
     public IEnumerator InvincibilityTimer()
     {

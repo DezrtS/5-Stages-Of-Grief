@@ -53,7 +53,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 710
+  Length: 0
 --- !u!114 &-8497120038545462413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,6 +82,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 12000
+--- !u!114 &-8493200301936791099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Dialogue/Dialogue
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Dialogue/Dialogue
+  Guid:
+    Data1: -1209801701
+    Data2: 1117437563
+    Data3: -781440865
+    Data4: 772181357
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -7540015918839843185}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-8260435118205532706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,11 +125,87 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638372441977021577
+  lastModified: 638376606148936692
   FileSizes:
   - Name: Desktop
     Value: 1036
   Exists: 1
+--- !u!114 &-7540015918839843185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Dialogue/dialogue_option
+  m_EditorClassIdentifier: 
+  Name: dialogue_option
+  StudioPath: 
+  Min: 0
+  Max: 3
+  Default: 0
+  ID:
+    data1: 2243457603
+    data2: 1754114890
+  Type: 1
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-7388814863845891478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Footsteps/terrain_material
+  m_EditorClassIdentifier: 
+  Name: terrain_material
+  StudioPath: 
+  Min: 0
+  Max: 5
+  Default: 0
+  ID:
+    data1: 3417398644
+    data2: 3274630146
+  Type: 1
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-4824679643330590444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Denial Theme 1
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Denial Theme 1
+  Guid:
+    Data1: 1445230782
+    Data2: 1075501126
+    Data3: 850447770
+    Data4: -1576932907
+  Banks:
+  - {fileID: -534576764791880568}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -1252631137041875416}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 97714
 --- !u!114 &-3583667136050282892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,7 +232,31 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 0
+  Length: 350
+--- !u!114 &-1252631137041875416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Denial Theme 1/combat_intensity
+  m_EditorClassIdentifier: 
+  Name: combat_intensity
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1732933865
+    data2: 854172175
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-534576764791880568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,10 +272,10 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Denial.bank
   Name: Denial
   StudioPath: bank:/Denial
-  lastModified: 638372441976934402
+  lastModified: 638375855312579602
   FileSizes:
   - Name: Desktop
-    Value: 149536
+    Value: 2464096
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -171,13 +299,75 @@ MonoBehaviour:
   - {fileID: -3583667136050282892}
   - {fileID: -9064084284937919549}
   - {fileID: -8557064927371499859}
+  - {fileID: 7939333833758903401}
+  - {fileID: -4824679643330590444}
+  - {fileID: 9190125042507677311}
+  - {fileID: 3154388379945603181}
+  - {fileID: 2029733761135007170}
+  - {fileID: 6475642112388995495}
+  - {fileID: -8493200301936791099}
   EditorParameters: []
   MasterBanks:
   - {fileID: -8260435118205532706}
   StringsBanks:
   - {fileID: 5618337765621597603}
-  cacheTime: 638372446673760699
+  cacheTime: 638376699710033238
   cacheVersion: 131608
+--- !u!114 &2029733761135007170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Crow Caw
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Crow Caw
+  Guid:
+    Data1: 448562119
+    Data2: 1191485845
+    Data3: -540737393
+    Data4: -624302374
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3154388379945603181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Footsteps
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Footsteps
+  Guid:
+    Data1: 678729342
+    Data2: 1329422836
+    Data3: -1377246560
+    Data4: -1789574410
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -7388814863845891478}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &5618337765621597603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,11 +383,38 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638372441977031607
+  lastModified: 638376606148946690
   FileSizes:
   - Name: Desktop
-    Value: 1054
+    Value: 1506
   Exists: 1
+--- !u!114 &6475642112388995495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Snarl
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Snarl
+  Guid:
+    Data1: 1406374580
+    Data2: 1209354181
+    Data3: 2037563797
+    Data4: -1343434883
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &7561616249138049272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,10 +430,10 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638372446673760699
+  lastModified: 638376699710033238
   FileSizes:
   - Name: Desktop
-    Value: 48256
+    Value: 523808
   Exists: 1
 --- !u!114 &7829615312821548797
 MonoBehaviour:
@@ -242,3 +459,57 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &7939333833758903401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Hit
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Hit
+  Guid:
+    Data1: -256632904
+    Data2: 1307947147
+    Data3: 1160089789
+    Data4: -630896032
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &9190125042507677311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Ice Break
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Ice Break
+  Guid:
+    Data1: -4191380
+    Data2: 1238532757
+    Data3: -719494777
+    Data4: -350574295
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0

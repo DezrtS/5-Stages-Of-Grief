@@ -39,7 +39,8 @@ public class EffectManager : Singleton<EffectManager>
 
             if (renderer.transform.TryGetComponent(out FlashEffect oldFlash))
             {
-                oldFlash.Deactivate();
+                oldFlash.Restart(flashEffectData);
+                continue;
             }
 
             FlashEffect newFlash = renderer.transform.AddComponent<FlashEffect>();

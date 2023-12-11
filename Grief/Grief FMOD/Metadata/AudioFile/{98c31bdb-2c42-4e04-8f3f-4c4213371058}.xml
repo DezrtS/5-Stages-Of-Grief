@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{98c31bdb-2c42-4e04-8f3f-4c4213371058}">
 		<property name="assetPath">
-			<value>Sounds V1/SkeletonSounds/Skeleton5.wav</value>
+			<value>SFX/Skeleton Noises/Skeleton5.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>

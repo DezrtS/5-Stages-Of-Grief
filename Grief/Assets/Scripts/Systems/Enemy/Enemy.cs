@@ -1,4 +1,4 @@
-using System;
+using FMOD.Studio;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +6,8 @@ using UnityEngine.AI;
 
 public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind
 {
+    private bool isAggro = false;
+
     // ---------------------------------------------------------------------------------------------------------
     // Enemy Variables
     // ---------------------------------------------------------------------------------------------------------
@@ -119,6 +121,8 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
             return;
         }
 
+        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.iceBreak, Vector3.zero);
+
         health = Mathf.Max(health - damage, 0);
 
         if (health == 0)
@@ -142,6 +146,28 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         if (isDodging)
         {
             OnDodgeCancel(false);
+        }
+
+        if (isAggro)
+        {
+            player.targeting--;
+            if (player.targeting == 0)
+            {
+                AudioManager.Instance.SetAmbienceParameter("combat_intensity", 0);
+                //Debug.Log("Setting Combat OFF");
+            }
+        }
+
+        EventInstance dialogue = PlayerController.Instance.dialogue;
+
+        if (Random.Range(0, 2) == 1)
+        {
+            dialogue.getPlaybackState(out PLAYBACK_STATE playbackState);
+            if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
+            {
+                dialogue.setParameterByName("dialogue_option", 2);
+                dialogue.start();
+            }
         }
 
         activeAttack.DestroyClone();
@@ -180,13 +206,37 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
 
                 break;
             case EnemyState.Idle:
+                if (isAggro)
+                {
+                    player.targeting--;
+                    if (player.targeting == 0)
+                    {
+                        AudioManager.Instance.SetAmbienceParameter("combat_intensity", 0);
+                        //Debug.Log("Setting Combat OFF");
+                    }
+                }
 
+                isAggro = false;
                 break;
             case EnemyState.Patrolling:
                 pathfindDestination = spawnPosition;
                 InitiatePathfinding();
                 break;
             case EnemyState.Chasing:
+                if (!isAggro)
+                {
+                    player.targeting++;
+
+                    AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.snarl, transform.position);
+
+                    if (player.targeting == 1)
+                    {
+                        //Debug.Log("Setting Combat ON");
+                        AudioManager.Instance.SetAmbienceParameter("combat_intensity", 1);
+                    }
+                }
+
+                isAggro = true;
                 break;
             case EnemyState.Attacking:
                 break;

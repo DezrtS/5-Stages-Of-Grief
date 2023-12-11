@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{f2c08c1f-b4f8-4522-94d0-dd54370315f4}">
 		<property name="assetPath">
-			<value>Sounds V1/dings/ding2.wav</value>
+			<value>SFX/Dings/ding2.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>

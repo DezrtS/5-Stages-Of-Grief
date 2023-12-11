@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{a4eadfcd-6549-48e5-8892-0c3deb46429b}">
+		<property name="name">
+			<value>terrain_material</value>
+		</property>
+		<relationship name="folder">
+			<destination>{66d574d0-1905-4dc6-ace6-d48e611afcbc}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{7350590c-a032-4a21-9d5a-24fb665199f5}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{7350590c-a032-4a21-9d5a-24fb665199f5}">
+		<property name="parameterType">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>6</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

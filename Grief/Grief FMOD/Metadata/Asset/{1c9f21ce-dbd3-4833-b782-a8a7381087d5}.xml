@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="EncodableAsset" id="{1c9f21ce-dbd3-4833-b782-a8a7381087d5}">
 		<property name="assetPath">
-			<value>Prototype Sounds/</value>
+			<value>Prototype SFX/</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{3a5acdd4-29bd-4fa7-9d09-8638563d8c46}</destination>

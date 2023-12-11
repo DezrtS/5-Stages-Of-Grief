@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{c4109a0b-4963-499e-b13b-fbe847eb3671}">
+		<property name="assetPath">
+			<value>SFX/Ice Breaking/Ice Break 7.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>24</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.29520833333333335</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{3a5acdd4-29bd-4fa7-9d09-8638563d8c46}</destination>
+		</relationship>
+	</object>
+</objects>
