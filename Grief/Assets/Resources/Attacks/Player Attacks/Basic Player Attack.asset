@@ -18,13 +18,13 @@ MonoBehaviour:
   stateMovements:
   - state: 3
     movementData: {fileID: 11400000, guid: 2240e59b8d5a482478380b147662bbfd, type: 2}
-  hasAimingStage: 1
+  hasAimingStage: 0
   maxAimTime: 99
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
   chargingUpTime: 0
   hasAttackStage: 1
-  maxAttackTime: 0.2
+  maxAttackTime: 0.1
   coolingDownTime: 0
   attackCooldown: 0
   damage: 3

@@ -4220,7 +4220,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 15
   totalAccelerationTime: 0.25
-  totalDeaccelerationTime: 0.5
+  totalDeaccelerationTime: 0.1
   useMovementInputSmooth: 1
   movementInputSmoothMultiplier: 6
   useRotationInputSmooth: 1
