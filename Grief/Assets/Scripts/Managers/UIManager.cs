@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -67,7 +69,7 @@ public class UIManager : Singleton<UIManager>
 
     public void OnSelection(InputAction.CallbackContext obj)
     {
-
+        
     }
 
     public void OnDeselection(InputAction.CallbackContext obj)

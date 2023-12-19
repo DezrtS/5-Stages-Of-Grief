@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.U2D.Path.GUIFramework;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -12,10 +10,11 @@ public class MenuMoving : MonoBehaviour
     //to add more menu buttons just create new buttons in the scene don't worry about colors this code overrides any colors that were on the button prestart
     //this should continue to work even when time scale is set to 0
 
+    // Daniel Try onPointer things
 
     public UserInterfaceInputControls inputcontrols;
     public Button[] buttons;
-    public float horizontalInput;
+    public float verticalInput;
     public int indexNum;
     public ColorBlock defualt, highlight;
     public Vector2 Inputs;
@@ -31,20 +30,20 @@ public class MenuMoving : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(horizontalInput);
+        //Debug.Log(verticalInput);
         swapButtons();
         buttonColor();
     }
 
     void swapButtons()
     {
-        if(horizontalInput > 0.5 && canSwap)
+        if(verticalInput > 0.5 && canSwap)
         {
             indexNum--;
             canSwap = false;
             Invoke("returnSwapping", Time.unscaledDeltaTime + 0.5f);
         }
-        if (horizontalInput < -0.5 && canSwap)
+        if (verticalInput < -0.5 && canSwap)
         {
             indexNum++;
             canSwap = false;
@@ -80,7 +79,7 @@ public class MenuMoving : MonoBehaviour
     void OnNavigation(InputValue value)
     {
         Inputs = value.Get<Vector2>();
-        horizontalInput = Inputs.y;
+        verticalInput = Inputs.y;
     }
 
     void OnSelection()
