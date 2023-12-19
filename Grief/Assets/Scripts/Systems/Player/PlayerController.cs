@@ -54,18 +54,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     [Space(10)]
     [Header("Attacking")]
     [SerializeField] private List<EntityType> damageableEntities;
-    [SerializeField] private Attack basicAttackTemplate;
-    [SerializeField] private Attack iceShardAttackTemplate;
-    [SerializeField] private Attack firePunchAttackTemplate;
-    [SerializeField] private Attack teleportingKunaiAttackTemplate;
-    [SerializeField] private Attack lightBeamAttackTemplate;
-    private Attack basicAttack;
-    private Attack iceShardAttack;
-    private Attack firePunchAttack;
-    private Attack teleportingKunaiAttack;
-    private Attack lightBeamAttack;
 
-    private Attack activeAttack;
+    private AttackHolder attackHolder;
+
     private AttackState attackState;
     private bool isAttacking;
 
@@ -85,12 +76,12 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     // ---------------------------------------------------------------------------------------------------------
     // Interface Implementation Fields
     // ---------------------------------------------------------------------------------------------------------
-    
+
     public EntityType EntityType { get { return entityType; } }
     public float MaxHealth { get { return maxHealth; } }
     public float Health { get { return health; } }
     public bool IsInvincible { get { return isInvincible; } }
-    public Attack ActiveAttack { get { return activeAttack; } }
+    public AttackHolder AttackHolder { get { return attackHolder; } }
     public bool IsAttacking { get { return isAttacking; } }
     public AttackState AttackState { get { return attackState; } }
     public List<EntityType> DamageableEntities { get { return damageableEntities; } }
@@ -128,13 +119,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         dodge = dodgeTemplate.Clone(dodge, this, charAgent);
 
-        basicAttack = basicAttackTemplate.Clone(basicAttack, this, transform);
-        iceShardAttack = iceShardAttackTemplate.Clone(iceShardAttack, this, transform);
-        firePunchAttack = firePunchAttackTemplate.Clone(firePunchAttack, this, transform);
-        teleportingKunaiAttack = teleportingKunaiAttackTemplate.Clone(teleportingKunaiAttack, this, transform);
-        lightBeamAttack = lightBeamAttackTemplate.Clone(lightBeamAttack, this, transform);
-
-        activeAttack = basicAttack;
+        if (!TryGetComponent(out attackHolder))
+        {
+            attackHolder = transform.AddComponent<AttackHolder>();
+        }
 
         health = maxHealth;
     }
@@ -209,19 +197,19 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
                 if (lastDPadInput == Vector2.up)
                 {
-                    SwitchActiveAttack(iceShardAttack);
+                    AttackHolder.SetActiveAttack(1);
                 }
                 else if (lastDPadInput == Vector2.left)
                 {
-                    SwitchActiveAttack(firePunchAttack);
+                    AttackHolder.SetActiveAttack(2);
                 }
                 else if (lastDPadInput == Vector2.right)
                 {
-                    SwitchActiveAttack(teleportingKunaiAttack);
+                    AttackHolder.SetActiveAttack(3);
                 }
                 else if (lastDPadInput == Vector2.down)
                 {
-                    //SwitchActiveAttack(lightBeamAttack);
+                    AttackHolder.SetActiveAttack(1);
                 } 
                 else
                 {
@@ -240,7 +228,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                 InitiateDodge();
                 return;
             case "buttonWest":
-                SwitchActiveAttack(basicAttack);
+                AttackHolder.SetActiveAttack(0);
 
                 InitiateAttackState(AttackState.Aiming);
                 return;
@@ -415,27 +403,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         return GetMovementInput();
     }
 
-    public virtual void SwitchActiveAttack(Attack activeAttack)
-    {
-        if (CanSwitchActiveAttack(activeAttack))
-        {
-            //Debug.Log($"Switching from {this.activeAttack.AttackId} to {activeAttack.AttackId}");
-
-            isAttacking = false;
-            this.activeAttack = activeAttack;
-        }
-    }
-
-    public virtual bool CanSwitchActiveAttack(Attack activeAttack)
-    {
-        if (this.activeAttack == activeAttack)
-        {
-            return false;
-        }
-
-        return attackState == AttackState.Idle;
-    }
-
     public void TransferToAttackState(AttackState attackState)
     {
         this.attackState = attackState;
@@ -443,18 +410,16 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public void InitiateAttackState(AttackState attackState)
     {
-        if (CanInitiateAttackState(attackState, activeAttack.AttackId))
+        if (CanInitiateAttackState(attackState, attackHolder.GetAttackId()))
         {
-            activeAttack.TransferToAttackState(attackState);
+            attackHolder.GetActiveAttack().TransferToAttackState(attackState);
         }
     }
 
     public bool CanInitiateAttackState(AttackState attackState, string attackId)
     {
-        // Specific requirements to the class rather than the attack
-        if (activeAttack == null)
+        if (!attackHolder.CanAttack())
         {
-            Debug.LogWarning($"{name} Does Not Have An Attack");
             return false;
         }
         else if (attackState == AttackState.Aiming && (isAttacking || isDodging || isPathfinding))
@@ -505,6 +470,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
         else if (attackState == AttackState.Attacking)
         {
+            Aim();
             slash.Play();
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
@@ -546,11 +512,11 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             if (attackState ==  AttackState.Idle)
             {
-                Debug.Log($"Canceling Attack on Idle,\nIsAttacking: {isAttacking}\nActive Attack: {activeAttack.AttackId}\nActive Attack State: {activeAttack.AttackState}");
+                // Cancelled On Idle
                 return;
             }
 
-            activeAttack.OnAttackStateCancel(attackState, true);
+            attackHolder.GetActiveAttack().OnAttackStateCancel(attackState, true);
         }
 
         this.attackState = AttackState.Idle;

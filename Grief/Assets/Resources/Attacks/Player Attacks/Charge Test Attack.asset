@@ -15,9 +15,9 @@ MonoBehaviour:
   attackId: basic_player_attack
   attackStatusEffects:
   - {fileID: 11400000, guid: c7245dc7599cec142bcbd5bb15304825, type: 2}
-  stateMovements:
+  attackStateMovements:
   - state: 1
-    movementData: {fileID: 11400000, guid: 6361b49771be5744680e7013d50baa15, type: 2}
+    movement: {fileID: 11400000, guid: 6361b49771be5744680e7013d50baa15, type: 2}
   hasAimingStage: 1
   maxAimTime: 5
   attackRequiredChargeUpTime: 0

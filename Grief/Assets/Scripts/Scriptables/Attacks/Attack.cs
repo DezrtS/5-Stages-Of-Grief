@@ -13,7 +13,7 @@ public abstract class Attack : ScriptableObject
 
     [Space(15)]
     [Header("Attack Stages")]
-    [SerializeField] private List<StateMovement> stateMovements = new List<StateMovement>();
+    [SerializeField] private List<AttackStateMovement> attackStateMovements = new List<AttackStateMovement>();
     
     [Space(5)]
     [Header("Aiming")]
@@ -83,7 +83,7 @@ public abstract class Attack : ScriptableObject
         clone.isClone = true;
 
         // Reorganize in proper places
-        clone.stateMovements = stateMovements;
+        clone.attackStateMovements = attackStateMovements;
         clone.parentTransform.TryGetComponent(out clone.movementController);
 
         return clone;
@@ -241,17 +241,17 @@ public abstract class Attack : ScriptableObject
         float timeStateStarted = Time.timeSinceLevelLoad;
 
         bool useMovementState = false;
-        StateMovementData stateMovementData = null;
+        StateMovement stateMovement = null;
         float stateTimeLength = 0;
 
         if (movementController != null)
         {
-            foreach (StateMovement stateMovement in stateMovements)
+            foreach (AttackStateMovement attackStateMovement in attackStateMovements)
             {
-                if (stateMovement.State == attackState)
+                if (attackStateMovement.State == attackState)
                 {
                     useMovementState = true;
-                    stateMovementData = stateMovement.MovementData;
+                    stateMovement = attackStateMovement.Movement;
 
                     switch (attackState)
                     {
@@ -282,7 +282,7 @@ public abstract class Attack : ScriptableObject
 
             if (useMovementState)
             {
-                movementController.SetVelocity(stateMovementData.GetStateCurrentVelocity(Time.timeSinceLevelLoad - timeStateStarted, stateTimeLength, parentTransform, movementController.GetVelocity()));
+                movementController.SetVelocity(stateMovement.GetStateCurrentVelocity(Time.timeSinceLevelLoad - timeStateStarted, stateTimeLength, parentTransform, movementController.GetVelocity()));
             }
 
             OnAttackState(attackState, Time.timeSinceLevelLoad - timeStateStarted);
@@ -353,11 +353,11 @@ public abstract class Attack : ScriptableObject
 }
 
 [Serializable]
-public class StateMovement
+public class AttackStateMovement
 {
     [SerializeField] private AttackState state;
-    [SerializeField] private StateMovementData movementData;
+    [SerializeField] private StateMovement movement;
 
     public AttackState State { get { return state; } }
-    public StateMovementData MovementData { get { return movementData; } }
+    public StateMovement Movement { get { return movement; } }
 }

@@ -12,13 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17c0f27d0a3747c48891ca2ec94de92f, type: 3}
   m_Name: Move Forward
   m_EditorClassIdentifier: 
-  defaultSpeed: 0
-  activeSpeed: 7
-  defaultDirection: {x: 0, y: 0, z: 1}
-  activeDirection: {x: 0, y: 0, z: 1}
-  activationStart: 0
-  activationEnd: 1
-  accelerateToDefaultSpeed: 0
-  lengthOfDefaultAcceleration: 1
-  accelerateToActiveSpeed: 0
-  lengthOfActiveAcceleration: 1
+  stateMovementData:
+  - activeSpeed: 15
+    activeDirection: {x: 0, y: 0, z: 1}
+    activationRangeStart: 0
+    activationRangeEnd: 1
+    accelerateToActiveSpeed: 0
+    rangeOfAcceleration: 0
