@@ -10,17 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e37ce8317771fc64baa1b7b2b471715e, type: 3}
-  m_Name: Basic Burning
+  m_Name: Basic Burn
   m_EditorClassIdentifier: 
-  statusEffectId: Burning
+  statusEffectId: Basic_Burn
   statusEffectType: 0
-  duration: 3
+  statusEffectDuration: 5
   timeBetweenEffectActivations: 1
-  stunEntity: 0
   applyEffectOnStart: 1
   applyEffectOnEnd: 0
-  particleEffectOnEffectStart: {fileID: 1196895337536390683, guid: df8669d4de01ac84ca7cd0811748ab1c,
+  particleEffectOnStartPrefab: {fileID: 1196895337536390683, guid: df8669d4de01ac84ca7cd0811748ab1c,
     type: 3}
-  particleEffectOnEffectApply: {fileID: 0}
+  particleEffectOnApplyPrefab: {fileID: 0}
+  playAudioOnStart:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioOnApply:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   healthEffectValue: 1
   isDamage: 1

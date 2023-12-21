@@ -1,3 +1,4 @@
+using FMODUnity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,8 @@ public abstract class Attack : ScriptableObject
     [SerializeField] private string attackId;
 
     [Space(10)]
-    [SerializeField] private List<StatusEffect> attackStatusEffects = new List<StatusEffect>();
+    [SerializeField] private List<StatusEffectData> applyStatusEffects = new List<StatusEffectData>();
+    [SerializeField] private List<StatusEffectData> recieveStatusEffects = new List<StatusEffectData>();
 
     [Space(15)]
     [Header("Attack Stages")]
@@ -66,7 +68,8 @@ public abstract class Attack : ScriptableObject
 
         clone.attackId = attackId;
 
-        clone.attackStatusEffects = attackStatusEffects;
+        clone.applyStatusEffects = applyStatusEffects;
+        clone.recieveStatusEffects = recieveStatusEffects;
         clone.attackCooldown = attackCooldown;
         clone.attackCancelCooldown = attackCancelCooldown;
         clone.attackRequiredChargeUpTime = attackRequiredChargeUpTime;
@@ -169,6 +172,13 @@ public abstract class Attack : ScriptableObject
         if (attackState == AttackState.Aiming)
         {
             timeAimingStateStarted = Time.timeSinceLevelLoad;
+        }
+        else if (attackState == AttackState.Attacking)
+        {
+            if (recieveStatusEffects.Count > 0 && parentTransform.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
+            {
+                statusEffectTarget.StatusEffectHolder.AddStatusEffect(recieveStatusEffects);
+            }
         }
     }
 
@@ -292,9 +302,10 @@ public abstract class Attack : ScriptableObject
     // All Code Below Needs Tweaking
     public virtual bool OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
     {
-        if (attackStatusEffects.Count > 0 && entityTransform.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
+        // Right now status effects do not care if they can actually be applied to the entity type
+        if (applyStatusEffects.Count > 0 && entityTransform.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
         {
-            StatusEffectManager.AddStatusEffectToObject(attackStatusEffects, statusEffectTarget, entityTransform);
+            statusEffectTarget.StatusEffectHolder.AddStatusEffect(applyStatusEffects);
         }
 
         return CombatManager.Instance.DamageEntity(this, attacker, entity, parentTransform, entityTransform);
@@ -311,11 +322,11 @@ public abstract class Attack : ScriptableObject
 
     }
 
-    public void PlayAudio(string audioId)
+    public void PlayAudio(EventReference audioReference)
     {
-        if (audioId != "")
+        if (!audioReference.IsNull)
         {
-
+            AudioManager.Instance.PlayOneShot(audioReference, parentTransform.position);
         }
     }
 

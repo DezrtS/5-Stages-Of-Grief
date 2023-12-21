@@ -31,7 +31,35 @@ MonoBehaviour:
   knockbackPower: 12
   attackTriggerScale: 3
   attackTriggerSpawnDistance: 2
-  playAudioIdOnAim: 
-  playAudioIdOnAttack: player_attack1
-  playAudioIdOnCooldown: 
-  playAudioIdOnCancel: 
+  playAudioIdOnAim:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnAttack:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCooldown:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCancel:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  particleEffectOnAim: {fileID: 0}
+  particleEffectOnAttack: {fileID: 0}
+  particleEffectOnCooldown: {fileID: 0}
+  particleEffectOnCancel: {fileID: 0}

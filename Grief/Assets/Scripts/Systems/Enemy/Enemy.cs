@@ -83,7 +83,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     // Default Unity Methods
     // ---------------------------------------------------------------------------------------------------------
 
-    public virtual void Awake()
+    protected virtual void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         rigidAgent = GetComponent<RigidAgent>();
@@ -94,7 +94,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         health = maxHealth;
     }
 
-    public virtual void Start()
+    protected virtual void Start()
     {
         player = PlayerController.Instance;
 
@@ -122,6 +122,8 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         }
 
         AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.iceBreak, Vector3.zero);
+
+        EffectManager.Instance.Flash(transform);
 
         health = Mathf.Max(health - damage, 0);
 

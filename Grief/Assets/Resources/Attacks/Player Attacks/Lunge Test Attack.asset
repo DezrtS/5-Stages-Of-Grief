@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Lunge Test Attack
   m_EditorClassIdentifier: 
   attackId: basic_player_attack
-  attackStatusEffects:
+  applyStatusEffects:
   - {fileID: 11400000, guid: c7245dc7599cec142bcbd5bb15304825, type: 2}
+  recieveStatusEffects:
+  - {fileID: 11400000, guid: 72bf344e4b56f0c43815edf95b49e637, type: 2}
   attackStateMovements:
   - state: 2
     movement: {fileID: 11400000, guid: 0076fe7f7c573b04784b8e47d1028c74, type: 2}
@@ -33,7 +35,35 @@ MonoBehaviour:
   knockbackPower: 12
   attackTriggerScale: 3
   attackTriggerSpawnDistance: 2
-  playAudioIdOnAim: 
-  playAudioIdOnAttack: player_attack1
-  playAudioIdOnCooldown: 
-  playAudioIdOnCancel: 
+  playAudioIdOnAim:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnAttack:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCooldown:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCancel:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  particleEffectOnAim: {fileID: 0}
+  particleEffectOnAttack: {fileID: 0}
+  particleEffectOnCooldown: {fileID: 0}
+  particleEffectOnCancel: {fileID: 0}

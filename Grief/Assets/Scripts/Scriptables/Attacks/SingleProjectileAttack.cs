@@ -24,6 +24,10 @@ public class SingleProjectileAttack : RangedAttack
         newClone.playAudioIdOnAttack = playAudioIdOnAttack;
         newClone.playAudioIdOnCancel = playAudioIdOnCancel;
 
+        newClone.particleEffectOnAim = particleEffectOnAim;
+        newClone.particleEffectOnAttack = particleEffectOnAttack;
+        newClone.particleEffectOnCancel = particleEffectOnCancel;
+
         newClone.projectileData = projectileData;
         newClone.spawnOffset = spawnOffset;
 

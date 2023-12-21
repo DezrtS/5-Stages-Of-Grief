@@ -24,7 +24,7 @@ public class CombatManager : Singleton<CombatManager>
             ApplyKnockback(attack, attackerTransform, recieverTransform);
 
             reciever.Damage(attack.GetDamage());
-            EffectManager.Instance.Flash(recieverTransform);
+            //EffectManager.Instance.Flash(recieverTransform);
 
             return true;
         }

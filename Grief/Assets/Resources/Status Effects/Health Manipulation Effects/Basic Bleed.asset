@@ -12,15 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e37ce8317771fc64baa1b7b2b471715e, type: 3}
   m_Name: Basic Bleed
   m_EditorClassIdentifier: 
-  statusEffectId: Bleeding
+  statusEffectId: Basic_Bleed
   statusEffectType: 3
-  duration: 0.1
+  statusEffectDuration: 5
   timeBetweenEffectActivations: 1
-  stunEntity: 0
   applyEffectOnStart: 1
   applyEffectOnEnd: 0
-  particleEffectOnEffectStart: {fileID: 0}
-  particleEffectOnEffectApply: {fileID: 9176901763896446002, guid: dbd500fa8b823464d9abdb41e0b28276,
+  particleEffectOnStartPrefab: {fileID: 0}
+  particleEffectOnApplyPrefab: {fileID: 9176901763896446002, guid: dbd500fa8b823464d9abdb41e0b28276,
     type: 3}
+  playAudioOnStart:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioOnApply:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   healthEffectValue: 1
   isDamage: 1

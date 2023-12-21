@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 public abstract class PhysicalAttack : Attack
@@ -11,10 +12,17 @@ public abstract class PhysicalAttack : Attack
 
     [Space(15)]
     [Header("Audio Variables")]
-    [SerializeField] protected string playAudioIdOnAim;
-    [SerializeField] protected string playAudioIdOnAttack;
-    [SerializeField] protected string playAudioIdOnCooldown;
-    [SerializeField] protected string playAudioIdOnCancel;
+    [field: SerializeField] protected EventReference playAudioIdOnAim;
+    [field: SerializeField] protected EventReference playAudioIdOnAttack;
+    [field: SerializeField] protected EventReference playAudioIdOnCooldown;
+    [field: SerializeField] protected EventReference playAudioIdOnCancel;
+
+    [Space(15)]
+    [Header("Particle Effect Variables")]
+    [SerializeField] protected ParticleSystem particleEffectOnAim;
+    [SerializeField] protected ParticleSystem particleEffectOnAttack;
+    [SerializeField] protected ParticleSystem particleEffectOnCooldown;
+    [SerializeField] protected ParticleSystem particleEffectOnCancel;
 
     public override Attack Clone(Attack clone, IAttack attacker, Transform parentTransform)
     {
@@ -34,6 +42,11 @@ public abstract class PhysicalAttack : Attack
         newClone.playAudioIdOnAttack = playAudioIdOnAttack;
         newClone.playAudioIdOnCooldown = playAudioIdOnCooldown;
         newClone.playAudioIdOnCancel = playAudioIdOnCancel;
+
+        newClone.particleEffectOnAim = particleEffectOnAim;
+        newClone.particleEffectOnAttack = particleEffectOnAttack;
+        newClone.particleEffectOnCooldown = particleEffectOnCooldown;
+        newClone.particleEffectOnCancel = particleEffectOnCancel;
 
         return base.Clone(newClone, attacker, parentTransform);
     }

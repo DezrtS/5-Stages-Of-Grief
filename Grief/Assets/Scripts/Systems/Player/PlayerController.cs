@@ -70,8 +70,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     private Vector3 pathfindDestination;
     private NavMeshAgent navMeshAgent;
 
-    private List<StatusEffect> statusEffects = new List<StatusEffect>();
-    private bool isStunned;
+    private StatusEffectHolder statusEffectHolder;
 
     // ---------------------------------------------------------------------------------------------------------
     // Interface Implementation Fields
@@ -89,8 +88,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public bool IsDodging { get { return isDodging; } }
     public bool IsPathfinding { get { return isPathfinding; } }
     public Vector3 PathfindDestination { get { return pathfindDestination; } set { pathfindDestination = value; } }
-    public List<StatusEffect> StatusEffects { get { return statusEffects; } }
-    public bool IsStunned { get { return isStunned; } }
+    public StatusEffectHolder StatusEffectHolder { get { return statusEffectHolder; } }
 
     // ---------------------------------------------------------------------------------------------------------
     // Class Events
@@ -122,6 +120,11 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         if (!TryGetComponent(out attackHolder))
         {
             attackHolder = transform.AddComponent<AttackHolder>();
+        }
+
+        if (!TryGetComponent(out statusEffectHolder))
+        {
+            statusEffectHolder = transform.AddComponent<StatusEffectHolder>();
         }
 
         health = maxHealth;
@@ -341,6 +344,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, transform.position);
         CameraManager.Instance.Shake(6, 0.2f);
 
+        EffectManager.Instance.Flash(transform);
+
         OnPlayerHealthEvent(health);
 
         if (health == 0)
@@ -370,7 +375,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             OnDodgeCancel(false);
         }
 
-        ClearStatusEffects();
+        statusEffectHolder.ClearStatusEffects();
 
         CancelPathfinding();
 
@@ -617,33 +622,15 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         charAgent.StopPathfinding();
     }
 
-    public void AddStatusEffect(StatusEffect statusEffect)
+    public void ApplyHealthStatusEffect(float healthEffectValue, bool isDamage)
     {
-        statusEffects.Add(statusEffect);
-    }
-
-    public void RemoveStatusEffect(StatusEffect statusEffect)
-    {
-        statusEffects.Remove(statusEffect);
-    }
-
-    public void ClearStatusEffects()
-    {
-        StatusEffectManager.RemoveAllStatusEffectFromObject(this);
-    }
-
-    public void Stun(bool isStunned)
-    {
-        if (this.isStunned == isStunned)
+        if (isDamage)
         {
-            return;
+            Damage(healthEffectValue);
         }
-        
-        this.isStunned = isStunned;
-
-        if (isStunned)
+        else
         {
-            // Activate
+            Heal(healthEffectValue);
         }
     }
 
