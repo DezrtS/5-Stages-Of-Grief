@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind
+public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
 {
     private bool isAggro = false;
 
@@ -147,7 +147,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         }
         if (isDodging)
         {
-            OnDodgeCancel(false);
+            //OnDodgeCancel(false);
         }
 
         if (isAggro)
@@ -433,61 +433,6 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         rigidAgent.SetAllowMovementInput(true);
         rigidAgent.SetAllowRotationInput(true);
         isAttacking = false;
-    }
-
-    public virtual void InitiateDodge()
-    {
-        if (CanInitiateDodge())
-        {
-
-        }
-    }
-
-    public virtual bool CanInitiateDodge()
-    {
-        // Specific requirements to the class rather than the dodge
-
-        if (dodge == null)
-        {
-            Debug.LogWarning($"{name} Does Not Have An Dodge");
-            return false;
-        }
-
-        return (!IsDodging && attackState == AttackState.Idle && !isPathfinding);
-    }
-
-    public virtual void OnDodgeStart()
-    {
-        // Actions to do when the dodge has first started
-        isDodging = true;
-        rigidAgent.SetAllowMovementInput(false);
-        rigidAgent.SetAllowRotationInput(false);
-    }
-
-    public virtual void OnDodge()
-    {
-        // Actions to do while the dodge is happening
-    }
-
-    public virtual void OnDodgeEnd()
-    {
-        // Actions to do when the dodge has ended
-        isDodging = false;
-        rigidAgent.SetAllowMovementInput(true);
-        rigidAgent.SetAllowRotationInput(true);
-    }
-
-    public virtual void OnDodgeCancel(bool otherHasCancelled)
-    {
-        // Actions to do when the state is cancelled
-        if (!otherHasCancelled)
-        {
-            dodge.OnDodgeCancel(true);
-        }
-
-        isDodging = false;
-        rigidAgent.SetAllowMovementInput(true);
-        rigidAgent.SetAllowRotationInput(true);
     }
 
     public void TransferToPathfindingState(bool isPathfinding)

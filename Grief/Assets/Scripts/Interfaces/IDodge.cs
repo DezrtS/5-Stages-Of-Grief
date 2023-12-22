@@ -1,12 +1,23 @@
+public enum DodgeState
+{
+    Idle,
+    Aiming,
+    ChargingUp,
+    Dodging,
+    CoolingDown
+}
+
 public interface IDodge
 {
-    Dodge Dodge { get; }
+    DodgeHolder DodgeHolder { get; }
     bool IsDodging { get; }
+    DodgeState DodgeState { get; }
 
-    void InitiateDodge();
-    bool CanInitiateDodge();
-    void OnDodgeStart();
-    void OnDodge();
-    void OnDodgeEnd();
-    void OnDodgeCancel(bool otherHasCancelled);
+    void TransferToDodgeState(DodgeState dodgeState);
+    void InitiateDodgeState(DodgeState dodgeState);
+    bool CanInitiateDodgeState(DodgeState dodgeState, string dodgeId);
+    void OnDodgeStateStart(DodgeState dodgeState);
+    void OnDodgeState(DodgeState dodgeState);
+    void OnDodgeStateEnd(DodgeState dodgeState);
+    void OnDodgeStateCancel(DodgeState dodgeState, bool otherHasCancelled);
 }

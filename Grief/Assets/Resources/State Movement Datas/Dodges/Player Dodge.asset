@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17c0f27d0a3747c48891ca2ec94de92f, type: 3}
-  m_Name: Slow to Stop
+  m_Name: Player Dodge
   m_EditorClassIdentifier: 
   stateMovementData:
-  - activeSpeed: 0
+  - activeSpeed: 25
     activeDirection: {x: 0, y: 0, z: 1}
     activationRangeStart: 0
     activationRangeEnd: 1
-    accelerateToActiveSpeed: 1
-    rangeOfAcceleration: 1
+    accelerateToActiveSpeed: 0
+    rangeOfAcceleration: 0

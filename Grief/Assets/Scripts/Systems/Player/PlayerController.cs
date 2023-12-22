@@ -54,16 +54,14 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     [Space(10)]
     [Header("Attacking")]
     [SerializeField] private List<EntityType> damageableEntities;
-
     private AttackHolder attackHolder;
-
     private AttackState attackState;
     private bool isAttacking;
 
     [Space(10)]
     [Header("Dodging")]
-    [SerializeField] private Dodge dodgeTemplate;
-    private Dodge dodge;
+    private DodgeHolder dodgeHolder;
+    private DodgeState dodgeState;
     private bool isDodging;
 
     private bool isPathfinding;
@@ -84,8 +82,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public bool IsAttacking { get { return isAttacking; } }
     public AttackState AttackState { get { return attackState; } }
     public List<EntityType> DamageableEntities { get { return damageableEntities; } }
-    public Dodge Dodge { get { return dodgeTemplate; } }
+    public DodgeHolder DodgeHolder {  get { return dodgeHolder; } }
     public bool IsDodging { get { return isDodging; } }
+    public DodgeState DodgeState {  get { return dodgeState; } }
     public bool IsPathfinding { get { return isPathfinding; } }
     public Vector3 PathfindDestination { get { return pathfindDestination; } set { pathfindDestination = value; } }
     public StatusEffectHolder StatusEffectHolder { get { return statusEffectHolder; } }
@@ -115,11 +114,14 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         charAgent = GetComponent<CharAgent>();
         playerLook = transform.AddComponent<PlayerLook>();
 
-        dodge = dodgeTemplate.Clone(dodge, this, charAgent);
-
         if (!TryGetComponent(out attackHolder))
         {
             attackHolder = transform.AddComponent<AttackHolder>();
+        }
+
+        if (!TryGetComponent(out dodgeHolder))
+        {
+            dodgeHolder = transform.AddComponent<DodgeHolder>();
         }
 
         if (!TryGetComponent(out statusEffectHolder))
@@ -140,7 +142,15 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            InitiateDodge();
+            InitiateDodgeState(DodgeState.Aiming);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (dodgeState == DodgeState.Aiming)
+            {
+                InitiateDodgeState(DodgeState.ChargingUp);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking)
@@ -228,7 +238,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
                 return;
             case "buttonSouth":
-                InitiateDodge();
+                InitiateDodgeState(DodgeState.Aiming);
                 return;
             case "buttonWest":
                 AttackHolder.SetActiveAttack(0);
@@ -256,7 +266,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
                 return;
             case "buttonSouth":
-
+                if (dodgeState == DodgeState.Aiming)
+                {
+                    InitiateDodgeState(DodgeState.ChargingUp);
+                }
                 return;
             case "buttonWest":
                 if (attackState == AttackState.Aiming)
@@ -372,7 +385,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
         if (isDodging)
         {
-            OnDodgeCancel(false);
+            OnDodgeStateCancel(dodgeState, false);
         }
 
         statusEffectHolder.ClearStatusEffects();
@@ -449,12 +462,11 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
 
         // Actions to do when the state has first started
-        if (attackState == AttackState.Aiming || attackState == AttackState.Attacking)
+        if (attackState == AttackState.Aiming)
         {
             charAgent.SetAllowMovementInput(false);
         }
-
-        if (attackState == AttackState.ChargingUp)
+        else if (attackState == AttackState.ChargingUp)
         {
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
@@ -530,68 +542,111 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         isAttacking = false;
     }
 
-    public void InitiateDodge()
+    public void TransferToDodgeState(DodgeState dodgeState)
     {
-        if (CanInitiateDodge())
-        {
-            Vector3 dodgeDirection = GetRotationInput().normalized;
-
-            if (dodgeDirection == Vector3.zero)
-            {
-                Quaternion qInverse = Quaternion.Inverse(MovementController.MovementAxis);
-                dodgeDirection = qInverse * transform.forward;
-            }
-
-            dodge.InitiateDodge(dodgeDirection, GetRotationInput().normalized);
-        } 
+        this.dodgeState = dodgeState;
     }
 
-    public bool CanInitiateDodge()
+    public void InitiateDodgeState(DodgeState dodgeState)
     {
-        // Specific requirements to the class rather than the dodge
-        if (dodge == null)
+        if (CanInitiateDodgeState(dodgeState, dodgeHolder.GetDodgeId()))
         {
-            Debug.LogWarning($"{name} Does Not Have An Dodge");
+            dodgeHolder.GetActiveDodge().TransferToDodgeState(dodgeState);
+        }
+    }
+
+    public bool CanInitiateDodgeState(DodgeState dodgeState, string dodgeId)
+    {
+        if (!dodgeHolder.CanDodge())
+        {
+            return false;
+        }
+        else if (dodgeState == DodgeState.Aiming && (isAttacking || IsDodging || isPathfinding))
+        {
+            return false;
+        }
+        else if (this.dodgeState == dodgeState)
+        {
             return false;
         }
 
-        return (!IsDodging && attackState == AttackState.Idle && !isPathfinding);
+        return true;
     }
 
-    public void OnDodgeStart()
+    public void OnDodgeStateStart(DodgeState dodgeState)
     {
-        // Actions to do when the dodge has first started
-        //playerAnimation.Dodge();
+        // Can be Simplified
 
-        isDodging = true;
-        charAgent.SetAllowMovementInput(false);
-        charAgent.SetAllowRotationInput(false);
+        if (dodgeState != DodgeState.Idle)
+        {
+            isDodging = true;
+        }
+
+        // CHANGED THIS
+        // Actions to do when the state has first started
+        if (dodgeState == DodgeState.Aiming)
+        {
+            charAgent.SetAllowMovementInput(false);
+        }
+        else if (dodgeState == DodgeState.ChargingUp)
+        {
+            charAgent.SetAllowMovementInput(false);
+            charAgent.SetAllowRotationInput(false);
+        }
+        else if (dodgeState == DodgeState.Dodging)
+        {
+            Aim();
+            charAgent.SetAllowMovementInput(false);
+            charAgent.SetAllowRotationInput(false);
+        }
+        else if (dodgeState == DodgeState.CoolingDown)
+        {
+            charAgent.SetAllowMovementInput(false);
+            charAgent.SetAllowRotationInput(false);
+        }
+        else if (dodgeState == DodgeState.Idle)
+        {
+            charAgent.SetAllowMovementInput(true);
+            charAgent.SetAllowRotationInput(true);
+
+            isDodging = false;
+        }
     }
 
-    public void OnDodge()
+    public void OnDodgeState(DodgeState dodgeState)
     {
-        // Actions to do while the dodge is happening
+        // Actions to do while the state is happening
+        if (dodgeState == DodgeState.Aiming)
+        {
+            Aim();
+        }
     }
 
-    public void OnDodgeEnd()
+    public void OnDodgeStateEnd(DodgeState dodgeState)
     {
-        // Actions to do when the dodge has ended
-        isDodging = false;
+        // Actions to do when the state has ended
         charAgent.SetAllowMovementInput(true);
         charAgent.SetAllowRotationInput(true);
     }
 
-    public void OnDodgeCancel(bool otherHasCancelled)
+    public void OnDodgeStateCancel(DodgeState dodgeState, bool otherHasCancelled)
     {
         // Actions to do when the state is cancelled
         if (!otherHasCancelled)
         {
-            dodge.OnDodgeCancel(true);
+            if (dodgeState == DodgeState.Idle)
+            {
+                // Cancelled On Idle
+                return;
+            }
+
+            dodgeHolder.GetActiveDodge().OnDodgeStateCancel(dodgeState, true);
         }
 
-        isDodging = false;
+        this.dodgeState = DodgeState.Idle;
         charAgent.SetAllowMovementInput(true);
         charAgent.SetAllowRotationInput(true);
+        isDodging = false;
     }
 
     public void TransferToPathfindingState(bool isPathfinding)

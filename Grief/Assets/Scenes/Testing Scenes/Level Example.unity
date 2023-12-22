@@ -960,7 +960,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh47176
+  m_Name: pb_Mesh135232
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1913,7 +1913,6 @@ MonoBehaviour:
   panTimeMultiplier: 10
   maxHealth: 10
   damageableEntities: 01000000020000000300000004000000
-  dodgeTemplate: {fileID: 11400000, guid: 4bbca63ffbabf48489a376a71ab7f29a, type: 2}
 --- !u!4 &414319064
 Transform:
   m_ObjectHideFlags: 0
@@ -2544,7 +2543,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh47122
+  m_Name: pb_Mesh135168
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3958,7 +3957,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh47026
+  m_Name: pb_Mesh135064
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
