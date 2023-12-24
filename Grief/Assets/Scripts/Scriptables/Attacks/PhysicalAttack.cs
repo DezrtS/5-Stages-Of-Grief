@@ -51,8 +51,8 @@ public abstract class PhysicalAttack : Attack
         return base.Clone(newClone, attacker, parentTransform);
     }
 
-    public override float GetDamage()
+    public override void OnAttackTriggerEnter(Transform hit)
     {
-        return damage;
+        OnAttackHit(hit, damage, knockbackPower);
     }
 }

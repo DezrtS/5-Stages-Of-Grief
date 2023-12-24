@@ -4,7 +4,7 @@ public class AttackHolder : MonoBehaviour
 {
     private IAttack attacker;
 
-    [SerializeField] private Attack[] attackList;
+    [SerializeField] private Attack[] attackList = new Attack[0];
     private Attack[] clonedAttackList;
 
     private Attack activeAttack;
@@ -31,6 +31,16 @@ public class AttackHolder : MonoBehaviour
         }
 
         activeAttack = clonedAttackList[0];
+    }
+
+    public void DestroyClones()
+    {
+        for (int i = 0; i < attackCount; i++)
+        {
+            clonedAttackList[i].DestroyClone();
+        }
+
+        canAttack = false;
     }
 
     public bool CanAttack()

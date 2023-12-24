@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60ee716d2dd0c63438021eda841f064c, type: 3}
+  m_Script: {fileID: 11500000, guid: 779b124757feb69479fa5ba1ac536f08, type: 3}
   m_Name: Light Beam
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 6099641582174394987, guid: 0d6f47465dd517749942e189ffd5f7da,
-    type: 3}
-  projectileId: light_beam
-  damage: 0.2
+  projectilePrefab: {fileID: 0}
+  projectileId: 
+  damage: 0
   fireSpeed: 0
-  projectileLifespan: 10
+  projectileLifespan: 0

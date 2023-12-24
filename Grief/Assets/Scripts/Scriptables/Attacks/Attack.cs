@@ -8,6 +8,8 @@ public abstract class Attack : ScriptableObject
 {
     [Header("Attack Variables")]
     [SerializeField] private string attackId;
+    [SerializeField] private float recommendedMinAttackRange = 2;
+    [SerializeField] private float recommendedMaxAttackRange = 4;
 
     [Space(10)]
     [SerializeField] private List<StatusEffectData> applyStatusEffects = new List<StatusEffectData>();
@@ -48,16 +50,16 @@ public abstract class Attack : ScriptableObject
 
     protected IAttack attacker;
     protected Transform parentTransform;
-
-    // Put in proper place
     protected MovementController movementController;
+
     private IEnumerator attackStateCoroutine;
 
     private AttackState attackState = AttackState.Idle;
 
     public string AttackId { get { return attackId; } }
+    public float MinAttackRange { get { return recommendedMinAttackRange; } }
+    public float MaxAttackRange { get { return recommendedMaxAttackRange; } }
     public Transform ParentTransform { get { return parentTransform; } }
-    public AttackState AttackState { get { return attackState; } }
 
     public virtual Attack Clone(Attack clone, IAttack attacker, Transform parentTransform)
     {
@@ -67,27 +69,28 @@ public abstract class Attack : ScriptableObject
         }
 
         clone.attackId = attackId;
+        clone.recommendedMinAttackRange = recommendedMinAttackRange;
+        clone.recommendedMaxAttackRange = recommendedMaxAttackRange;
 
         clone.applyStatusEffects = applyStatusEffects;
         clone.recieveStatusEffects = recieveStatusEffects;
-        clone.attackCooldown = attackCooldown;
-        clone.attackCancelCooldown = attackCancelCooldown;
-        clone.attackRequiredChargeUpTime = attackRequiredChargeUpTime;
+        clone.attackStateMovements = attackStateMovements;
+
         clone.hasAimingStage = hasAimingStage;
-        clone.hasAttackStage = hasAttackStage;
         clone.maxAimTime = maxAimTime;
-        clone.maxAttackTime = maxAttackTime;
+        clone.attackRequiredChargeUpTime = attackRequiredChargeUpTime;
+        clone.attackCancelCooldown = attackCancelCooldown;
         clone.chargingUpTime = chargingUpTime;
+        clone.hasAttackStage = hasAttackStage;
+        clone.maxAttackTime = maxAttackTime;
         clone.coolingDownTime = coolingDownTime;
+        clone.attackCooldown = attackCooldown;
 
         clone.attacker = attacker;
         clone.parentTransform = parentTransform;
+        clone.parentTransform.TryGetComponent(out clone.movementController);
 
         clone.isClone = true;
-
-        // Reorganize in proper places
-        clone.attackStateMovements = attackStateMovements;
-        clone.parentTransform.TryGetComponent(out clone.movementController);
 
         return clone;
     }
@@ -96,8 +99,6 @@ public abstract class Attack : ScriptableObject
     {
         Destroy(this);
     }
-
-    public abstract float GetDamage();
 
     public virtual void TransferToAttackState(AttackState attackState)
     {
@@ -299,27 +300,65 @@ public abstract class Attack : ScriptableObject
         }
     }
 
-    // All Code Below Needs Tweaking
-    public virtual bool OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
+    public virtual void OnAttackTriggerEnter(Transform hit) { }
+
+    public virtual void OnAttackTriggerStay(Transform hit) { }
+
+    public virtual void OnAttackTriggerExit(Transform hit) { }
+
+    public virtual bool CanHitEntity(Transform hit)
     {
-        // Right now status effects do not care if they can actually be applied to the entity type
-        if (applyStatusEffects.Count > 0 && entityTransform.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
+        if (hit.TryGetComponent(out IHealth entityHealth))
         {
-            statusEffectTarget.StatusEffectHolder.AddStatusEffect(applyStatusEffects);
+            if (attacker.DamageableEntities.Contains(entityHealth.EntityType))
+            {
+                return true;
+            }
         }
 
-        return CombatManager.Instance.DamageEntity(this, attacker, entity, parentTransform, entityTransform);
-        //CombatManager.Instance.ApplyKnockback(this, parentTransform, entityTransform);
+        return false;
     }
 
-    public virtual void OnAttackTriggerStay(IHealth entity, Transform entityTransform)
+    public virtual void OnAttackHit(Transform hit, float damage, float knockbackPower)
     {
+        if (CanHitEntity(hit))
+        {
+            hit.GetComponent<IHealth>().Damage(damage);
 
+            if (applyStatusEffects.Count > 0 && hit.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
+            {
+                statusEffectTarget.StatusEffectHolder.AddStatusEffect(applyStatusEffects);
+            }
+
+            Vector3 knockbackDirection = (hit.position - parentTransform.position).normalized;
+            ApplyKnockback(hit, knockbackPower, knockbackDirection);
+        }
     }
 
-    public virtual void OnAttackTriggerExit(IHealth entity, Transform entityTransform)
+    public virtual void OnProjectileHit(BasicProjectile projectile, Transform hit, float damage, float knockbackPower)
     {
+        if (CanHitEntity(hit))
+        {
+            projectile.DestroyProjectile();
 
+            hit.GetComponent<IHealth>().Damage(damage);
+
+            if (applyStatusEffects.Count > 0 && hit.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
+            {
+                statusEffectTarget.StatusEffectHolder.AddStatusEffect(applyStatusEffects);
+            }
+
+            Vector3 knockbackDirection = projectile.transform.forward;
+            ApplyKnockback(hit, knockbackPower, knockbackDirection);
+        }
+    }
+
+    public virtual void ApplyKnockback(Transform hit, float knockbackPower, Vector3 knockbackDirection)
+    {
+        if (hit.TryGetComponent(out MovementController movementController))
+        {
+            movementController.ApplyForce(knockbackDirection.normalized * knockbackPower);
+        }
     }
 
     public void PlayAudio(EventReference audioReference)
@@ -330,12 +369,7 @@ public abstract class Attack : ScriptableObject
         }
     }
 
-    public void DamageEntity(IHealth entity)
-    {
-        CombatManager.Instance.DamageEntity(this, attacker, entity);
-    }
-
-    public virtual GameObject SpawnProjectile(Projectile projectileData, Vector3 position, Vector3 rotation)
+    public virtual GameObject SpawnProjectile(ProjectileData projectileData, Vector3 position, Vector3 rotation)
     {
         GameObject spawnedProjectile = Instantiate(projectileData.ProjectilePrefab, position, Quaternion.Euler(rotation));
         BasicProjectile basicProjectile = spawnedProjectile.GetComponent<BasicProjectile>();
@@ -353,7 +387,7 @@ public abstract class Attack : ScriptableObject
         return spawnedProjectile;
     }
 
-    public virtual void FireProjectile(Projectile projectileData, GameObject projectile, Vector3 direction)
+    public virtual void FireProjectile(ProjectileData projectileData, GameObject projectile, Vector3 direction)
     {
         Rigidbody rig = projectile.GetComponent<Rigidbody>();
 

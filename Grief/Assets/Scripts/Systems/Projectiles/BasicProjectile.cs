@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BasicProjectile : MonoBehaviour
 {
-    protected Projectile projectileData;
+    protected ProjectileData projectileData;
     protected Attack parentAttack;
     protected bool canDamage = true;
     protected bool isBeingDestroyed = false;
@@ -25,7 +25,7 @@ public class BasicProjectile : MonoBehaviour
         }
     }
 
-    public void SetProjectileData(Projectile projectileData)
+    public void SetProjectileData(ProjectileData projectileData)
     {
         this.projectileData = projectileData;
     }
@@ -39,30 +39,21 @@ public class BasicProjectile : MonoBehaviour
     {
         if (isFired)
         {
-            OnProjectileHit(other);
+            OnProjectileHit(other.transform);
         }
     }
 
-    public virtual void OnProjectileHit(Collider other)
+    public virtual void OnProjectileHit(Transform hit)
     {
-        if (other.TryGetComponent(out IHealth entityHealth) && canDamage)
-        {
-            if (parentAttack == null)
-            {
-                DestroyProjectile();
-            }
-            else
-            {
-                if (parentAttack.OnAttackTriggerEnter(entityHealth, other.transform))
-                {
-                    DestroyProjectile();
-                }
-            }
-        }
-
-        if (other.tag == "Wall")
+        if (hit.CompareTag("Wall") || parentAttack == null)
         {
             DestroyProjectile();
+            return;
+        }
+
+        if (canDamage)
+        {
+            parentAttack.OnProjectileHit(this, hit, projectileData.Damage, projectileData.KnockbackPower);
         }
     }
 

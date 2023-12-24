@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60ee716d2dd0c63438021eda841f064c, type: 3}
+  m_Script: {fileID: 11500000, guid: 779b124757feb69479fa5ba1ac536f08, type: 3}
   m_Name: Teleporting Kunai Data
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 3474950850733570568, guid: 7e4ae7069eeff864dbce02df26970f29,

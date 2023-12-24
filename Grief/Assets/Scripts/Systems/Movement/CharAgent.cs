@@ -375,6 +375,7 @@ public class CharAgent : MovementController
         SetAllowRotationInput(true);
     }
 
+    // Change to Play footstep sound at a certain rate
     private void UpdateSound()
     {
         if (velocity.magnitude > 0.75f)

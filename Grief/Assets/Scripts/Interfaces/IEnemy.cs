@@ -4,8 +4,11 @@ public enum EnemyState
     Idle,
     Patrolling,
     Chasing,
+    Repositioning,
     Attacking,
+    Dodging,
     Fleeing,
+
     Stunned,
     Dead
 }

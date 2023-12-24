@@ -5,7 +5,7 @@ public class SingleProjectileAttack : RangedAttack
 {
     [Space(10)]
     [Header("Single Projectile Attack Variables")]
-    [SerializeField] private Projectile projectileData;
+    [SerializeField] private ProjectileData projectileData;
     [SerializeField] private Vector3 spawnOffset;
     [SerializeField] private bool fireProjectileOnAttack = true;
 
@@ -32,11 +32,6 @@ public class SingleProjectileAttack : RangedAttack
         newClone.spawnOffset = spawnOffset;
 
         return base.Clone(newClone, attacker, parentTransform);
-    }
-
-    public override float GetDamage()
-    {
-        return projectileData.Damage;
     }
 
     public override void OnAttackStateStart(AttackState attackState)

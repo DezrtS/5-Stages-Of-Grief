@@ -4,7 +4,7 @@ public class DodgeHolder : MonoBehaviour
 {
     private IDodge dodger;
 
-    [SerializeField] private Dodge[] dodgeList;
+    [SerializeField] private Dodge[] dodgeList = new Dodge[0];
     private Dodge[] clonedDodgeList;
 
     private Dodge activeDodge;
@@ -31,6 +31,16 @@ public class DodgeHolder : MonoBehaviour
         }
 
         activeDodge = clonedDodgeList[0];
+    }
+
+    public void DestroyClones()
+    {
+        for (int i = 0; i < dodgeCount; i++)
+        {
+            clonedDodgeList[i].DestroyClone();
+        }
+
+        canDodge = false;
     }
 
     public bool CanDodge()

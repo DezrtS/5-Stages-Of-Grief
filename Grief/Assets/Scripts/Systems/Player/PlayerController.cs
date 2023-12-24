@@ -376,9 +376,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public void Die()
     {
-        // Destroy Attacks and Dodges on death (Mostly for enemies and not player)
-        //Debug.Log("Player Has Died");
-
         if (isAttacking)
         {
             OnAttackStateCancel(attackState, false);
@@ -575,15 +572,20 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public void OnDodgeStateStart(DodgeState dodgeState)
     {
-        // Can be Simplified
+        // Actions to do when the state has first started
+        if (dodgeState == DodgeState.Idle)
+        {
+            charAgent.SetAllowMovementInput(true);
+            charAgent.SetAllowRotationInput(true);
 
-        if (dodgeState != DodgeState.Idle)
+            isDodging = false;
+            return;
+        }
+        else
         {
             isDodging = true;
         }
 
-        // CHANGED THIS
-        // Actions to do when the state has first started
         if (dodgeState == DodgeState.Aiming)
         {
             charAgent.SetAllowMovementInput(false);
@@ -595,7 +597,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
         else if (dodgeState == DodgeState.Dodging)
         {
-            Aim();
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
         }
@@ -603,13 +604,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
-        }
-        else if (dodgeState == DodgeState.Idle)
-        {
-            charAgent.SetAllowMovementInput(true);
-            charAgent.SetAllowRotationInput(true);
-
-            isDodging = false;
         }
     }
 
@@ -675,18 +669,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public void CancelPathfinding()
     {
         charAgent.StopPathfinding();
-    }
-
-    public void ApplyHealthStatusEffect(float healthEffectValue, bool isDamage)
-    {
-        if (isDamage)
-        {
-            Damage(healthEffectValue);
-        }
-        else
-        {
-            Heal(healthEffectValue);
-        }
     }
 
     // ---------------------------------------------------------------------------------------------------------

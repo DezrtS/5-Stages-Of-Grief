@@ -14,6 +14,4 @@ public abstract class RangedAttack : Attack
     [SerializeField] protected ParticleSystem particleEffectOnAim;
     [SerializeField] protected ParticleSystem particleEffectOnAttack;
     [SerializeField] protected ParticleSystem particleEffectOnCancel;
-
-    public override abstract float GetDamage();
 }

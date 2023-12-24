@@ -1,17 +1,17 @@
 using FMOD.Studio;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
+public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind, IStatusEffectTarget
 {
-    private bool isAggro = false;
-
     // ---------------------------------------------------------------------------------------------------------
     // Enemy Variables
     // ---------------------------------------------------------------------------------------------------------
 
+    [Header("Enemy")]
     [SerializeField] private float chaseActivationDistance = 10;
 
     [SerializeField] private float timeBetweenWanders = 5;
@@ -46,20 +46,21 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
     [Space(10)]
     [Header("Attacking")]
     [SerializeField] private List<EntityType> damageableEntities;
-    [SerializeField] private Attack attackTemplate;
-    private Attack activeAttack;
-    private bool isAttacking;
+    private AttackHolder attackHolder;
     private AttackState attackState;
+    private bool isAttacking;
 
     [Space(10)]
     [Header("Dodging")]
-    [SerializeField] private Dodge dodgeTemplate;
-    private Dodge dodge;
+    private DodgeHolder dodgeHolder;
+    private DodgeState dodgeState;
     private bool isDodging;
 
     private bool isPathfinding;
     private Vector3 pathfindDestination;
     private NavMeshAgent navMeshAgent;
+
+    private StatusEffectHolder statusEffectHolder;
 
     // ---------------------------------------------------------------------------------------------------------
     // Interface Implementation Fields
@@ -70,14 +71,16 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
     public float Health { get { return health; } }
     public bool IsInvincible { get { return isInvincible; } }
     public EnemyState EnemyState { get { return enemyState; } }
-    public Attack ActiveAttack { get { return attackTemplate; } }
+    public AttackHolder AttackHolder { get { return attackHolder; } }
     public bool IsAttacking { get { return isAttacking; } }
     public AttackState AttackState { get { return attackState; } }
     public List<EntityType> DamageableEntities { get { return damageableEntities; } }
-    public Dodge Dodge { get { return dodgeTemplate; } }
+    public DodgeHolder DodgeHolder { get { return dodgeHolder; } }
     public bool IsDodging { get { return isDodging; } }
+    public DodgeState DodgeState { get { return dodgeState; } }
     public bool IsPathfinding { get { return isPathfinding; } }
     public Vector3 PathfindDestination { get { return pathfindDestination; } set { pathfindDestination = value; } }
+    public StatusEffectHolder StatusEffectHolder { get { return statusEffectHolder; } }
 
     // ---------------------------------------------------------------------------------------------------------
     // Default Unity Methods
@@ -88,8 +91,20 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
         navMeshAgent = GetComponent<NavMeshAgent>();
         rigidAgent = GetComponent<RigidAgent>();
 
-        //dodge = dodgeTemplate.Clone(dodge, this, rigidAgent);
-        activeAttack = attackTemplate.Clone(activeAttack, this, transform);
+        if (!TryGetComponent(out attackHolder))
+        {
+            attackHolder = transform.AddComponent<AttackHolder>();
+        }
+
+        if (!TryGetComponent(out dodgeHolder))
+        {
+            dodgeHolder = transform.AddComponent<DodgeHolder>();
+        }
+
+        if (!TryGetComponent(out statusEffectHolder))
+        {
+            statusEffectHolder = transform.AddComponent<StatusEffectHolder>();
+        }
 
         health = maxHealth;
     }
@@ -106,8 +121,6 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
     private void FixedUpdate()
     {
         OnEnemyState(enemyState);
-
-        // Do checks for when to enter each enemy state and initiate them in each OnState
     }
 
     // ---------------------------------------------------------------------------------------------------------
@@ -121,11 +134,9 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
             return;
         }
 
-        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.iceBreak, Vector3.zero);
+        health = Mathf.Max(health - damage, 0);
 
         EffectManager.Instance.Flash(transform);
-
-        health = Mathf.Max(health - damage, 0);
 
         if (health == 0)
         {
@@ -140,40 +151,20 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
 
     public virtual void Die()
     {
-        // Destroy Attacks and Dodges on death
         if (isAttacking)
         {
             OnAttackStateCancel(attackState, false);
         }
         if (isDodging)
         {
-            //OnDodgeCancel(false);
+            OnDodgeStateCancel(dodgeState, false);
         }
 
-        if (isAggro)
-        {
-            player.targeting--;
-            if (player.targeting == 0)
-            {
-                AudioManager.Instance.SetAmbienceParameter("combat_intensity", 0);
-                //Debug.Log("Setting Combat OFF");
-            }
-        }
+        statusEffectHolder.ClearStatusEffects();
+        attackHolder.DestroyClones();
+        dodgeHolder.DestroyClones();
 
-        EventInstance dialogue = PlayerController.Instance.dialogue;
-
-        if (Random.Range(0, 2) == 1)
-        {
-            dialogue.getPlaybackState(out PLAYBACK_STATE playbackState);
-            if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
-            {
-                dialogue.setParameterByName("dialogue_option", 2);
-                dialogue.start();
-            }
-        }
-
-        activeAttack.DestroyClone();
-        //dodge.DestroyClone();
+        CancelPathfinding();
 
         Destroy(gameObject);
     }
@@ -208,39 +199,23 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
 
                 break;
             case EnemyState.Idle:
-                if (isAggro)
-                {
-                    player.targeting--;
-                    if (player.targeting == 0)
-                    {
-                        AudioManager.Instance.SetAmbienceParameter("combat_intensity", 0);
-                        //Debug.Log("Setting Combat OFF");
-                    }
-                }
 
-                isAggro = false;
                 break;
             case EnemyState.Patrolling:
                 pathfindDestination = spawnPosition;
                 InitiatePathfinding();
                 break;
             case EnemyState.Chasing:
-                if (!isAggro)
-                {
-                    player.targeting++;
 
-                    AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.snarl, transform.position);
+                break;
+            case EnemyState.Repositioning:
 
-                    if (player.targeting == 1)
-                    {
-                        //Debug.Log("Setting Combat ON");
-                        AudioManager.Instance.SetAmbienceParameter("combat_intensity", 1);
-                    }
-                }
-
-                isAggro = true;
                 break;
             case EnemyState.Attacking:
+
+                break;
+            case EnemyState.Dodging: 
+                
                 break;
             case EnemyState.Fleeing:
 
@@ -259,6 +234,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
         switch (enemyState)
         {
             case EnemyState.Deciding:
+                OnDeciding();
                 break;
             case EnemyState.Idle:
                 OnIdle();
@@ -269,8 +245,14 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
             case EnemyState.Chasing:
                 OnChasing();
                 break;
+            case EnemyState.Repositioning:
+                OnRepositioning();
+                break;
             case EnemyState.Attacking:
                 OnAttacking();
+                break;
+            case EnemyState.Dodging:
+                OnDodging();
                 break;
             case EnemyState.Fleeing:
                 OnFleeing();
@@ -300,8 +282,14 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
             case EnemyState.Chasing:
 
                 break;
+            case EnemyState.Repositioning:
+
+                break;
             case EnemyState.Attacking:
 
+                break;
+            case EnemyState.Dodging:
+                
                 break;
             case EnemyState.Fleeing:
 
@@ -315,25 +303,6 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
         }
     }
 
-    public virtual void SwitchActiveAttack(Attack activeAttack)
-    {
-        if (CanSwitchActiveAttack(activeAttack))
-        {
-            isAttacking = false;
-            this.activeAttack = activeAttack;
-        }
-    }
-
-    public virtual bool CanSwitchActiveAttack(Attack activeAttack)
-    {
-        if (this.activeAttack == activeAttack)
-        {
-            return false;
-        }
-
-        return attackState == AttackState.Idle;
-    }
-
     public virtual void TransferToAttackState(AttackState attackState)
     {
         this.attackState = attackState;
@@ -341,25 +310,22 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
 
     public virtual void InitiateAttackState(AttackState attackState)
     {
-        if (CanInitiateAttackState(attackState, activeAttack.AttackId))
+        if (CanInitiateAttackState(attackState, attackHolder.GetAttackId()))
         {
-            activeAttack.TransferToAttackState(attackState);
+            attackHolder.GetActiveAttack().TransferToAttackState(attackState);
         }
     }
 
     public virtual bool CanInitiateAttackState(AttackState attackState, string attackId)
     {
-        // Specific requirements to the class rather than the attack
-
-        if (activeAttack == null)
+        if (!attackHolder.CanAttack())
         {
-            Debug.LogWarning($"{name} Does Not Have An Attack");
             return false;
         }
         else if (attackState == AttackState.Aiming && (isAttacking || isDodging || isPathfinding))
         {
             return false;
-        }
+        } 
         else if (this.attackState == attackState)
         {
             return false;
@@ -371,17 +337,24 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
     public virtual void OnAttackStateStart(AttackState attackState)
     {
         // Actions to do when the state has first started
-        if (attackState != AttackState.Idle)
+        if (attackState == AttackState.Idle)
+        {
+            rigidAgent.SetAllowMovementInput(true);
+            rigidAgent.SetAllowRotationInput(true);
+
+            isAttacking = false;
+            return;
+        }
+        else
         {
             isAttacking = true;
         }
 
-        if (attackState == AttackState.Aiming || attackState == AttackState.Attacking)
+        if (attackState == AttackState.Aiming)
         {
             rigidAgent.SetAllowMovementInput(false);
-        }
-
-        if (attackState == AttackState.ChargingUp)
+        } 
+        else if (attackState == AttackState.ChargingUp)
         {
             rigidAgent.SetAllowMovementInput(false);
             rigidAgent.SetAllowRotationInput(false);
@@ -395,13 +368,6 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
         {
             rigidAgent.SetAllowMovementInput(false);
             rigidAgent.SetAllowRotationInput(false);
-        }
-        else if (attackState == AttackState.Idle)
-        {
-            rigidAgent.SetAllowMovementInput(true);
-            rigidAgent.SetAllowRotationInput(true);
-
-            isAttacking = false;
         }
     }
 
@@ -426,13 +392,123 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
         // Actions to do when the state is cancelled
         if (!otherHasCancelled)
         {
-            activeAttack.OnAttackStateCancel(attackState, true);
+            if (attackState == AttackState.Idle)
+            {
+                // Cancel called while idling
+                return;
+            }
+
+            attackHolder.GetActiveAttack().OnAttackStateCancel(attackState, true);
         }
 
         this.attackState = AttackState.Idle;
         rigidAgent.SetAllowMovementInput(true);
         rigidAgent.SetAllowRotationInput(true);
         isAttacking = false;
+    }
+
+    public void TransferToDodgeState(DodgeState dodgeState)
+    {
+        this.dodgeState = dodgeState;
+    }
+
+    public void InitiateDodgeState(DodgeState dodgeState)
+    {
+        if (CanInitiateDodgeState(dodgeState, dodgeHolder.GetDodgeId()))
+        {
+            dodgeHolder.GetActiveDodge().TransferToDodgeState(dodgeState);
+        }
+    }
+
+    public bool CanInitiateDodgeState(DodgeState dodgeState, string dodgeId)
+    {
+        if (!dodgeHolder.CanDodge())
+        {
+            return false;
+        }
+        else if (dodgeState == DodgeState.Aiming && (isAttacking || IsDodging || isPathfinding))
+        {
+            return false;
+        }
+        else if (this.dodgeState == dodgeState)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void OnDodgeStateStart(DodgeState dodgeState)
+    {
+        // Actions to do when the state has first started
+        if (dodgeState == DodgeState.Idle)
+        {
+            rigidAgent.SetAllowMovementInput(true);
+            rigidAgent.SetAllowRotationInput(true);
+
+            isDodging = false;
+            return;
+        }
+        else
+        {
+            isDodging = true;
+        }
+
+        if (dodgeState == DodgeState.Aiming)
+        {
+            rigidAgent.SetAllowMovementInput(false);
+        }
+        else if (dodgeState == DodgeState.ChargingUp)
+        {
+            rigidAgent.SetAllowMovementInput(false);
+            rigidAgent.SetAllowRotationInput(false);
+        }
+        else if (dodgeState == DodgeState.Dodging)
+        {
+            rigidAgent.SetAllowMovementInput(false);
+            rigidAgent.SetAllowRotationInput(false);
+        }
+        else if (dodgeState == DodgeState.CoolingDown)
+        {
+            rigidAgent.SetAllowMovementInput(false);
+            rigidAgent.SetAllowRotationInput(false);
+        }
+    }
+
+    public void OnDodgeState(DodgeState dodgeState)
+    {
+        // Actions to do while the state is happening
+        if (dodgeState == DodgeState.Aiming)
+        {
+            Aim();
+        }
+    }
+
+    public void OnDodgeStateEnd(DodgeState dodgeState)
+    {
+        // Actions to do when the state has ended
+        rigidAgent.SetAllowMovementInput(true);
+        rigidAgent.SetAllowRotationInput(true);
+    }
+
+    public void OnDodgeStateCancel(DodgeState dodgeState, bool otherHasCancelled)
+    {
+        // Actions to do when the state is cancelled
+        if (!otherHasCancelled)
+        {
+            if (dodgeState == DodgeState.Idle)
+            {
+                // Cancel called while idling
+                return;
+            }
+
+            dodgeHolder.GetActiveDodge().OnDodgeStateCancel(dodgeState, true);
+        }
+
+        this.dodgeState = DodgeState.Idle;
+        rigidAgent.SetAllowMovementInput(true);
+        rigidAgent.SetAllowRotationInput(true);
+        isDodging = false;
     }
 
     public void TransferToPathfindingState(bool isPathfinding)
@@ -466,6 +542,11 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
     // ---------------------------------------------------------------------------------------------------------
     // Extra Methods
     // ---------------------------------------------------------------------------------------------------------
+
+    public virtual void OnDeciding()
+    {
+
+    }
 
     public virtual void OnIdle()
     {
@@ -538,6 +619,11 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
         }
     }
 
+    public virtual void OnRepositioning()
+    {
+
+    }
+
     public virtual void OnAttacking()
     {
         if (GetVectorToPlayer().magnitude > attackRange && !isAttacking)
@@ -551,6 +637,11 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
             Aim();
             InitiateAttackState(AttackState.Aiming);
         }
+    }
+
+    public virtual void OnDodging()
+    {
+
     }
 
     public virtual void OnFleeing()
@@ -585,7 +676,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
 
         for (int wanderTry = 1; wanderTry <= 5; wanderTry++)
         {
-            Vector3 wanderDestination = transform.position + new Vector3(UnityEngine.Random.Range(-wanderRange, wanderRange), 0, UnityEngine.Random.Range(-wanderRange, wanderRange));
+            Vector3 wanderDestination = transform.position + new Vector3(Random.Range(-wanderRange, wanderRange), 0, Random.Range(-wanderRange, wanderRange));
 
             if (NavMesh.SamplePosition(wanderDestination, out _, navMeshAgent.height * 2, NavMesh.AllAreas))
             {
@@ -610,6 +701,6 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IPathfind
 
     public bool RollDice(float chance)
     {
-        return chance <= UnityEngine.Random.Range(0, 100);
+        return chance <= Random.Range(0, 100);
     }
 }

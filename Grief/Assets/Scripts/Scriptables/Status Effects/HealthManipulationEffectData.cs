@@ -15,6 +15,13 @@ public class HealthManipulationEffectData : StatusEffectData
 
     public override void ApplyStatusEffect(IStatusEffectTarget statusEffectTarget)
     {
-        statusEffectTarget.ApplyHealthStatusEffect(healthEffectValue, isDamage);
+        if (isDamage)
+        {
+            statusEffectTarget.StatusEffectHolder.transform.GetComponent<IHealth>().Damage(healthEffectValue);
+        }
+        else
+        {
+            statusEffectTarget.StatusEffectHolder.transform.GetComponent<IHealth>().Heal(healthEffectValue);
+        }
     }
 }

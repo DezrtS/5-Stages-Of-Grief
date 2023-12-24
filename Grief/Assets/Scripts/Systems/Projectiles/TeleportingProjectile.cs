@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class TeleportingProjectile : BasicProjectile
 {
-    public override void OnProjectileHit(Collider other)
+    public override void OnProjectileHit(Transform hit)
     {
-        if (other.CompareTag("Wall"))
-        {
-            parentAttack.ParentTransform.GetComponent<MovementController>().Teleport(transform.position);
-            DestroyProjectile();
-        }
+        base.OnProjectileHit(hit);
+            
+        parentAttack.ParentTransform.GetComponent<MovementController>().Teleport(transform.position);
+        DestroyProjectile();
     }
 }

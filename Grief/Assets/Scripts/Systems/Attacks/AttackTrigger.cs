@@ -13,25 +13,16 @@ public class AttackTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out IHealth entityHealth))
-        {
-            parentAttack.OnAttackTriggerEnter(entityHealth, other.transform);
-        }
+        parentAttack.OnAttackTriggerEnter(other.transform);
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        //if (other.TryGetComponent(out IHealth entityHealth))
-        //{
-        //    parentAttack.OnAttackTriggerStay(entityHealth, other.transform);
-        //}
-    }
+    //private void OnTriggerStay(Collider other)
+    //{
+    //    parentAttack.OnAttackTriggerStay(other.transform);
+    //}
 
     private void OnTriggerExit(Collider other)
     {
-        //if (other.TryGetComponent(out IHealth entityHealth))
-        //{
-        //    parentAttack.OnAttackTriggerExit(entityHealth, other.transform);
-        //}
+        parentAttack.OnAttackTriggerExit(other.transform);
     }
 }
