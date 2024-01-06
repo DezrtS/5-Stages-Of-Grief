@@ -48,13 +48,13 @@ public abstract class StatusEffectData : ScriptableObject
     {
         if (particleEffectOnStartPrefab != null)
         {
-            GameObject particleOnStart = Instantiate(particleEffectOnStartPrefab, statusEffectTarget.StatusEffectHolder.ParticleEffectHolder.transform);
+            GameObject particleOnStart = Instantiate(particleEffectOnStartPrefab, statusEffectTarget.ParticleEffectHolder.transform);
             particleEffectsOnStart.Add(particleOnStart.GetComponent<ParticleSystem>());
         }
 
         if (particleEffectOnApplyPrefab != null)
         {
-            GameObject particleOnApply = Instantiate(particleEffectOnApplyPrefab, statusEffectTarget.StatusEffectHolder.ParticleEffectHolder.transform);
+            GameObject particleOnApply = Instantiate(particleEffectOnApplyPrefab, statusEffectTarget.ParticleEffectHolder.transform);
             particleEffectsOnApply.Add(particleOnApply.GetComponent<ParticleSystem>());
         }
     }

@@ -11,7 +11,11 @@ public abstract class RangedAttack : Attack
 
     [Space(15)]
     [Header("Particle Effect Variables")]
-    [SerializeField] protected ParticleSystem particleEffectOnAim;
-    [SerializeField] protected ParticleSystem particleEffectOnAttack;
-    [SerializeField] protected ParticleSystem particleEffectOnCancel;
+    [SerializeField] protected GameObject particleEffectOnAimPrefab;
+    [SerializeField] protected GameObject particleEffectOnAttackPrefab;
+    [SerializeField] protected GameObject particleEffectOnCancelPrefab;
+
+    protected ParticleSystem particleEffectOnAim;
+    protected ParticleSystem particleEffectOnAttack;
+    protected ParticleSystem particleEffectOnCancel;
 }

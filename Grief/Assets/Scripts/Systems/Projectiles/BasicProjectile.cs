@@ -12,16 +12,14 @@ public class BasicProjectile : MonoBehaviour
 
     private float spawnTime = 0;
 
-    private void Start()
-    {
-        spawnTime = Time.timeSinceLevelLoad;
-    }
-
     private void FixedUpdate()
     {
-        if (Time.timeSinceLevelLoad - spawnTime >= projectileData.ProjectileLifespan && !isBeingDestroyed)
+        if (isFired)
         {
-            DestroyProjectile();
+            if (Time.timeSinceLevelLoad - spawnTime >= projectileData.ProjectileLifespan && !isBeingDestroyed)
+            {
+                DestroyProjectile();
+            }
         }
     }
 
@@ -60,6 +58,7 @@ public class BasicProjectile : MonoBehaviour
     public virtual void OnFireProjectile()
     {
         isFired = true;
+        spawnTime = Time.timeSinceLevelLoad;
     }
 
     public virtual void DestroyProjectile()

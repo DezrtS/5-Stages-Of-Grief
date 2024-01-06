@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Fire Punch
   m_EditorClassIdentifier: 
   attackId: fire_punch
-  attackStatusEffects: []
-  stateMovements: []
+  recommendedAttackRange: 2
+  attackRangeDeviation: 1
+  applyStatusEffects: []
+  recieveStatusEffects: []
+  attackStateMovements: []
   hasAimingStage: 1
   maxAimTime: 99
   attackRequiredChargeUpTime: 0
@@ -28,7 +31,36 @@ MonoBehaviour:
   knockbackPower: 20
   attackTriggerScale: 6
   attackTriggerSpawnDistance: 3
-  playAudioIdOnAim: 
-  playAudioIdOnAttack: player_attack1
-  playAudioIdOnCooldown: 
-  playAudioIdOnCancel: 
+  playAudioIdOnAim:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnAttack:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCooldown:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCancel:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  particleEffectOnAimPrefab: {fileID: 6400168622586035988, guid: 824ee86bbbc98044984ce6620129a115,
+    type: 3}
+  particleEffectOnAttackPrefab: {fileID: 0}
+  particleEffectOnCooldownPrefab: {fileID: 0}
+  particleEffectOnCancelPrefab: {fileID: 0}

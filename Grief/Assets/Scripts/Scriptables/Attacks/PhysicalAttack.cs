@@ -19,10 +19,15 @@ public abstract class PhysicalAttack : Attack
 
     [Space(15)]
     [Header("Particle Effect Variables")]
-    [SerializeField] protected ParticleSystem particleEffectOnAim;
-    [SerializeField] protected ParticleSystem particleEffectOnAttack;
-    [SerializeField] protected ParticleSystem particleEffectOnCooldown;
-    [SerializeField] protected ParticleSystem particleEffectOnCancel;
+    [SerializeField] protected GameObject particleEffectOnAimPrefab;
+    [SerializeField] protected GameObject particleEffectOnAttackPrefab;
+    [SerializeField] protected GameObject particleEffectOnCooldownPrefab;
+    [SerializeField] protected GameObject particleEffectOnCancelPrefab;
+
+    protected ParticleSystem particleEffectOnAim;
+    protected ParticleSystem particleEffectOnAttack;
+    protected ParticleSystem particleEffectOnCooldown;
+    protected ParticleSystem particleEffectOnCancel;
 
     public override Attack Clone(Attack clone, IAttack attacker, Transform parentTransform)
     {
@@ -43,10 +48,10 @@ public abstract class PhysicalAttack : Attack
         newClone.playAudioIdOnCooldown = playAudioIdOnCooldown;
         newClone.playAudioIdOnCancel = playAudioIdOnCancel;
 
-        newClone.particleEffectOnAim = particleEffectOnAim;
-        newClone.particleEffectOnAttack = particleEffectOnAttack;
-        newClone.particleEffectOnCooldown = particleEffectOnCooldown;
-        newClone.particleEffectOnCancel = particleEffectOnCancel;
+        newClone.particleEffectOnAimPrefab = particleEffectOnAimPrefab;
+        newClone.particleEffectOnAttackPrefab = particleEffectOnAttackPrefab;
+        newClone.particleEffectOnCooldownPrefab = particleEffectOnCooldownPrefab;
+        newClone.particleEffectOnCancelPrefab = particleEffectOnCancelPrefab;
 
         return base.Clone(newClone, attacker, parentTransform);
     }

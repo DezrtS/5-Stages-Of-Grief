@@ -18,10 +18,13 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     [Range(5, 100)]
     [SerializeField] private float chanceToWander = 50;
     [SerializeField] private float wanderRange = 5;
-    [SerializeField] private float attackRange = 4;
-    [SerializeField] private float stoppingRange = 3;
     [SerializeField] private float maxTotalWanderRange = 10;
     [SerializeField] private float lostPlayerRecoverTime = 4;
+
+    private float attackRange = 1;
+    private float attackRangeDeviation = 1;
+
+    private bool chooseNewAttack;
 
     private PlayerController player;
     private RigidAgent rigidAgent;
@@ -42,11 +45,14 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     private bool isInvincible;
 
     private EnemyState enemyState;
+    private bool isQueued;
+    private bool hasRequested;
 
     [Space(10)]
     [Header("Attacking")]
     [SerializeField] private List<EntityType> damageableEntities;
     private AttackHolder attackHolder;
+    private GameObject particleEffectHolder;
     private AttackState attackState;
     private bool isAttacking;
 
@@ -71,7 +77,10 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     public float Health { get { return health; } }
     public bool IsInvincible { get { return isInvincible; } }
     public EnemyState EnemyState { get { return enemyState; } }
+    public bool IsQueued { get { return isQueued; } set { isQueued = value; } }
+    public bool HasRequested { get { return hasRequested; } set { hasRequested = value; } }
     public AttackHolder AttackHolder { get { return attackHolder; } }
+    public GameObject ParticleEffectHolder { get { return particleEffectHolder; } }
     public bool IsAttacking { get { return isAttacking; } }
     public AttackState AttackState { get { return attackState; } }
     public List<EntityType> DamageableEntities { get { return damageableEntities; } }
@@ -81,6 +90,14 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     public bool IsPathfinding { get { return isPathfinding; } }
     public Vector3 PathfindDestination { get { return pathfindDestination; } set { pathfindDestination = value; } }
     public StatusEffectHolder StatusEffectHolder { get { return statusEffectHolder; } }
+
+    // ---------------------------------------------------------------------------------------------------------
+    // Class Events
+    // ---------------------------------------------------------------------------------------------------------
+
+    public delegate void EnemyDeathHandler(Enemy enemy);
+
+    public event EnemyDeathHandler OnEnemyDeath;
 
     // ---------------------------------------------------------------------------------------------------------
     // Default Unity Methods
@@ -113,7 +130,16 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         player = PlayerController.Instance;
 
+        particleEffectHolder = Instantiate(GameManager.Instance.EmptyGameObject, transform);
+        particleEffectHolder.name = $"{name}'s Particle Effect Holder";
+
         spawnPosition = transform.position;
+
+        if (attackHolder.CanAttack())
+        {
+            attackRange = attackHolder.GetActiveAttack().AttackRange;
+            attackRangeDeviation = attackHolder.GetActiveAttack().AttackRangeDeviation;
+        }
 
         InitiateEnemyState(EnemyState.Idle);
     }
@@ -137,6 +163,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         health = Mathf.Max(health - damage, 0);
 
         EffectManager.Instance.Flash(transform);
+        //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, transform.position);
 
         if (health == 0)
         {
@@ -159,6 +186,17 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         {
             OnDodgeStateCancel(dodgeState, false);
         }
+
+        if (isQueued)
+        {
+            EnemyQueueManager.Instance.CycleOut(this);
+        }
+        else if (hasRequested)
+        {
+            EnemyQueueManager.Instance.RemoveFromQueue(this);
+        }
+
+        OnEnemyDeath?.Invoke(this);
 
         statusEffectHolder.ClearStatusEffects();
         attackHolder.DestroyClones();
@@ -195,9 +233,6 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         switch (enemyState)
         {
-            case EnemyState.Deciding:
-
-                break;
             case EnemyState.Idle:
 
                 break;
@@ -206,10 +241,10 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
                 InitiatePathfinding();
                 break;
             case EnemyState.Chasing:
-
+                //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.snarl, transform.position);
                 break;
             case EnemyState.Repositioning:
-
+                navMeshAgent.updateRotation = false;
                 break;
             case EnemyState.Attacking:
 
@@ -230,12 +265,9 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     }
 
     public virtual void OnEnemyState(EnemyState enemyState)
-    {
+    { 
         switch (enemyState)
         {
-            case EnemyState.Deciding:
-                OnDeciding();
-                break;
             case EnemyState.Idle:
                 OnIdle();
                 break;
@@ -270,9 +302,6 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         switch (enemyState)
         {
-            case EnemyState.Deciding:
-
-                break;
             case EnemyState.Idle:
 
                 break;
@@ -283,7 +312,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
 
                 break;
             case EnemyState.Repositioning:
-
+                navMeshAgent.updateRotation = true;
                 break;
             case EnemyState.Attacking:
 
@@ -343,6 +372,11 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
             rigidAgent.SetAllowRotationInput(true);
 
             isAttacking = false;
+
+            if (isQueued)
+            {
+                EnemyQueueManager.Instance.CycleOut(this);
+            }
             return;
         }
         else
@@ -543,11 +577,6 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     // Extra Methods
     // ---------------------------------------------------------------------------------------------------------
 
-    public virtual void OnDeciding()
-    {
-
-    }
-
     public virtual void OnIdle()
     {
         if (IsWithinChasingDistance())
@@ -595,13 +624,11 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     {
         Vector3 vectorToPlayer = GetVectorToPlayer();
 
-        pathfindDestination = player.transform.position - vectorToPlayer.normalized * stoppingRange;
-
-        // If stopping distance is greater than 0, player will no longer be pathfinding when this needs to trigger
+        pathfindDestination = player.transform.position - vectorToPlayer.normalized * attackRange;
 
         if (isPathfinding)
         {
-            if (vectorToPlayer.magnitude < attackRange)
+            if (vectorToPlayer.magnitude < attackRange + attackRangeDeviation)
             {
                 CancelPathfinding();
                 InitiateEnemyState(EnemyState.Attacking);
@@ -621,43 +648,104 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
 
     public virtual void OnRepositioning()
     {
+        Vector3 vectorToPlayer = GetVectorToPlayer();
 
+        pathfindDestination = player.transform.position - vectorToPlayer.normalized * attackRange;
+
+        Aim();
+
+        if (isPathfinding)
+        {
+            if (vectorToPlayer.magnitude > attackRange - attackRangeDeviation) //&& isQueued)
+            {
+                CancelPathfinding();
+                InitiateEnemyState(EnemyState.Attacking);
+            }
+        }
+        else
+        {
+            InitiatePathfinding();
+        }
     }
 
+    // Method will constantly choose random attack if attack is on cooldown
     public virtual void OnAttacking()
     {
-        if (GetVectorToPlayer().magnitude > attackRange && !isAttacking)
+        /*
+        if (!isQueued && !hasRequested)
         {
-            InitiateEnemyState(EnemyState.Chasing);
+            EnemyQueueManager.Instance.RequestToAttack(this);
+            hasRequested = true;
+            InitiateEnemyState(EnemyState.Repositioning);
             return;
         }
-
+        */
+        
         if (!isAttacking)
         {
+            if (chooseNewAttack)
+            {
+                attackHolder.SetRandomActiveAttack();
+
+                if (attackHolder.CanAttack())
+                {
+                    attackRange = attackHolder.GetActiveAttack().AttackRange;
+                    attackRangeDeviation = attackHolder.GetActiveAttack().AttackRangeDeviation;
+                }
+
+                chooseNewAttack = false;
+            }
+
+            Vector3 vectorToPlayer = GetVectorToPlayer();
+
+            if (vectorToPlayer.magnitude > attackRange + attackRangeDeviation)
+            {
+                InitiateEnemyState(EnemyState.Chasing);
+                return;
+            }
+            else if (vectorToPlayer.magnitude < attackRange - attackRangeDeviation)
+            {
+                InitiateEnemyState(EnemyState.Repositioning);
+                return;
+            }
+
             Aim();
+
             InitiateAttackState(AttackState.Aiming);
+
+            if (IsAttacking)
+            {
+                hasRequested = false;
+                chooseNewAttack = true;
+            }
         }
     }
 
-    public virtual void OnDodging()
-    {
+    public virtual void OnDodging() { }
 
+    public virtual void OnFleeing() 
+    {
+        Vector3 vectorToPlayer = GetVectorToPlayer();
+
+        float activationDiff = chaseActivationDistance - vectorToPlayer.magnitude;
+
+        pathfindDestination = transform.position + -vectorToPlayer.normalized * activationDiff;
+
+        if (!isPathfinding)
+        {
+            InitiatePathfinding();
+        }
+
+        if (!IsWithinChasingDistance())
+        {
+            timeSinceLostPlayer = Time.timeSinceLevelLoad;
+            InitiateEnemyState(EnemyState.Idle);
+        }
     }
 
-    public virtual void OnFleeing()
-    {
+    public virtual void OnStunned() { }
 
-    }
-
-    public virtual void OnStunned()
-    {
-
-    }
-
-    public virtual void OnDead()
-    {
-
-    }
+    public virtual void OnDead() { }
 
     public virtual void Aim()
     {

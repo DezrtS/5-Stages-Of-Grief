@@ -81,6 +81,7 @@ Transform:
   - {fileID: 953851365206823293}
   - {fileID: 3885575282022037772}
   - {fileID: 6270046886226912973}
+  - {fileID: 3455171512752344164}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -238,6 +239,51 @@ MonoBehaviour:
   flashObject: {fileID: 0}
   flashEffectData: {fileID: 11400000, guid: 4206cd636fddf86459d55cf9eaf09486, type: 2}
   flashMaterial: {fileID: 2100000, guid: a87de172ec36f964db0379ebe53357c3, type: 2}
+--- !u!1 &5234610735720588866
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3455171512752344164}
+  - component: {fileID: 1906911342462934507}
+  m_Layer: 0
+  m_Name: EnemyQueueManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3455171512752344164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5234610735720588866}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 798816379751952140}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1906911342462934507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5234610735720588866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cf4767d17fa9e94da896d82534d2dd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxQueueTime: 99
 --- !u!1 &6408682500121640656
 GameObject:
   m_ObjectHideFlags: 0

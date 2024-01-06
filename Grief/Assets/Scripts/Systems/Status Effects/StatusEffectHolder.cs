@@ -6,10 +6,8 @@ public class StatusEffectHolder : MonoBehaviour
 {
     private IStatusEffectTarget statusEffectTarget;
     private readonly List<StatusEffect> statusEffects = new();
-    private GameObject particleEffectHolder;
 
     public IStatusEffectTarget StatusEffectTarget {  get { return statusEffectTarget; } }
-    public GameObject ParticleEffectHolder { get { return particleEffectHolder; } }
 
     private void Awake()
     {
@@ -19,12 +17,6 @@ public class StatusEffectHolder : MonoBehaviour
             Destroy(this);
             return;
         }
-    }
-
-    private void Start()
-    {
-        particleEffectHolder = Instantiate(GameManager.Instance.EmptyGameObject, transform);
-        particleEffectHolder.name = $"{gameObject.name}'s Particle Effect Holder";
     }
 
     private void FixedUpdate()

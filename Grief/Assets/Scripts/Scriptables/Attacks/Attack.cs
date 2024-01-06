@@ -8,8 +8,8 @@ public abstract class Attack : ScriptableObject
 {
     [Header("Attack Variables")]
     [SerializeField] private string attackId;
-    [SerializeField] private float recommendedMinAttackRange = 2;
-    [SerializeField] private float recommendedMaxAttackRange = 4;
+    [SerializeField] private float recommendedAttackRange = 2;
+    [SerializeField] private float attackRangeDeviation = 1;
 
     [Space(10)]
     [SerializeField] private List<StatusEffectData> applyStatusEffects = new List<StatusEffectData>();
@@ -57,8 +57,8 @@ public abstract class Attack : ScriptableObject
     private AttackState attackState = AttackState.Idle;
 
     public string AttackId { get { return attackId; } }
-    public float MinAttackRange { get { return recommendedMinAttackRange; } }
-    public float MaxAttackRange { get { return recommendedMaxAttackRange; } }
+    public float AttackRange { get { return recommendedAttackRange; } }
+    public float AttackRangeDeviation { get { return attackRangeDeviation; } }
     public Transform ParentTransform { get { return parentTransform; } }
 
     public virtual Attack Clone(Attack clone, IAttack attacker, Transform parentTransform)
@@ -69,8 +69,8 @@ public abstract class Attack : ScriptableObject
         }
 
         clone.attackId = attackId;
-        clone.recommendedMinAttackRange = recommendedMinAttackRange;
-        clone.recommendedMaxAttackRange = recommendedMaxAttackRange;
+        clone.recommendedAttackRange = recommendedAttackRange;
+        clone.attackRangeDeviation = attackRangeDeviation;
 
         clone.applyStatusEffects = applyStatusEffects;
         clone.recieveStatusEffects = recieveStatusEffects;
@@ -104,8 +104,6 @@ public abstract class Attack : ScriptableObject
     {
         if (CanInitiateAttackState(attackState))
         {
-            OnAttackStateEnd(this.attackState);
-
             if (!hasAimingStage && attackState == AttackState.Aiming)
             {
                 attacker.InitiateAttackState(AttackState.ChargingUp);
@@ -116,6 +114,7 @@ public abstract class Attack : ScriptableObject
                 attackState = AttackState.CoolingDown;
             }
 
+            OnAttackStateEnd(this.attackState);
             this.attackState = attackState;
             InitiateAttackState(attackState);
         } 
@@ -358,6 +357,10 @@ public abstract class Attack : ScriptableObject
         if (hit.TryGetComponent(out MovementController movementController))
         {
             movementController.ApplyForce(knockbackDirection.normalized * knockbackPower);
+        }
+        else if (hit.TryGetComponent(out Rigidbody rig))
+        {
+            rig.AddForce(knockbackDirection.normalized * knockbackPower, ForceMode.Impulse);
         }
     }
 

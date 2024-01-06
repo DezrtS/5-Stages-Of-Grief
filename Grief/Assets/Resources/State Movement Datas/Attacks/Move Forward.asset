@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Move Forward
   m_EditorClassIdentifier: 
   stateMovementData:
-  - activeSpeed: 15
+  - activeSpeed: 10
     activeDirection: {x: 0, y: 0, z: 1}
     activationRangeStart: 0
     activationRangeEnd: 1

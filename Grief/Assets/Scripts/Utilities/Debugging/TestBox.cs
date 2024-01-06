@@ -27,7 +27,7 @@ public class TestBox : MonoBehaviour, IHealth
             return;
         }
 
-        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, Vector3.zero);
+        EffectManager.Instance.Flash(transform);
 
         health = Mathf.Max(health - damage, 0);
 

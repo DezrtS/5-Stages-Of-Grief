@@ -90,8 +90,6 @@ public class Dodge : ScriptableObject
     {
         if (CanInitiateDodgeState(dodgeState))
         {
-            OnDodgeStateEnd(this.dodgeState);
-
             if (!hasAimingStage && dodgeState == DodgeState.Aiming)
             {
                 dodger.InitiateDodgeState(DodgeState.ChargingUp);
@@ -102,6 +100,7 @@ public class Dodge : ScriptableObject
                 dodgeState = DodgeState.CoolingDown;
             }
 
+            OnDodgeStateEnd(this.dodgeState);
             this.dodgeState = dodgeState;
             InitiateDodgeState(dodgeState);
         }

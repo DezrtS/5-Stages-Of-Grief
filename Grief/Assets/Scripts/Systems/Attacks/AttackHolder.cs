@@ -94,4 +94,20 @@ public class AttackHolder : MonoBehaviour
     {
         return activeAttack;
     }
+
+    public ParticleSystem AddParticleEffect(GameObject particleEffectPrefab, Vector3 offset, float scale)
+    {
+        if (particleEffectPrefab == null)
+        {
+            return null;
+        }
+
+        GameObject effect = Instantiate(particleEffectPrefab, attacker.ParticleEffectHolder.transform);
+        effect.transform.localPosition = offset;
+        //effect.transform.localScale = transform.localScale * scale;
+
+        ParticleSystem effectParticle = effect.GetComponent<ParticleSystem>();
+
+        return effectParticle;
+    }
 }

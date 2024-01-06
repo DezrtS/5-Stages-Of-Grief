@@ -16,5 +16,6 @@ MonoBehaviour:
     type: 3}
   projectileId: ice_shard
   damage: 5
-  fireSpeed: 10
+  knockbackPower: 0
+  fireSpeed: 55
   projectileLifespan: 4

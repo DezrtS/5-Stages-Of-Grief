@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public enum AttackState
 {
@@ -12,6 +13,7 @@ public enum AttackState
 public interface IAttack
 {
     AttackHolder AttackHolder { get; }
+    GameObject ParticleEffectHolder { get; }
     bool IsAttacking { get; }
     AttackState AttackState { get; }
     List<EntityType> DamageableEntities { get; }

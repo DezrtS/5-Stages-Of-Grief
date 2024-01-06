@@ -24,9 +24,9 @@ public class SingleProjectileAttack : RangedAttack
         newClone.playAudioIdOnAttack = playAudioIdOnAttack;
         newClone.playAudioIdOnCancel = playAudioIdOnCancel;
 
-        newClone.particleEffectOnAim = particleEffectOnAim;
-        newClone.particleEffectOnAttack = particleEffectOnAttack;
-        newClone.particleEffectOnCancel = particleEffectOnCancel;
+        newClone.particleEffectOnAimPrefab = particleEffectOnAimPrefab;
+        newClone.particleEffectOnAttackPrefab = particleEffectOnAttackPrefab;
+        newClone.particleEffectOnCancelPrefab = particleEffectOnCancelPrefab;
 
         newClone.projectileData = projectileData;
         newClone.spawnOffset = spawnOffset;
@@ -42,12 +42,46 @@ public class SingleProjectileAttack : RangedAttack
         {
             projectile = SpawnProjectile(projectileData, parentTransform.position + parentTransform.rotation * spawnOffset, parentTransform.forward);
             PlayAudio(playAudioIdOnAim);
+
+            if (particleEffectOnAimPrefab != null)
+            {
+                if (particleEffectOnAim != null)
+                {
+                    particleEffectOnAim.Play();
+                }
+                else
+                {
+                    particleEffectOnAim = attacker.AttackHolder.AddParticleEffect(particleEffectOnAimPrefab, spawnOffset, 1);
+                    particleEffectOnAim.Play();
+                }
+            }
         }
 
         if (attackState == AttackState.Attacking && fireProjectileOnAttack)
         {
             FireProjectile(projectileData, projectile, parentTransform.forward);
             PlayAudio(playAudioIdOnAttack);
+
+            if (particleEffectOnAim != null)
+            {
+                if (particleEffectOnAim.isPlaying)
+                {
+                    particleEffectOnAim.Stop();
+                }
+            }
+
+            if (particleEffectOnAttackPrefab != null)
+            {
+                if (particleEffectOnAttack != null)
+                {
+                    particleEffectOnAttack.Play();
+                }
+                else
+                {
+                    particleEffectOnAttack = attacker.AttackHolder.AddParticleEffect(particleEffectOnAttackPrefab, spawnOffset, 1);
+                    particleEffectOnAttack.Play();
+                }
+            }
         }
     }
 
@@ -70,6 +104,28 @@ public class SingleProjectileAttack : RangedAttack
         {
             Destroy(projectile);
             PlayAudio(playAudioIdOnCancel);
+        }
+
+        if (particleEffectOnAim != null)
+        {
+            particleEffectOnAim.Stop();
+        }
+        if (particleEffectOnAttack != null)
+        {
+            particleEffectOnAttack.Stop();
+        }
+
+        if (particleEffectOnCancelPrefab != null)
+        {
+            if (particleEffectOnCancel != null)
+            {
+                particleEffectOnCancel.Play();
+            }
+            else
+            {
+                particleEffectOnCancel = attacker.AttackHolder.AddParticleEffect(particleEffectOnCancelPrefab, spawnOffset, 1);
+                particleEffectOnCancel.Play();
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAttack, IDodge, IPathfind, IStatusEffectTarget
 {
     [SerializeField] private PlayerAnimation playerAnimation;
-    [SerializeField] private ParticleSystem slash;
+    //[SerializeField] private ParticleSystem slash;
 
     public int targeting = 0;
     public EventInstance dialogue;
@@ -55,6 +55,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     [Header("Attacking")]
     [SerializeField] private List<EntityType> damageableEntities;
     private AttackHolder attackHolder;
+    private GameObject particleEffectHolder;
     private AttackState attackState;
     private bool isAttacking;
 
@@ -79,6 +80,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public float Health { get { return health; } }
     public bool IsInvincible { get { return isInvincible; } }
     public AttackHolder AttackHolder { get { return attackHolder; } }
+    public GameObject ParticleEffectHolder { get { return particleEffectHolder; } }
     public bool IsAttacking { get { return isAttacking; } }
     public AttackState AttackState { get { return attackState; } }
     public List<EntityType> DamageableEntities { get { return damageableEntities; } }
@@ -134,6 +136,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     private void Start()
     {
+        particleEffectHolder = Instantiate(GameManager.Instance.EmptyGameObject, transform);
+        particleEffectHolder.name = $"{name}'s Particle Effect Holder";
+
         dialogue = AudioManager.Instance.CreateInstance(FMODEventsManager.Instance.dialogue);
         CameraManager.Instance.TransferCameraTo(transform);
     }
@@ -354,7 +359,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerHurt, transform.position);
         }
 
-        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, transform.position);
+        //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, transform.position);
         CameraManager.Instance.Shake(6, 0.2f);
 
         EffectManager.Instance.Flash(transform);
@@ -479,13 +484,13 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             }
   
 
-            AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerSwing, transform.position);
+            //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerSwing, transform.position);
             //playerAnimation.Swing();
         }
         else if (attackState == AttackState.Attacking)
         {
             Aim();
-            slash.Play();
+            //slash.Play();
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
         } 
@@ -597,6 +602,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
         else if (dodgeState == DodgeState.Dodging)
         {
+            Aim();
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
         }
