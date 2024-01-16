@@ -12,10 +12,17 @@ public class RigidAgent : MovementController
 
     private Rigidbody rig;
 
+    [SerializeField] private float runningSpeed = 10;
+    [SerializeField] private float walkingSpeed = 5;
+
     private Vector3 velocity = Vector3.zero;
 
     private bool allowMovementInput = true;
     private bool allowRotationInput = true;
+
+    IAnimate animator;
+    private bool isWalking;
+    private bool isRunning;
 
     // ---------------------------------------------------------------------------------------------------------
     // Pathfinding Variables
@@ -36,6 +43,7 @@ public class RigidAgent : MovementController
 
         TryGetComponent(out navMeshAgent);
         TryGetComponent(out pathfinder);
+        TryGetComponent(out animator);
 
         if (navMeshAgent != null)
         {
@@ -205,5 +213,36 @@ public class RigidAgent : MovementController
 
         SetAllowMovementInput(true);
         SetAllowRotationInput(true);
+    }
+
+    private void UpdateAnimations()
+    {
+        if (velocity.magnitude >= runningSpeed)
+        {
+            if (!isRunning)
+            {
+                //Debug.Log("IsNowRunning");
+                animator?.OnAnimationStart(AnimationEvent.Run, "");
+                isWalking = false;
+                isRunning = true;
+            }
+        }
+        else if (velocity.magnitude >= walkingSpeed)
+        {
+            if (!isWalking)
+            {
+                //Debug.Log("IsNowWalking");
+                animator?.OnAnimationStart(AnimationEvent.Walk, "");
+                isRunning = false;
+                isWalking = true;
+            }
+        }
+        else if (isWalking || isRunning)
+        {
+            //Debug.Log("IsNowStanding");
+            animator?.OnAnimationStart(AnimationEvent.Stand, "");
+            isWalking = false;
+            isRunning = false;
+        }
     }
 }

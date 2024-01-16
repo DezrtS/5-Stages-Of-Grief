@@ -27,12 +27,12 @@ MonoBehaviour:
   chargingUpTime: 0
   hasAttackStage: 1
   maxAttackTime: 0.1
-  coolingDownTime: 0.1
+  coolingDownTime: 0
   attackCooldown: 0.1
   damage: 3
   knockbackPower: 12
-  attackTriggerScale: 3
-  attackTriggerSpawnDistance: 2
+  attackTriggerScale: 5
+  attackTriggerSpawnDistance: 2.5
   playAudioIdOnAim:
     Guid:
       Data1: 0

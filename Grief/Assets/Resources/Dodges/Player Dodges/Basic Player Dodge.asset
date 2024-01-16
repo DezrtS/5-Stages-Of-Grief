@@ -16,8 +16,6 @@ MonoBehaviour:
   dodgeStateMovements:
   - state: 3
     movement: {fileID: 11400000, guid: be6935f823a314948baaf9365d7b327c, type: 2}
-  - state: 4
-    movement: {fileID: 11400000, guid: d62ff6f64b308cf499555373b607fc2c, type: 2}
   hasAimingStage: 0
   maxAimTime: 99
   dodgeRequiredChargeUpTime: 0
@@ -25,5 +23,5 @@ MonoBehaviour:
   chargingUpTime: 0
   hasDodgeStage: 1
   dodgeTime: 0.2
-  coolingDownTime: 0.1
-  dodgeCooldown: 0
+  coolingDownTime: 0
+  dodgeCooldown: 0.2

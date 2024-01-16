@@ -43,6 +43,7 @@ public class Dodge : ScriptableObject
     private bool isClone;
 
     protected IDodge dodger;
+    protected IAnimate animator;
     private Transform parentTransform;
     protected MovementController parentMovementController;
 
@@ -74,6 +75,7 @@ public class Dodge : ScriptableObject
 
         clone.dodger = dodger;
         clone.parentTransform = parentTransform;
+        clone.parentTransform.TryGetComponent(out clone.animator);
         clone.parentTransform.TryGetComponent(out clone.parentMovementController);
 
         clone.isClone = true;
@@ -157,8 +159,13 @@ public class Dodge : ScriptableObject
 
         if (dodgeState == DodgeState.Aiming)
         {
+            PlayAnimation(AnimationEvent.AimDodge, dodgeId);
             timeAimingStateStarted = Time.timeSinceLevelLoad;
-        }  
+        }
+        else if (dodgeState == DodgeState.Dodging)
+        {
+            PlayAnimation(AnimationEvent.Dodge, dodgeId);
+        }
     }
 
     public virtual void OnDodgeState(DodgeState dodgeState, float timeSinceStateStarted)
@@ -219,7 +226,11 @@ public class Dodge : ScriptableObject
         this.dodgeState = DodgeState.Idle;
         CoroutineRunner.Instance.StopCoroutine(dodgeStateCoroutine);
 
-        if (dodgeState == DodgeState.Dodging)
+        if (dodgeState == DodgeState.Aiming)
+        {
+            PlayAnimation(AnimationEvent.AimDodgeCancel, dodgeId);
+        }
+        else if (dodgeState == DodgeState.Dodging)
         {
             timeDodgingStateEnded = Time.timeSinceLevelLoad - dodgeCooldown + dodgeCancelCooldown;
         }
@@ -276,6 +287,11 @@ public class Dodge : ScriptableObject
 
             OnDodgeState(dodgeState, Time.timeSinceLevelLoad - timeStateStarted);
         }
+    }
+
+    public void PlayAnimation(AnimationEvent animationEvent, string animationId)
+    {
+        animator?.OnAnimationStart(animationEvent, animationId);
     }
 }
 

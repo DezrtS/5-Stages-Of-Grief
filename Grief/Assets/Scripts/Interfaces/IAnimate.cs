@@ -1,18 +1,21 @@
-using UnityEngine;
-
 public enum AnimationEvent
 {
-    LightAttack,
-    MediumAttack,
-    HeavyAttack,
+    AimAttack,
+    AimDodge,
+    AimAttackCancel,
+    AimDodgeCancel,
+    Attack,
+    Dodge,
+
     Walk,
     Run,
-    Aim,
-    ChargingUp,
-    CoolingDown,
+    Stand,
+
+    Hurt,
+    Die,
 }
 
 public interface IAnimate
 {
-    
+    public void OnAnimationStart(AnimationEvent animationEvent, string animationId);
 }

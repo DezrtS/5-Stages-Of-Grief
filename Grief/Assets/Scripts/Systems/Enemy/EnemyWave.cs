@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class EnemyWave : MonoBehaviour
 {
-    [SerializeField] List<EnemyWaveData> enemyWaves = new List<EnemyWaveData>();
+    [SerializeField] List<EnemyWaveData> enemyWaves = new();
     [SerializeField] private float spawnRadius = 5;
     [SerializeField] private float spawnOffset = 5;
 
-    private List<Enemy> spawnedEnemies = new();
+    private readonly List<Enemy> spawnedEnemies = new();
 
     private int wave = 0;
     private float currentSpawnOffset = 0;
@@ -57,7 +57,6 @@ public class EnemyWave : MonoBehaviour
         }
 
         List<EnemyData> enemyDatas = enemyWaves[wave].EnemyDatas;
-        Transform trans = transform;
 
         foreach (EnemyData enemyData in enemyDatas)
         {

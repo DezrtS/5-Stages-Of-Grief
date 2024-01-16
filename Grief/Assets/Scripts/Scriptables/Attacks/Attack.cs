@@ -49,6 +49,7 @@ public abstract class Attack : ScriptableObject
     private bool isClone = false;
 
     protected IAttack attacker;
+    protected IAnimate animator;
     protected Transform parentTransform;
     protected MovementController movementController;
 
@@ -88,6 +89,7 @@ public abstract class Attack : ScriptableObject
 
         clone.attacker = attacker;
         clone.parentTransform = parentTransform;
+        clone.parentTransform.TryGetComponent(out clone.animator);
         clone.parentTransform.TryGetComponent(out clone.movementController);
 
         clone.isClone = true;
@@ -171,10 +173,12 @@ public abstract class Attack : ScriptableObject
 
         if (attackState == AttackState.Aiming)
         {
+            PlayAnimation(AnimationEvent.AimAttack, AttackId);
             timeAimingStateStarted = Time.timeSinceLevelLoad;
         }
         else if (attackState == AttackState.Attacking)
         {
+            PlayAnimation(AnimationEvent.Attack, AttackId);
             if (recieveStatusEffects.Count > 0 && parentTransform.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
             {
                 statusEffectTarget.StatusEffectHolder.AddStatusEffect(recieveStatusEffects);
@@ -240,7 +244,11 @@ public abstract class Attack : ScriptableObject
         this.attackState = AttackState.Idle;
         CoroutineRunner.Instance.StopCoroutine(attackStateCoroutine);
 
-        if (attackState == AttackState.Attacking)
+        if (attackState == AttackState.Aiming)
+        {
+            PlayAnimation(AnimationEvent.AimAttackCancel, AttackId);
+        }
+        else if (attackState == AttackState.Attacking)
         {
             timeAttackingStateEnded = Time.timeSinceLevelLoad - attackCooldown + attackCancelCooldown;
         }
@@ -370,6 +378,11 @@ public abstract class Attack : ScriptableObject
         {
             AudioManager.Instance.PlayOneShot(audioReference, parentTransform.position);
         }
+    }
+
+    public void PlayAnimation(AnimationEvent animationEvent, string animationId)
+    {
+        animator?.OnAnimationStart(animationEvent, animationId);
     }
 
     public virtual GameObject SpawnProjectile(ProjectileData projectileData, Vector3 position, Vector3 rotation)

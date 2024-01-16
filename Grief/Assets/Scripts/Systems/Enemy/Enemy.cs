@@ -129,6 +129,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     protected virtual void Start()
     {
         player = PlayerController.Instance;
+        //EnemyManager.Instance.AddEnemyToList(this);
 
         particleEffectHolder = Instantiate(GameManager.Instance.EmptyGameObject, transform);
         particleEffectHolder.name = $"{name}'s Particle Effect Holder";
@@ -195,6 +196,8 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         {
             EnemyQueueManager.Instance.RemoveFromQueue(this);
         }
+
+        //EnemyManager.Instance.RemoveEnemyFromList(this);
 
         OnEnemyDeath?.Invoke(this);
 
@@ -715,7 +718,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
 
             if (IsAttacking)
             {
-                hasRequested = false;
+                //hasRequested = false;
                 chooseNewAttack = true;
             }
         }

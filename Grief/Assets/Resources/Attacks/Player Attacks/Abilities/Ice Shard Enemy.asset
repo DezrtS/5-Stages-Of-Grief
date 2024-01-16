@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackId: ice_shard_enemy
   recommendedAttackRange: 10
-  attackRangeDeviation: 1
+  attackRangeDeviation: 5
   applyStatusEffects: []
   recieveStatusEffects: []
   attackStateMovements: []
@@ -48,9 +48,9 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  particleEffectOnAim: {fileID: 0}
-  particleEffectOnAttack: {fileID: 0}
-  particleEffectOnCancel: {fileID: 0}
+  particleEffectOnAimPrefab: {fileID: 0}
+  particleEffectOnAttackPrefab: {fileID: 0}
+  particleEffectOnCancelPrefab: {fileID: 0}
   projectileData: {fileID: 11400000, guid: c41601858f119e345b8c0f3807727240, type: 2}
   spawnOffset: {x: 0, y: 0, z: 2}
   fireProjectileOnAttack: 1
