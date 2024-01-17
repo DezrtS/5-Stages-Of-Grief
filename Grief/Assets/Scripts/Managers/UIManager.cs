@@ -10,6 +10,13 @@ public class UIManager : Singleton<UIManager>
     private UserInterfaceInputControls userInterfaceInputControls;
     private InputAction navigationAction;
 
+    public UserInterfaceInputControls inputcontrols;
+    public Button[] buttons;
+    public float verticalInput;
+    public int indexNum;
+    public ColorBlock defualt, highlight;
+    public bool canSwap;
+
     [SerializeField] private bool canPause = true;
     private bool isPaused;
 
@@ -59,7 +66,8 @@ public class UIManager : Singleton<UIManager>
     public void OnNavigation(InputAction.CallbackContext obj)
     {
         Vector2 navigationInput = navigationAction.ReadValue<Vector2>();
-
+        verticalInput = navigationInput.y;
+        swapButtons();
     }
 
     public void OnQuickTabNavigation(InputAction.CallbackContext obj)
@@ -104,11 +112,70 @@ public class UIManager : Singleton<UIManager>
 
     public void TransferToButton()
     {
-
+        Debug.Log(indexNum);
+        buttons[indexNum].colors.selectedColor.Equals(buttons[indexNum].colors.highlightedColor);
+        buttons[indexNum].onClick.Invoke();
     }
 
     public void GetClosestAngledButton()
     {
         
     }
+
+    private void Update()
+    {
+        //swapButtons();
+        buttonColor();
+        CheckCancelInvoke();
+    }
+    void swapButtons()
+    {
+        if (verticalInput > 0.5 && canSwap)
+        {
+            indexNum--;
+            canSwap = false;
+            Invoke("returnSwapping", Time.unscaledDeltaTime + 0.5f);
+        }
+        if (verticalInput < -0.5 && canSwap)
+        {
+            indexNum++;
+            canSwap = false;
+            Invoke("returnSwapping", Time.unscaledDeltaTime + 0.5f);
+        }
+        indexNum = (int)Mathf.Clamp(indexNum, 0f, buttons.Length - 1);
+        //Debug.Log(indexNum);
+        //Debug.Log(canSwap);
+    }
+    void CheckCancelInvoke()
+    {
+        if (verticalInput > -0.2 && verticalInput < 0.2 && !canSwap)
+        {
+            CancelInvoke();
+            returnSwapping();
+            //Debug.Log("canceled");
+        }
+    }
+
+    void returnSwapping()
+    {
+        canSwap = true;
+    }
+
+    void buttonColor()
+    {
+
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if (i == indexNum)
+            {
+                buttons[indexNum].colors = highlight;
+            }
+            else
+            {
+                buttons[i].colors = defualt; ;
+            }
+        }
+
+    }
+    
 }

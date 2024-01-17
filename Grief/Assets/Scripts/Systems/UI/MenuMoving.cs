@@ -33,6 +33,7 @@ public class MenuMoving : MonoBehaviour
         //Debug.Log(verticalInput);
         swapButtons();
         buttonColor();
+        CheckCancelInvoke();
     }
 
     void swapButtons()
@@ -52,6 +53,17 @@ public class MenuMoving : MonoBehaviour
         indexNum = (int)Mathf.Clamp(indexNum, 0f, buttons.Length-1);
         //Debug.Log(indexNum);
         //Debug.Log(canSwap);
+    }
+
+    void CheckCancelInvoke()
+    {
+        if (verticalInput > -0.1 && verticalInput < 0.1 && !canSwap)
+        {
+            CancelInvoke();
+            returnSwapping();
+
+            //Debug.Log("canceled");
+        }
     }
 
     void returnSwapping()
