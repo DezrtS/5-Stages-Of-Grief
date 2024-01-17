@@ -148,7 +148,7 @@ public class UIManager : Singleton<UIManager>
     }
     void CheckCancelInvoke()
     {
-        if (verticalInput > -0.2 && verticalInput < 0.2 && !canSwap)
+        if (verticalInput > -0.5 && verticalInput < 0.5 && !canSwap)
         {
             CancelInvoke();
             returnSwapping();
