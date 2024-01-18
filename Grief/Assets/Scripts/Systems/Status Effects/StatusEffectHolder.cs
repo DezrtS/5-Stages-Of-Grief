@@ -21,9 +21,9 @@ public class StatusEffectHolder : MonoBehaviour
 
     private void FixedUpdate()
     {
-        for (int i = statusEffects.Count - 1; i >= 0; i--)
+        foreach (StatusEffect statusEffect in statusEffects)
         {
-            statusEffects[i].UpdateStatusEffect();
+            statusEffect.UpdateStatusEffect();
         }
     }
 

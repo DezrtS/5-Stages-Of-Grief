@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AttackHolder : MonoBehaviour
@@ -5,7 +6,7 @@ public class AttackHolder : MonoBehaviour
     private IAttack attacker;
 
     [SerializeField] private Attack[] attackList = new Attack[0];
-    private Attack[] clonedAttackList;
+    private Attack[] clonedAttackList = new Attack[0];
 
     private Attack activeAttack;
 
@@ -31,6 +32,14 @@ public class AttackHolder : MonoBehaviour
         }
 
         activeAttack = clonedAttackList[0];
+    }
+
+    private void FixedUpdate()
+    {
+        foreach (Attack attack in clonedAttackList)
+        {
+            attack.OnAttackState();
+        }
     }
 
     public void DestroyClones()

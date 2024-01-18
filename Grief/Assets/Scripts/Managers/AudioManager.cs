@@ -48,6 +48,11 @@ public class AudioManager : Singleton<AudioManager>
         RuntimeManager.PlayOneShot(sound, worldPosition);
     }
 
+    public void PlayOneShot(EventReference sound)
+    {
+        RuntimeManager.PlayOneShot(sound);
+    }
+
     public EventInstance CreateInstance(EventReference eventReference)
     {
         EventInstance eventInstance = RuntimeManager.CreateInstance(eventReference);

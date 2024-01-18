@@ -56,7 +56,9 @@ public class RigidAgent : MovementController
         if (isPathfinding)
         {
             UpdatePathfinding();
-        } 
+        }
+
+        UpdateAnimations();
     }
 
     // ---------------------------------------------------------------------------------------------------------

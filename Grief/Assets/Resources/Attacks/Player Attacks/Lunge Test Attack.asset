@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackId: basic_player_attack
   recommendedAttackRange: 4
-  attackRangeDeviation: 0.5
+  attackRangeDeviation: 1
   applyStatusEffects: []
   recieveStatusEffects: []
   attackStateMovements:
@@ -26,11 +26,11 @@ MonoBehaviour:
   maxAimTime: 99
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
-  chargingUpTime: 0.4
+  chargingUpTime: 0.8
   hasAttackStage: 1
   maxAttackTime: 0.2
   coolingDownTime: 1
-  attackCooldown: 0.2
+  attackCooldown: 1
   damage: 3
   knockbackPower: 12
   attackTriggerScale: 5

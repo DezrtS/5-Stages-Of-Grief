@@ -55,7 +55,13 @@ public abstract class Attack : ScriptableObject
 
     private IEnumerator attackStateCoroutine;
 
-    private AttackState attackState = AttackState.Idle;
+    protected AttackState attackState = AttackState.Idle;
+
+    private bool onCooldown = false;
+    protected float timeSinceStateStarted = 0;
+    private bool useMovementState = false;
+    private StateMovement activeStateMovement;
+    private float stateTimeLength = 0;
 
     public string AttackId { get { return attackId; } }
     public float AttackRange { get { return recommendedAttackRange; } }
@@ -138,14 +144,6 @@ public abstract class Attack : ScriptableObject
         attacker.TransferToAttackState(attackState);
 
         OnAttackStateStart(attackState);
-
-        if (attackState == AttackState.Idle)
-        {
-            return;
-        }
-
-        attackStateCoroutine = AttackStateCoroutine(attackState);
-        CoroutineRunner.Instance.StartCoroutine(attackStateCoroutine);
     }
 
     public virtual bool CanInitiateAttackState(AttackState attackState)
@@ -158,13 +156,18 @@ public abstract class Attack : ScriptableObject
         if (attackState == AttackState.ChargingUp)
         {
             return (Time.timeSinceLevelLoad - timeAimingStateStarted >= attackRequiredChargeUpTime);
-        } 
+        }
         else if (attackState == AttackState.Aiming)
         {
-            return (Time.timeSinceLevelLoad - timeAttackingStateEnded >= attackCooldown);
-        } 
+            return !onCooldown;
+        }
 
         return true;
+    }
+
+    public virtual bool IsOnCooldown()
+    {
+        return onCooldown;
     }
 
     public virtual void OnAttackStateStart(AttackState attackState)
@@ -184,17 +187,57 @@ public abstract class Attack : ScriptableObject
                 statusEffectTarget.StatusEffectHolder.AddStatusEffect(recieveStatusEffects);
             }
         }
+
+        timeSinceStateStarted = 0;
+        useMovementState = false;
+
+        if (movementController != null)
+        {
+            foreach (AttackStateMovement attackStateMovement in attackStateMovements)
+            {
+                if (attackStateMovement.State == attackState)
+                {
+                    useMovementState = true;
+                    activeStateMovement = attackStateMovement.Movement;
+
+                    switch (attackState)
+                    {
+                        case AttackState.Idle:
+                            stateTimeLength = 0;
+                            break;
+                        case AttackState.Aiming:
+                            stateTimeLength = maxAimTime;
+                            break;
+                        case AttackState.ChargingUp:
+                            stateTimeLength = chargingUpTime;
+                            break;
+                        case AttackState.Attacking:
+                            stateTimeLength = maxAttackTime;
+                            break;
+                        case AttackState.CoolingDown:
+                            stateTimeLength = coolingDownTime;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                }
+            }
+        }
     }
 
-    public virtual void OnAttackState(AttackState attackState, float timeSinceStateStarted)
+    public virtual void OnAttackState()
     {
         attacker.OnAttackState(attackState);
+
+        timeSinceStateStarted += Time.fixedDeltaTime;
 
         switch (attackState)
         {
             case AttackState.Idle:
-                Debug.LogWarning("Idle On Attack State");
-                break;
+                onCooldown = Time.timeSinceLevelLoad - timeAttackingStateEnded <= attackCooldown;
+                return;
             case AttackState.Aiming:
                 if (maxAimTime < timeSinceStateStarted)
                 {
@@ -219,6 +262,11 @@ public abstract class Attack : ScriptableObject
                     TransferToAttackState(AttackState.Idle);
                 }
                 break;
+        }
+
+        if (useMovementState)
+        {
+            movementController.SetVelocity(activeStateMovement.GetStateCurrentVelocity(timeSinceStateStarted, stateTimeLength, parentTransform, movementController.GetVelocity()));
         }
     }
 
@@ -256,43 +304,11 @@ public abstract class Attack : ScriptableObject
 
     public IEnumerator AttackStateCoroutine(AttackState attackState) 
     {
+        Debug.Log("Running Coroutine");
+        yield return null;
+
+        /*
         float timeStateStarted = Time.timeSinceLevelLoad;
-
-        bool useMovementState = false;
-        StateMovement stateMovement = null;
-        float stateTimeLength = 0;
-
-        if (movementController != null)
-        {
-            foreach (AttackStateMovement attackStateMovement in attackStateMovements)
-            {
-                if (attackStateMovement.State == attackState)
-                {
-                    useMovementState = true;
-                    stateMovement = attackStateMovement.Movement;
-
-                    switch (attackState)
-                    {
-                        case AttackState.Aiming:
-                            stateTimeLength = maxAimTime;
-                            break;
-                        case AttackState.ChargingUp:
-                            stateTimeLength = chargingUpTime;
-                            break;
-                        case AttackState.Attacking:
-                            stateTimeLength = maxAttackTime;
-                            break;
-                        case AttackState.CoolingDown:
-                            stateTimeLength = coolingDownTime;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    break;
-                }
-            }
-        }
 
         while (true)
         {
@@ -305,6 +321,7 @@ public abstract class Attack : ScriptableObject
 
             OnAttackState(attackState, Time.timeSinceLevelLoad - timeStateStarted);
         }
+        */
     }
 
     public virtual void OnAttackTriggerEnter(Transform hit) { }

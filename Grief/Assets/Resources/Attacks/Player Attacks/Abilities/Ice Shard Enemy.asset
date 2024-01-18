@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ice Shard Enemy
   m_EditorClassIdentifier: 
   attackId: ice_shard_enemy
-  recommendedAttackRange: 10
+  recommendedAttackRange: 15
   attackRangeDeviation: 5
   applyStatusEffects: []
   recieveStatusEffects: []
@@ -25,8 +25,8 @@ MonoBehaviour:
   chargingUpTime: 0.2
   hasAttackStage: 1
   maxAttackTime: 0
-  coolingDownTime: 0.2
-  attackCooldown: 0.75
+  coolingDownTime: 3
+  attackCooldown: 0.2
   playAudioIdOnAim:
     Guid:
       Data1: 0
@@ -52,5 +52,5 @@ MonoBehaviour:
   particleEffectOnAttackPrefab: {fileID: 0}
   particleEffectOnCancelPrefab: {fileID: 0}
   projectileData: {fileID: 11400000, guid: c41601858f119e345b8c0f3807727240, type: 2}
-  spawnOffset: {x: 0, y: 0, z: 2}
+  spawnOffset: {x: 0, y: 1, z: 2}
   fireProjectileOnAttack: 1

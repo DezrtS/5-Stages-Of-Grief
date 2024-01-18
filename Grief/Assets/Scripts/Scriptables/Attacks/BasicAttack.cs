@@ -22,7 +22,7 @@ public class BasicAttack : PhysicalAttack
                 }
                 else
                 {
-                    particleEffectOnCooldown = attacker.AttackHolder.AddParticleEffect(particleEffectOnCooldownPrefab, Vector3.forward * attackTriggerSpawnDistance, attackTriggerScale);
+                    particleEffectOnCooldown = attacker.AttackHolder.AddParticleEffect(particleEffectOnCooldownPrefab, Vector3.forward * attackTriggerSpawnDistance + Vector3.up, attackTriggerScale);
                     particleEffectOnCooldown.Play();
                 }
             }
@@ -47,14 +47,14 @@ public class BasicAttack : PhysicalAttack
                 }
                 else
                 {
-                    particleEffectOnAim = attacker.AttackHolder.AddParticleEffect(particleEffectOnAimPrefab, Vector3.forward * attackTriggerSpawnDistance, attackTriggerScale);
+                    particleEffectOnAim = attacker.AttackHolder.AddParticleEffect(particleEffectOnAimPrefab, Vector3.forward * attackTriggerSpawnDistance + Vector3.up, attackTriggerScale);
                     particleEffectOnAim.Play();
                 }
             }
         }
         else if (attackState == AttackState.Attacking)
         {
-            attackTrigger = CombatManager.Instance.CreateCircleTrigger(this, parentTransform.position + parentTransform.forward * attackTriggerSpawnDistance, attackTriggerScale);
+            attackTrigger = CombatManager.Instance.CreateCircleTrigger(this, parentTransform.position + parentTransform.forward * attackTriggerSpawnDistance + Vector3.up, attackTriggerScale);
             triggerOffset = attackTrigger.transform.position - parentTransform.position;
             PlayAudio(playAudioIdOnAttack);
 
@@ -74,21 +74,21 @@ public class BasicAttack : PhysicalAttack
                 }
                 else
                 {
-                    particleEffectOnAttack = attacker.AttackHolder.AddParticleEffect(particleEffectOnAttackPrefab, Vector3.forward * attackTriggerSpawnDistance, attackTriggerScale);
+                    particleEffectOnAttack = attacker.AttackHolder.AddParticleEffect(particleEffectOnAttackPrefab, Vector3.forward * attackTriggerSpawnDistance + Vector3.up, attackTriggerScale);
                     particleEffectOnAttack.Play();
                 }
             }
         }
     }
 
-    public override void OnAttackState(AttackState attackState, float timeSinceStateStart)
+    public override void OnAttackState()
     {
         if (attackState == AttackState.Attacking)
         {
             attackTrigger.transform.position = parentTransform.position + triggerOffset;
         }
 
-        base.OnAttackState(attackState, timeSinceStateStart);
+        base.OnAttackState();
     }
 
     public override void OnAttackStateEnd(AttackState attackState)
@@ -133,7 +133,7 @@ public class BasicAttack : PhysicalAttack
             }
             else
             {
-                particleEffectOnCancel = attacker.AttackHolder.AddParticleEffect(particleEffectOnCancelPrefab, Vector3.forward * attackTriggerSpawnDistance, attackTriggerScale);
+                particleEffectOnCancel = attacker.AttackHolder.AddParticleEffect(particleEffectOnCancelPrefab, Vector3.forward * attackTriggerSpawnDistance + Vector3.up, attackTriggerScale);
                 particleEffectOnCancel.Play();
             }
         }

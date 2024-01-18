@@ -22,6 +22,6 @@ MonoBehaviour:
   dodgeCancelCooldown: 0
   chargingUpTime: 0
   hasDodgeStage: 1
-  dodgeTime: 0.2
+  dodgeTime: 0.35
   coolingDownTime: 0
-  dodgeCooldown: 0.2
+  dodgeCooldown: 0.15

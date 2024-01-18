@@ -51,6 +51,6 @@ MonoBehaviour:
   particleEffectOnAimPrefab: {fileID: 0}
   particleEffectOnAttackPrefab: {fileID: 0}
   particleEffectOnCancelPrefab: {fileID: 0}
-  projectileData: {fileID: 11400000, guid: c41601858f119e345b8c0f3807727240, type: 2}
-  spawnOffset: {x: 0, y: 0, z: 2}
+  projectileData: {fileID: 11400000, guid: 05d0e010dd510714ab0a17e541954f6e, type: 2}
+  spawnOffset: {x: 0, y: 2, z: 2}
   fireProjectileOnAttack: 1

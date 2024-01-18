@@ -6,7 +6,7 @@ public class SingleProjectileAttack : RangedAttack
     [Space(10)]
     [Header("Single Projectile Attack Variables")]
     [SerializeField] private ProjectileData projectileData;
-    [SerializeField] private Vector3 spawnOffset;
+    [SerializeField] private Vector3 spawnOffset = Vector3.up;
     [SerializeField] private bool fireProjectileOnAttack = true;
 
     private GameObject projectile;
@@ -85,7 +85,7 @@ public class SingleProjectileAttack : RangedAttack
         }
     }
 
-    public override void OnAttackState(AttackState attackState, float timeSinceStateStart)
+    public override void OnAttackState()
     {
         if (attackState == AttackState.Aiming)
         {
@@ -93,7 +93,7 @@ public class SingleProjectileAttack : RangedAttack
             projectile.transform.forward = parentTransform.forward;
         }
 
-        base.OnAttackState(attackState, timeSinceStateStart);
+        base.OnAttackState();
     }
 
     public override void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled)

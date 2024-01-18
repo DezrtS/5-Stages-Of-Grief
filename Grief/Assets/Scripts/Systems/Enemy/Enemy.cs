@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind, IStatusEffectTarget
+public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind, IStatusEffectTarget, IAnimate
 {
     // ---------------------------------------------------------------------------------------------------------
     // Enemy Variables
@@ -13,6 +13,8 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
 
     [Header("Enemy")]
     [SerializeField] private float chaseActivationDistance = 10;
+    [SerializeField] private float defaultRepositioningDistance = 5;
+    [SerializeField] private float defaultRepositioningDeviationDistance = 5;
 
     [SerializeField] private float timeBetweenWanders = 5;
     [Range(5, 100)]
@@ -33,6 +35,8 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     private float timeSinceLostPlayer = 0;
 
     private Vector3 spawnPosition;
+
+    private bool isOnCooldown;
 
     // ---------------------------------------------------------------------------------------------------------
     // Interface Related Variables
@@ -67,6 +71,9 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     private NavMeshAgent navMeshAgent;
 
     private StatusEffectHolder statusEffectHolder;
+
+    [SerializeField] private Animator animator;
+    private bool canAnimate = true;
 
     // ---------------------------------------------------------------------------------------------------------
     // Interface Implementation Fields
@@ -123,6 +130,11 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
             statusEffectHolder = transform.AddComponent<StatusEffectHolder>();
         }
 
+        if (animator == null)
+        {
+            canAnimate = false;
+        }
+
         health = maxHealth;
     }
 
@@ -162,6 +174,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         }
 
         health = Mathf.Max(health - damage, 0);
+        OnAnimationStart(AnimationEvent.Hurt, "");
 
         EffectManager.Instance.Flash(transform);
         //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, transform.position);
@@ -187,6 +200,8 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         {
             OnDodgeStateCancel(dodgeState, false);
         }
+
+        OnAnimationStart(AnimationEvent.Die, "");
 
         if (isQueued)
         {
@@ -576,6 +591,59 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         rigidAgent.StopPathfinding();
     }
 
+    public void OnAnimationStart(AnimationEvent animationEvent, string animationId)
+    {
+        if (!canAnimate)
+        {
+            return;
+        }
+
+        // Put check to see if animator has parameter.
+
+        switch (animationEvent)
+        {
+            case AnimationEvent.AimAttack:
+                //animator.SetTrigger("AimAttack");
+                break;
+            case AnimationEvent.AimDodge:
+                //animator.SetTrigger("AimDodge");
+                break;
+            case AnimationEvent.AimAttackCancel:
+                //animator.SetTrigger("AimAttackCancel");
+                break;
+            case AnimationEvent.AimDodgeCancel:
+                //animator.SetTrigger("AimDodgeCancel");
+                break;
+            case AnimationEvent.Attack:
+                animator.SetTrigger("Attack");
+                break;
+            case AnimationEvent.Dodge:
+                animator.SetTrigger("Dodge");
+                break;
+            case AnimationEvent.Walk:
+                animator.SetBool("IsRunning", false);
+                animator.SetBool("IsWalking", true);
+                break;
+            case AnimationEvent.Run:
+                animator.SetBool("IsWalking", false);
+                animator.SetBool("IsRunning", true);
+                break;
+            case AnimationEvent.Stand:
+                animator.SetBool("IsWalking", false);
+                animator.SetBool("IsRunning", false);
+                break;
+            case AnimationEvent.Hurt:
+                animator.SetTrigger("Hurt");
+                break;
+            case AnimationEvent.Die:
+                animator.SetTrigger("Die");
+                break;
+            default:
+                Debug.Log($"Animation Event {animationEvent} is not supported for {name}");
+                break;
+        }
+    }
+
     // ---------------------------------------------------------------------------------------------------------
     // Extra Methods
     // ---------------------------------------------------------------------------------------------------------
@@ -659,7 +727,14 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
 
         if (isPathfinding)
         {
-            if (vectorToPlayer.magnitude > attackRange - attackRangeDeviation) //&& isQueued)
+            if (isOnCooldown && !attackHolder.GetActiveAttack().IsOnCooldown())
+            {
+                attackRange = attackHolder.GetActiveAttack().AttackRange;
+                attackRangeDeviation = attackHolder.GetActiveAttack().AttackRangeDeviation;
+                isOnCooldown = false;
+            }
+            
+            if (vectorToPlayer.magnitude > attackRange - attackRangeDeviation && !isOnCooldown) //&& isQueued)
             {
                 CancelPathfinding();
                 InitiateEnemyState(EnemyState.Attacking);
@@ -683,20 +758,24 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
             return;
         }
         */
+
+        if (!attackHolder.CanAttack())
+        {
+            InitiateEnemyState(EnemyState.Chasing);
+            return;
+        }
         
         if (!isAttacking)
         {
-            if (chooseNewAttack)
+            ChooseNewAttack();
+
+            if (attackHolder.GetActiveAttack().IsOnCooldown())
             {
-                attackHolder.SetRandomActiveAttack();
-
-                if (attackHolder.CanAttack())
-                {
-                    attackRange = attackHolder.GetActiveAttack().AttackRange;
-                    attackRangeDeviation = attackHolder.GetActiveAttack().AttackRangeDeviation;
-                }
-
-                chooseNewAttack = false;
+                attackRange = defaultRepositioningDistance;
+                attackRangeDeviation = defaultRepositioningDeviationDistance;
+                isOnCooldown = true;
+                InitiateEnemyState(EnemyState.Repositioning);
+                return;
             }
 
             Vector3 vectorToPlayer = GetVectorToPlayer();
@@ -793,5 +872,16 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
     public bool RollDice(float chance)
     {
         return chance <= Random.Range(0, 100);
+    }
+
+    public void ChooseNewAttack()
+    {
+        if (chooseNewAttack)
+        {
+            attackHolder.SetRandomActiveAttack();
+            attackRange = attackHolder.GetActiveAttack().AttackRange;
+            attackRangeDeviation = attackHolder.GetActiveAttack().AttackRangeDeviation;
+            chooseNewAttack = false;
+        }
     }
 }

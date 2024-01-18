@@ -70,10 +70,11 @@ public class CameraManager : Singleton<CameraManager>
         }
     }
 
-    public Vector3 ConvertScreenToWorld(Vector3 screenPosition)
-    {
-        return Camera.main.ScreenToWorldPoint(screenPosition);
-    }
+    // Use Cached Camera
+    //public Vector3 ConvertScreenToWorld(Vector3 screenPosition)
+    //{
+    //    return Camera.main.ScreenToWorldPoint(screenPosition);
+    //}
 
     public void Shake(float shakeIntensity, float shakeTime)
     {

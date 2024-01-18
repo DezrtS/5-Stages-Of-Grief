@@ -421,7 +421,15 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         CancelPathfinding();
 
-        charAgent.Teleport(Vector3.up);
+        if (CheckpointManager.Instance.GetActiveCheckpoint() != null)
+        {
+            charAgent.Teleport(CheckpointManager.Instance.GetActiveCheckpoint().transform.position);
+        }
+        else
+        {
+            charAgent.Teleport(Vector3.up);
+        }
+
         charAgent.SetVelocity(Vector3.zero);
         charAgent.SetRotation(Quaternion.Inverse(MovementController.MovementAxis) * Vector3.right);
 
@@ -523,7 +531,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                 }
             }
 
-            OnAnimationStart(AnimationEvent.Attack, "");
             //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerSwing, transform.position);
             //playerAnimation.Swing();
         }
@@ -627,7 +634,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
             if (queueAttack)
             {
+                InitiateAttackState(AttackState.Aiming);
                 InitiateAttackState(AttackState.ChargingUp);
+                queueAttack = false;
             }
             return;
         }
@@ -642,12 +651,12 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
         else if (dodgeState == DodgeState.ChargingUp)
         {
-            OnAnimationStart(AnimationEvent.Dodge, "");
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
         }
         else if (dodgeState == DodgeState.Dodging)
         {
+            StartCoroutine(InvincibilityTimer());
             Aim();
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
@@ -765,10 +774,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                 animator.SetBool("IsRunning", false);
                 break;
             case AnimationEvent.Hurt:
-                animator.SetTrigger("Hurt");
+                //animator.SetTrigger("Hurt");
                 break;
             case AnimationEvent.Die:
-                animator.SetTrigger("Die");
+                //animator.SetTrigger("Die");
                 break;
             default:
                 Debug.Log($"Animation Event {animationEvent} is not supported for {name}");
@@ -796,7 +805,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public IEnumerator InvincibilityTimer()
     {
-        yield return new WaitForSeconds(0.5f);
+        isInvincible = true;
+        //Debug.Log("Started Invincibility");
+        yield return new WaitForSeconds(0.2f);
+        //Debug.Log("Ended Invincibility");
         isInvincible = false;
     }
 }

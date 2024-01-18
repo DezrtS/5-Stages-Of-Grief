@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2045761924504893249}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.25, z: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 1}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -112,7 +112,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6919339057877188736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -134,17 +134,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chaseActivationDistance: 100
+  defaultRepositioningDistance: 5
+  defaultRepositioningDeviationDistance: 5
   timeBetweenWanders: 3
   chanceToWander: 80
   wanderRange: 5
-  attackRange: 4
-  stoppingRange: 3
   maxTotalWanderRange: 10
   lostPlayerRecoverTime: 5
   maxHealth: 12
   damageableEntities: 0000000003000000
-  attackTemplate: {fileID: 11400000, guid: 4c7b676a0a13d0f4ab21bc7ea71813ba, type: 2}
-  dodgeTemplate: {fileID: 0}
+  animator: {fileID: 0}
 --- !u!114 &2518368392112422290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +156,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb1fc371d8c8e9d459653397850a6368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runningSpeed: 10
+  walkingSpeed: 5
 --- !u!136 &6919339057877188737
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -170,7 +171,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!195 &5014695383166651215
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -190,7 +191,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 1
+  m_BaseOffset: -0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!54 &8498864369370039067
@@ -235,7 +236,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6919339059106232510}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

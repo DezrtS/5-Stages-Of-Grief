@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemyWave : MonoBehaviour
 {
+    [SerializeField] private bool repeatable = false;
     [SerializeField] List<EnemyWaveData> enemyWaves = new();
     [SerializeField] private float spawnRadius = 5;
     [SerializeField] private float spawnOffset = 5;
@@ -79,11 +80,12 @@ public class EnemyWave : MonoBehaviour
     public void RestartWave()
     {
         waveDefeated = false;
-        waveStarted = false;
         currentSpawnOffset = 0;
         wave = 0;
 
         KillAllSpawnedEnemies();
+        waveStarted = true;
+        SpawnWave(0);
     }
 
     public void KillAllSpawnedEnemies()
@@ -96,10 +98,17 @@ public class EnemyWave : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !waveStarted && !waveDefeated)
+        if (other.CompareTag("Player"))
         {
-            waveStarted = true;
-            SpawnWave(0);
+            if (!waveStarted && !waveDefeated)
+            {
+                waveStarted = true;
+                SpawnWave(0);
+            }
+            else if (repeatable && waveDefeated)
+            {
+                RestartWave();
+            }
         }
     }
 }
@@ -107,7 +116,7 @@ public class EnemyWave : MonoBehaviour
 [Serializable]
 public class EnemyWaveData
 {
-    [SerializeField] private List<EnemyData> enemyDatas = new List<EnemyData>();
+    [SerializeField] private List<EnemyData> enemyDatas = new();
 
     public List<EnemyData> EnemyDatas { get { return enemyDatas; } }
 }
