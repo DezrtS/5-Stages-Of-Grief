@@ -47,9 +47,13 @@ public class Dodge : ScriptableObject
     private Transform parentTransform;
     protected MovementController parentMovementController;
 
-    private IEnumerator dodgeStateCoroutine;
-
     private DodgeState dodgeState = DodgeState.Idle;
+
+    private bool onCooldown = false;
+    protected float timeSinceStateStarted = 0;
+    private bool useMovementState = false;
+    private StateMovement activeStateMovement;
+    private float stateTimeLength = 0;
 
     public string DodgeId { get { return dodgeId; } }
 
@@ -129,9 +133,6 @@ public class Dodge : ScriptableObject
         {
             return;
         }
-
-        dodgeStateCoroutine = DodgeStateCoroutine(dodgeState);
-        CoroutineRunner.Instance.StartCoroutine(dodgeStateCoroutine);
     }
 
     public virtual bool CanInitiateDodgeState(DodgeState dodgeState)
@@ -147,10 +148,15 @@ public class Dodge : ScriptableObject
         }
         else if (dodgeState == DodgeState.Aiming)
         {
-            return (Time.timeSinceLevelLoad - timeDodgingStateEnded >= dodgeCooldown);
+            return !onCooldown;
         }
 
         return true;
+    }
+
+    public virtual bool IsOnCooldown()
+    {
+        return onCooldown;
     }
 
     public virtual void OnDodgeStateStart(DodgeState dodgeState)
@@ -166,17 +172,57 @@ public class Dodge : ScriptableObject
         {
             PlayAnimation(AnimationEvent.Dodge, dodgeId);
         }
+
+        timeSinceStateStarted = 0;
+        useMovementState = false;
+
+        if (parentMovementController != null)
+        {
+            foreach (DodgeStateMovement dodgeStateMovement in dodgeStateMovements)
+            {
+                if (dodgeStateMovement.State == dodgeState)
+                {
+                    useMovementState = true;
+                    activeStateMovement = dodgeStateMovement.Movement;
+
+                    switch (dodgeState)
+                    {
+                        case DodgeState.Idle:
+                            stateTimeLength = 0;
+                            break;
+                        case DodgeState.Aiming:
+                            stateTimeLength = maxAimTime;
+                            break;
+                        case DodgeState.ChargingUp:
+                            stateTimeLength = chargingUpTime;
+                            break;
+                        case DodgeState.Dodging:
+                            stateTimeLength = dodgeTime;
+                            break;
+                        case DodgeState.CoolingDown:
+                            stateTimeLength = coolingDownTime;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                }
+            }
+        }
     }
 
-    public virtual void OnDodgeState(DodgeState dodgeState, float timeSinceStateStarted)
+    public virtual void OnDodgeState()
     {
         dodger.OnDodgeState(dodgeState);
+
+        timeSinceStateStarted += Time.fixedDeltaTime;
 
         switch (dodgeState)
         {
             case DodgeState.Idle:
-                Debug.LogWarning("Idle On Attack State");
-                break;
+                onCooldown = Time.timeSinceLevelLoad - timeDodgingStateEnded <= dodgeCooldown;
+                return;
             case DodgeState.Aiming:
                 if (maxAimTime < timeSinceStateStarted)
                 {
@@ -202,13 +248,16 @@ public class Dodge : ScriptableObject
                 }
                 break;
         }
+
+        if (useMovementState)
+        {
+            parentMovementController.SetVelocity(activeStateMovement.GetStateCurrentVelocity(timeSinceStateStarted, stateTimeLength, parentTransform, parentMovementController.GetVelocity()));
+        }
     }
 
     public virtual void OnDodgeStateEnd(DodgeState dodgeState)
     {
         dodger.OnDodgeStateEnd(dodgeState);
-
-        CoroutineRunner.Instance.StopCoroutine(dodgeStateCoroutine);
 
         if (dodgeState == DodgeState.Dodging)
         {
@@ -224,7 +273,6 @@ public class Dodge : ScriptableObject
         }
 
         this.dodgeState = DodgeState.Idle;
-        CoroutineRunner.Instance.StopCoroutine(dodgeStateCoroutine);
 
         if (dodgeState == DodgeState.Aiming)
         {
@@ -233,59 +281,6 @@ public class Dodge : ScriptableObject
         else if (dodgeState == DodgeState.Dodging)
         {
             timeDodgingStateEnded = Time.timeSinceLevelLoad - dodgeCooldown + dodgeCancelCooldown;
-        }
-    }
-
-    public IEnumerator DodgeStateCoroutine(DodgeState dodgeState)
-    {
-        float timeStateStarted = Time.timeSinceLevelLoad;
-
-        bool useMovementState = false;
-        StateMovement stateMovement = null;
-        float stateTimeLength = 0;
-
-        if (parentMovementController != null)
-        {
-            foreach (DodgeStateMovement dodgeStateMovement in dodgeStateMovements)
-            {
-                if (dodgeStateMovement.State == dodgeState)
-                {
-                    useMovementState = true;
-                    stateMovement = dodgeStateMovement.Movement;
-
-                    switch (dodgeState)
-                    {
-                        case DodgeState.Aiming:
-                            stateTimeLength = maxAimTime;
-                            break;
-                        case DodgeState.ChargingUp:
-                            stateTimeLength = chargingUpTime;
-                            break;
-                        case DodgeState.Dodging:
-                            stateTimeLength = dodgeTime;
-                            break;
-                        case DodgeState.CoolingDown:
-                            stateTimeLength = coolingDownTime;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        while (true)
-        {
-            yield return new WaitForFixedUpdate();
-
-            if (useMovementState)
-            {
-                parentMovementController.SetVelocity(stateMovement.GetStateCurrentVelocity(Time.timeSinceLevelLoad - timeStateStarted, stateTimeLength, parentTransform, parentMovementController.GetVelocity()));
-            }
-
-            OnDodgeState(dodgeState, Time.timeSinceLevelLoad - timeStateStarted);
         }
     }
 

@@ -537,7 +537,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         else if (attackState == AttackState.Attacking)
         {
             Aim();
-            //slash.Play();
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
         } 
@@ -656,6 +655,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
         else if (dodgeState == DodgeState.Dodging)
         {
+            // Change this out to use timer on FixedUpdate()
             StartCoroutine(InvincibilityTimer());
             Aim();
             charAgent.SetAllowMovementInput(false);

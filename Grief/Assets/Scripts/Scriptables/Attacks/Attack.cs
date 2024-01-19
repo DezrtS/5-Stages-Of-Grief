@@ -51,9 +51,7 @@ public abstract class Attack : ScriptableObject
     protected IAttack attacker;
     protected IAnimate animator;
     protected Transform parentTransform;
-    protected MovementController movementController;
-
-    private IEnumerator attackStateCoroutine;
+    protected MovementController parentMovementController;
 
     protected AttackState attackState = AttackState.Idle;
 
@@ -96,7 +94,7 @@ public abstract class Attack : ScriptableObject
         clone.attacker = attacker;
         clone.parentTransform = parentTransform;
         clone.parentTransform.TryGetComponent(out clone.animator);
-        clone.parentTransform.TryGetComponent(out clone.movementController);
+        clone.parentTransform.TryGetComponent(out clone.parentMovementController);
 
         clone.isClone = true;
 
@@ -191,7 +189,7 @@ public abstract class Attack : ScriptableObject
         timeSinceStateStarted = 0;
         useMovementState = false;
 
-        if (movementController != null)
+        if (parentMovementController != null)
         {
             foreach (AttackStateMovement attackStateMovement in attackStateMovements)
             {
@@ -266,15 +264,13 @@ public abstract class Attack : ScriptableObject
 
         if (useMovementState)
         {
-            movementController.SetVelocity(activeStateMovement.GetStateCurrentVelocity(timeSinceStateStarted, stateTimeLength, parentTransform, movementController.GetVelocity()));
+            parentMovementController.SetVelocity(activeStateMovement.GetStateCurrentVelocity(timeSinceStateStarted, stateTimeLength, parentTransform, parentMovementController.GetVelocity()));
         }
     }
 
     public virtual void OnAttackStateEnd(AttackState attackState)
     {
         attacker.OnAttackStateEnd(attackState);
-
-        CoroutineRunner.Instance.StopCoroutine(attackStateCoroutine);
 
         if (attackState == AttackState.Attacking)
         {
@@ -290,7 +286,6 @@ public abstract class Attack : ScriptableObject
         }
 
         this.attackState = AttackState.Idle;
-        CoroutineRunner.Instance.StopCoroutine(attackStateCoroutine);
 
         if (attackState == AttackState.Aiming)
         {
@@ -300,28 +295,6 @@ public abstract class Attack : ScriptableObject
         {
             timeAttackingStateEnded = Time.timeSinceLevelLoad - attackCooldown + attackCancelCooldown;
         }
-    }
-
-    public IEnumerator AttackStateCoroutine(AttackState attackState) 
-    {
-        Debug.Log("Running Coroutine");
-        yield return null;
-
-        /*
-        float timeStateStarted = Time.timeSinceLevelLoad;
-
-        while (true)
-        {
-            yield return new WaitForFixedUpdate();
-
-            if (useMovementState)
-            {
-                movementController.SetVelocity(stateMovement.GetStateCurrentVelocity(Time.timeSinceLevelLoad - timeStateStarted, stateTimeLength, parentTransform, movementController.GetVelocity()));
-            }
-
-            OnAttackState(attackState, Time.timeSinceLevelLoad - timeStateStarted);
-        }
-        */
     }
 
     public virtual void OnAttackTriggerEnter(Transform hit) { }
@@ -379,9 +352,9 @@ public abstract class Attack : ScriptableObject
 
     public virtual void ApplyKnockback(Transform hit, float knockbackPower, Vector3 knockbackDirection)
     {
-        if (hit.TryGetComponent(out MovementController movementController))
+        if (hit.TryGetComponent(out MovementController parentMovementController))
         {
-            movementController.ApplyForce(knockbackDirection.normalized * knockbackPower);
+            parentMovementController.ApplyForce(knockbackDirection.normalized * knockbackPower);
         }
         else if (hit.TryGetComponent(out Rigidbody rig))
         {

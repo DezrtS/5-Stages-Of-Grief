@@ -26,7 +26,7 @@ MonoBehaviour:
   maxAimTime: 99
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
-  chargingUpTime: 0.8
+  chargingUpTime: 0.6
   hasAttackStage: 1
   maxAttackTime: 0.2
   coolingDownTime: 1
