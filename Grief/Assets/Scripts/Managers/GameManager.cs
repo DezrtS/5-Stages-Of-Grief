@@ -37,7 +37,7 @@ public class GameManager : Singleton<GameManager>
         }
 
         isPaused = true;
-        TempUI.Instance.PauseGame();
+        //TempUI.Instance.PauseGame();
         //EnemySpawning.Instance.PauseSpawning();
         Time.timeScale = 0;
     }
@@ -50,7 +50,7 @@ public class GameManager : Singleton<GameManager>
         }
 
         isPaused = false;
-        TempUI.Instance.UnPauseGame();
+        //TempUI.Instance.UnPauseGame();
         //EnemySpawning.Instance.UnPauseSpawning();
         Time.timeScale = 1;
     }
