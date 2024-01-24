@@ -389,6 +389,14 @@ public class CharAgent : MovementController
     {
         float inputSpeed = inputProvider.GetMovementInput().magnitude * maxSpeed;
 
+        if (!allowMovementInput)
+        {
+            animator?.OnAnimationStart(AnimationEvent.Stand, "");
+            isWalking = false;
+            isRunning = false;
+            return;
+        }
+
         if (inputSpeed >= runningSpeed)
         {
             if (!isRunning)

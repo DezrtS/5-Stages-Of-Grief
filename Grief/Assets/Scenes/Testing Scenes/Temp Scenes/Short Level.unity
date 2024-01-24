@@ -1883,7 +1883,7 @@ MonoBehaviour:
   m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 15
+    OrthographicSize: 18
     NearClipPlane: -100
     FarClipPlane: 1000
     Dutch: 0
@@ -5288,7 +5288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b203fe40b45b0f543b99f42aa58a4b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 12
+  maxSpeed: 15
   totalAccelerationTime: 0.1
   totalDeaccelerationTime: 0.15
   useMovementInputSmooth: 1
@@ -14224,7 +14224,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 15
+  orthographic size: 18
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

@@ -38,6 +38,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     [SerializeField] private bool useAimAssist = false;
     private bool assistAim;
 
+    private bool wantToAttack = false;
+
 
     // ---------------------------------------------------------------------------------------------------------
     // Interface Related Variables
@@ -153,6 +155,19 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         CameraManager.Instance.TransferCameraTo(transform);
     }
 
+    private void FixedUpdate()
+    {
+        if (wantToAttack)
+        {
+            if (!attackHolder.GetActiveAttack().IsOnCooldown())
+            {
+                InitiateAttackState(AttackState.ChargingUp);
+                StopAllCoroutines();
+                wantToAttack = false;
+            }
+        }
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -258,7 +273,17 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             case "buttonWest":
                 AttackHolder.SetActiveAttack(0);
 
-                InitiateAttackState(AttackState.Aiming);
+                if (AttackHolder.CanAttack())
+                {
+                    if (AttackHolder.GetActiveAttack().IsOnCooldown())
+                    {
+                        StartCoroutine(AttackPressTimer());
+                    }
+                    else
+                    {
+                        InitiateAttackState(AttackState.Aiming);
+                    }
+                }
                 return;
             default:
                 return;
@@ -303,7 +328,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                         assistAim = false;
                     }
 
-                    InitiateAttackState(AttackState.ChargingUp);
+                    //InitiateAttackState(AttackState.ChargingUp);
                 }
                 return;
             default:
@@ -810,5 +835,12 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         yield return new WaitForSeconds(0.2f);
         //Debug.Log("Ended Invincibility");
         isInvincible = false;
+    }
+
+    public IEnumerator AttackPressTimer()
+    {
+        wantToAttack = true;
+        yield return new WaitForSeconds(0.2f);
+        wantToAttack = false;
     }
 }

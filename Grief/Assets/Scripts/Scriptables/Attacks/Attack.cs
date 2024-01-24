@@ -12,6 +12,12 @@ public abstract class Attack : ScriptableObject
     [SerializeField] private float attackRangeDeviation = 1;
 
     [Space(10)]
+    [SerializeField] private bool isCombo = false;
+    [SerializeField] private int comboAttackCount = 1;
+    [SerializeField] private float fullComboCooldown = 0.5f;
+    [SerializeField] private float comboResetAfter = 1;
+
+    [Space(10)]
     [SerializeField] private List<StatusEffectData> applyStatusEffects = new List<StatusEffectData>();
     [SerializeField] private List<StatusEffectData> recieveStatusEffects = new List<StatusEffectData>();
 
@@ -61,6 +67,8 @@ public abstract class Attack : ScriptableObject
     private StateMovement activeStateMovement;
     private float stateTimeLength = 0;
 
+    private int comboAttack = 0;
+
     public string AttackId { get { return attackId; } }
     public float AttackRange { get { return recommendedAttackRange; } }
     public float AttackRangeDeviation { get { return attackRangeDeviation; } }
@@ -76,6 +84,11 @@ public abstract class Attack : ScriptableObject
         clone.attackId = attackId;
         clone.recommendedAttackRange = recommendedAttackRange;
         clone.attackRangeDeviation = attackRangeDeviation;
+
+        clone.isCombo = isCombo;
+        clone.comboAttackCount = comboAttackCount;
+        clone.fullComboCooldown = fullComboCooldown;
+        clone.comboResetAfter = comboResetAfter;
 
         clone.applyStatusEffects = applyStatusEffects;
         clone.recieveStatusEffects = recieveStatusEffects;
@@ -176,6 +189,14 @@ public abstract class Attack : ScriptableObject
         {
             PlayAnimation(AnimationEvent.AimAttack, AttackId);
             timeAimingStateStarted = Time.timeSinceLevelLoad;
+        } 
+        else if (attackState == AttackState.ChargingUp)
+        {
+            onCooldown = true;
+            if (isCombo)
+            {
+                comboAttack++;
+            }
         }
         else if (attackState == AttackState.Attacking)
         {
@@ -234,6 +255,11 @@ public abstract class Attack : ScriptableObject
         switch (attackState)
         {
             case AttackState.Idle:
+                if (isCombo && timeSinceStateStarted >= comboResetAfter)
+                {
+                    comboAttack = 0;
+                }
+
                 onCooldown = Time.timeSinceLevelLoad - timeAttackingStateEnded <= attackCooldown;
                 return;
             case AttackState.Aiming:
@@ -275,6 +301,14 @@ public abstract class Attack : ScriptableObject
         if (attackState == AttackState.Attacking)
         {
             timeAttackingStateEnded = Time.timeSinceLevelLoad;
+            
+            if (isCombo)
+            {
+                if (comboAttack >= comboAttackCount)
+                {
+                    timeAttackingStateEnded += fullComboCooldown;
+                }
+            }
         }
     }
 

@@ -168,6 +168,10 @@ public class Dodge : ScriptableObject
             PlayAnimation(AnimationEvent.AimDodge, dodgeId);
             timeAimingStateStarted = Time.timeSinceLevelLoad;
         }
+        else if (dodgeState == DodgeState.ChargingUp)
+        {
+            onCooldown = true;
+        }
         else if (dodgeState == DodgeState.Dodging)
         {
             PlayAnimation(AnimationEvent.Dodge, dodgeId);
