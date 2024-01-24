@@ -14,7 +14,8 @@ public class UIManager : Singleton<UIManager>
     public Button[] buttons;
     public float verticalInput;
     public int indexNum;
-    public ColorBlock defualt, highlight;
+    [SerializeField] Sprite button1,button2;
+    //public ColorBlock defualt, highlight;
     public bool canSwap;
 
     [SerializeField] private bool canPause = true;
@@ -168,11 +169,13 @@ public class UIManager : Singleton<UIManager>
         {
             if (i == indexNum)
             {
-                buttons[indexNum].colors = highlight;
+                buttons[indexNum].Select();
+                    //.colors = highlight;
             }
             else
             {
-                buttons[i].colors = defualt; ;
+                //buttons[i].Select();
+                    //.colors = defualt; ;
             }
         }
 
