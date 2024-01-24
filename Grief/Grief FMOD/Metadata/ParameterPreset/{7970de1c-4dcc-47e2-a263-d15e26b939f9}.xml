@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{7970de1c-4dcc-47e2-a263-d15e26b939f9}">
+		<property name="name">
+			<value>combat_intensity</value>
+		</property>
+		<relationship name="folder">
+			<destination>{66d574d0-1905-4dc6-ace6-d48e611afcbc}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{32cef592-8114-4a8f-a3ce-3862c6e18390}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{32cef592-8114-4a8f-a3ce-3862c6e18390}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.5</value>
+		</property>
+	</object>
+</objects>

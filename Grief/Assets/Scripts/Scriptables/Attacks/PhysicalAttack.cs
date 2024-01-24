@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 
 public abstract class PhysicalAttack : Attack
@@ -11,10 +12,22 @@ public abstract class PhysicalAttack : Attack
 
     [Space(15)]
     [Header("Audio Variables")]
-    [SerializeField] protected string playAudioIdOnAim;
-    [SerializeField] protected string playAudioIdOnAttack;
-    [SerializeField] protected string playAudioIdOnCooldown;
-    [SerializeField] protected string playAudioIdOnCancel;
+    [field: SerializeField] protected EventReference playAudioIdOnAim;
+    [field: SerializeField] protected EventReference playAudioIdOnAttack;
+    [field: SerializeField] protected EventReference playAudioIdOnCooldown;
+    [field: SerializeField] protected EventReference playAudioIdOnCancel;
+
+    [Space(15)]
+    [Header("Particle Effect Variables")]
+    [SerializeField] protected GameObject particleEffectOnAimPrefab;
+    [SerializeField] protected GameObject particleEffectOnAttackPrefab;
+    [SerializeField] protected GameObject particleEffectOnCooldownPrefab;
+    [SerializeField] protected GameObject particleEffectOnCancelPrefab;
+
+    protected ParticleSystem particleEffectOnAim;
+    protected ParticleSystem particleEffectOnAttack;
+    protected ParticleSystem particleEffectOnCooldown;
+    protected ParticleSystem particleEffectOnCancel;
 
     public override Attack Clone(Attack clone, IAttack attacker, Transform parentTransform)
     {
@@ -35,11 +48,16 @@ public abstract class PhysicalAttack : Attack
         newClone.playAudioIdOnCooldown = playAudioIdOnCooldown;
         newClone.playAudioIdOnCancel = playAudioIdOnCancel;
 
+        newClone.particleEffectOnAimPrefab = particleEffectOnAimPrefab;
+        newClone.particleEffectOnAttackPrefab = particleEffectOnAttackPrefab;
+        newClone.particleEffectOnCooldownPrefab = particleEffectOnCooldownPrefab;
+        newClone.particleEffectOnCancelPrefab = particleEffectOnCancelPrefab;
+
         return base.Clone(newClone, attacker, parentTransform);
     }
 
-    public override float GetDamage()
+    public override void OnAttackTriggerEnter(Transform hit)
     {
-        return damage;
+        OnAttackHit(hit, damage, knockbackPower);
     }
 }

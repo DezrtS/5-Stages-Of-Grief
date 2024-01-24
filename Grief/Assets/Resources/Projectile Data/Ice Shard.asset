@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60ee716d2dd0c63438021eda841f064c, type: 3}
+  m_Script: {fileID: 11500000, guid: 779b124757feb69479fa5ba1ac536f08, type: 3}
   m_Name: Ice Shard
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 4907591497259816637, guid: 7f727c94a5a6f2d4e9fa43545dc2a0cf,
     type: 3}
   projectileId: ice_shard
   damage: 5
-  fireSpeed: 10
+  knockbackPower: 0
+  fireSpeed: 65
   projectileLifespan: 4

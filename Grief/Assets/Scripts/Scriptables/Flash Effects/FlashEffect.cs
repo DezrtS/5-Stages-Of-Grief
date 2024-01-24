@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class FlashEffect : MonoBehaviour
@@ -36,14 +35,12 @@ public class FlashEffect : MonoBehaviour
             hideFlags = HideFlags.HideAndDontSave
         };
 
-        Material[] newMaterials = new Material[originalMaterials.Length + 1];
+        Material[] newMaterials = new Material[originalMaterials.Length];
 
         for (int i = 0; i < originalMaterials.Length; i++)
         {
-            newMaterials[i] = originalMaterials[i];
+            newMaterials[i] = flashMaterial;
         }
-
-        newMaterials[originalMaterials.Length] = flashMaterial;
 
         objectRenderer.materials = newMaterials;
 
@@ -66,7 +63,7 @@ public class FlashEffect : MonoBehaviour
 
                 if (flashColorIndex >= flashEffectData.FlashColors.Length)
                 {
-                    Debug.Log("Flash Deactivating");
+                    //Debug.Log("Flash Deactivating");
                     Deactivate();
                     return;
                 }
@@ -80,12 +77,32 @@ public class FlashEffect : MonoBehaviour
         }
     }
 
+    public void Restart(FlashEffectData flashEffectData)
+    {
+        if (flashStarted)
+        {
+            this.flashEffectData = flashEffectData;
+
+            flashTimer = 0;
+            flashColorDuration = flashEffectData.FlashColors[flashColorIndex].ColorDuration;
+            flashColorIndex = 0;
+
+            flashMaterial.SetColor("_FlashColor", flashEffectData.FlashColors[flashColorIndex].Color);
+            flashMaterial.SetFloat("_FlashAmount", flashEffectData.FlashColors[flashColorIndex].FlashAmount);
+            flashMaterial.SetFloat("_Emission", flashEffectData.FlashColors[flashColorIndex].FlashEmission);
+        } 
+        else
+        {
+            Activate(flashEffectData);
+        }
+    }
+
     public void Deactivate()
     {
-        Material[] materials = objectRenderer.materials;
-        int materialToRemove = materials.Length - 1;
-        ArrayUtility.RemoveAt(ref materials, materialToRemove);
-        objectRenderer.materials = materials;
+        if (flashStarted)
+        {
+            objectRenderer.materials = originalMaterials;
+        }
 
         Destroy(this);
     }

@@ -13,24 +13,56 @@ MonoBehaviour:
   m_Name: Basic Player Attack
   m_EditorClassIdentifier: 
   attackId: basic_player_attack
-  attackStatusEffects: []
-  stateMovements:
+  recommendedAttackRange: 2
+  attackRangeDeviation: 1
+  applyStatusEffects: []
+  recieveStatusEffects: []
+  attackStateMovements:
   - state: 3
-    movementData: {fileID: 11400000, guid: 2240e59b8d5a482478380b147662bbfd, type: 2}
-  hasAimingStage: 1
+    movement: {fileID: 11400000, guid: 2240e59b8d5a482478380b147662bbfd, type: 2}
+  hasAimingStage: 0
   maxAimTime: 99
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
   chargingUpTime: 0
   hasAttackStage: 1
-  maxAttackTime: 0.2
+  maxAttackTime: 0.1
   coolingDownTime: 0
-  attackCooldown: 0
+  attackCooldown: 0.1
   damage: 3
   knockbackPower: 12
-  attackTriggerScale: 3
-  attackTriggerSpawnDistance: 2
-  playAudioIdOnAim: 
-  playAudioIdOnAttack: player_attack1
-  playAudioIdOnCooldown: 
-  playAudioIdOnCancel: 
+  attackTriggerScale: 5
+  attackTriggerSpawnDistance: 2.5
+  playAudioIdOnAim:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnAttack:
+    Guid:
+      Data1: -2074651602
+      Data2: 1316148225
+      Data3: -305748817
+      Data4: 1512994757
+    Path: event:/SFX/Player/PlayerSwing
+  playAudioIdOnCooldown:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCancel:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  particleEffectOnAimPrefab: {fileID: 0}
+  particleEffectOnAttackPrefab: {fileID: 5799475271799421216, guid: 5c52ebf674c4ce84d9a5ff86b1b2c921,
+    type: 3}
+  particleEffectOnCooldownPrefab: {fileID: 0}
+  particleEffectOnCancelPrefab: {fileID: 0}

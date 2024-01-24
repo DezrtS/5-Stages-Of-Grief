@@ -44,6 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4061028c55eee644e8b24cb488852942, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <DenialTheme1>k__BackingField:
+    Guid:
+      Data1: 1445230782
+      Data2: 1075501126
+      Data3: 850447770
+      Data4: -1576932907
+    Path: event:/Music/Denial Theme 1
   <ambience>k__BackingField:
     Guid:
       Data1: 1155922249
@@ -51,6 +58,48 @@ MonoBehaviour:
       Data3: -127649608
       Data4: 718933337
     Path: event:/Ambience/Wind
+  <crow>k__BackingField:
+    Guid:
+      Data1: 448562119
+      Data2: 1191485845
+      Data3: -540737393
+      Data4: -624302374
+    Path: event:/SFX/Crow Caw
+  <hit>k__BackingField:
+    Guid:
+      Data1: -256632904
+      Data2: 1307947147
+      Data3: 1160089789
+      Data4: -630896032
+    Path: event:/SFX/Hit
+  <iceBreak>k__BackingField:
+    Guid:
+      Data1: -4191380
+      Data2: 1238532757
+      Data3: -719494777
+      Data4: -350574295
+    Path: event:/SFX/Ice Break
+  <footsteps>k__BackingField:
+    Guid:
+      Data1: 678729342
+      Data2: 1329422836
+      Data3: -1377246560
+      Data4: -1789574410
+    Path: event:/SFX/Footsteps
+  <snarl>k__BackingField:
+    Guid:
+      Data1: 1406374580
+      Data2: 1209354181
+      Data3: 2037563797
+      Data4: -1343434883
+    Path: event:/SFX/Snarl
+  <dialogue>k__BackingField:
+    Guid:
+      Data1: -1209801701
+      Data2: 1117437563
+      Data3: -781440865
+      Data4: 772181357
+    Path: event:/SFX/Dialogue/Dialogue
   <playerHurt>k__BackingField:
     Guid:
       Data1: 2130559376

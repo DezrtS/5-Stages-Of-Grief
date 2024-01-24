@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 779b124757feb69479fa5ba1ac536f08, type: 3}
+  m_Name: Ice Shard Bigger
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 4907591497259816637, guid: b82170c954195bf4381670151f895f72,
+    type: 3}
+  projectileId: ice_shard
+  damage: 5
+  knockbackPower: 0
+  fireSpeed: 90
+  projectileLifespan: 4

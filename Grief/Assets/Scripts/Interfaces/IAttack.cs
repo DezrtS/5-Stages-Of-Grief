@@ -12,17 +12,16 @@ public enum AttackState
 
 public interface IAttack
 {
-    Attack ActiveAttack { get; }
+    AttackHolder AttackHolder { get; }
+    GameObject ParticleEffectHolder { get; }
     bool IsAttacking { get; }
     AttackState AttackState { get; }
     List<EntityType> DamageableEntities { get; }
 
-    void SwitchActiveAttack(Attack activeAttack);
-    bool CanSwitchActiveAttack(Attack activeAttack);
     void TransferToAttackState(AttackState attackState);
     void InitiateAttackState(AttackState attackState);
     bool CanInitiateAttackState(AttackState attackState, string attackId);
-    void OnAttackStateStart(AttackState attackState);
+    void OnAttackStateStart(AttackState attackState, string attackId);
     void OnAttackState(AttackState attackState);
     void OnAttackStateEnd(AttackState attackState);
     void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled);

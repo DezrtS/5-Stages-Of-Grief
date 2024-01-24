@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BasicProjectile : MonoBehaviour
 {
-    protected Projectile projectileData;
+    protected ProjectileData projectileData;
     protected Attack parentAttack;
     protected bool canDamage = true;
     protected bool isBeingDestroyed = false;
@@ -12,20 +12,18 @@ public class BasicProjectile : MonoBehaviour
 
     private float spawnTime = 0;
 
-    private void Start()
-    {
-        spawnTime = Time.timeSinceLevelLoad;
-    }
-
     private void FixedUpdate()
     {
-        if (Time.timeSinceLevelLoad - spawnTime >= projectileData.ProjectileLifespan && !isBeingDestroyed)
+        if (isFired)
         {
-            DestroyProjectile();
+            if (Time.timeSinceLevelLoad - spawnTime >= projectileData.ProjectileLifespan && !isBeingDestroyed)
+            {
+                DestroyProjectile();
+            }
         }
     }
 
-    public void SetProjectileData(Projectile projectileData)
+    public void SetProjectileData(ProjectileData projectileData)
     {
         this.projectileData = projectileData;
     }
@@ -39,36 +37,28 @@ public class BasicProjectile : MonoBehaviour
     {
         if (isFired)
         {
-            OnProjectileHit(other);
+            OnProjectileHit(other.transform);
         }
     }
 
-    public virtual void OnProjectileHit(Collider other)
+    public virtual void OnProjectileHit(Transform hit)
     {
-        if (other.TryGetComponent(out IHealth entityHealth) && canDamage)
-        {
-            if (parentAttack == null)
-            {
-                DestroyProjectile();
-            }
-            else
-            {
-                if (parentAttack.OnAttackTriggerEnter(entityHealth, other.transform))
-                {
-                    DestroyProjectile();
-                }
-            }
-        }
-
-        if (other.tag == "Wall")
+        if (hit.CompareTag("Wall") || parentAttack == null)
         {
             DestroyProjectile();
+            return;
+        }
+
+        if (canDamage)
+        {
+            parentAttack.OnProjectileHit(this, hit, projectileData.Damage, projectileData.KnockbackPower);
         }
     }
 
     public virtual void OnFireProjectile()
     {
         isFired = true;
+        spawnTime = Time.timeSinceLevelLoad;
     }
 
     public virtual void DestroyProjectile()

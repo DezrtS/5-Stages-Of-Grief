@@ -1,3 +1,4 @@
+using FMODUnity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,13 +8,16 @@ public abstract class Attack : ScriptableObject
 {
     [Header("Attack Variables")]
     [SerializeField] private string attackId;
+    [SerializeField] private float recommendedAttackRange = 2;
+    [SerializeField] private float attackRangeDeviation = 1;
 
     [Space(10)]
-    [SerializeField] private List<StatusEffect> attackStatusEffects = new List<StatusEffect>();
+    [SerializeField] private List<StatusEffectData> applyStatusEffects = new List<StatusEffectData>();
+    [SerializeField] private List<StatusEffectData> recieveStatusEffects = new List<StatusEffectData>();
 
     [Space(15)]
     [Header("Attack Stages")]
-    [SerializeField] private List<StateMovement> stateMovements = new List<StateMovement>();
+    [SerializeField] private List<AttackStateMovement> attackStateMovements = new List<AttackStateMovement>();
     
     [Space(5)]
     [Header("Aiming")]
@@ -45,17 +49,22 @@ public abstract class Attack : ScriptableObject
     private bool isClone = false;
 
     protected IAttack attacker;
+    protected IAnimate animator;
     protected Transform parentTransform;
+    protected MovementController parentMovementController;
 
-    // Put in proper place
-    protected MovementController movementController;
-    private IEnumerator attackStateCoroutine;
+    protected AttackState attackState = AttackState.Idle;
 
-    private AttackState attackState = AttackState.Idle;
+    private bool onCooldown = false;
+    protected float timeSinceStateStarted = 0;
+    private bool useMovementState = false;
+    private StateMovement activeStateMovement;
+    private float stateTimeLength = 0;
 
     public string AttackId { get { return attackId; } }
+    public float AttackRange { get { return recommendedAttackRange; } }
+    public float AttackRangeDeviation { get { return attackRangeDeviation; } }
     public Transform ParentTransform { get { return parentTransform; } }
-    public AttackState AttackState { get { return attackState; } }
 
     public virtual Attack Clone(Attack clone, IAttack attacker, Transform parentTransform)
     {
@@ -65,26 +74,29 @@ public abstract class Attack : ScriptableObject
         }
 
         clone.attackId = attackId;
+        clone.recommendedAttackRange = recommendedAttackRange;
+        clone.attackRangeDeviation = attackRangeDeviation;
 
-        clone.attackStatusEffects = attackStatusEffects;
-        clone.attackCooldown = attackCooldown;
-        clone.attackCancelCooldown = attackCancelCooldown;
-        clone.attackRequiredChargeUpTime = attackRequiredChargeUpTime;
+        clone.applyStatusEffects = applyStatusEffects;
+        clone.recieveStatusEffects = recieveStatusEffects;
+        clone.attackStateMovements = attackStateMovements;
+
         clone.hasAimingStage = hasAimingStage;
-        clone.hasAttackStage = hasAttackStage;
         clone.maxAimTime = maxAimTime;
-        clone.maxAttackTime = maxAttackTime;
+        clone.attackRequiredChargeUpTime = attackRequiredChargeUpTime;
+        clone.attackCancelCooldown = attackCancelCooldown;
         clone.chargingUpTime = chargingUpTime;
+        clone.hasAttackStage = hasAttackStage;
+        clone.maxAttackTime = maxAttackTime;
         clone.coolingDownTime = coolingDownTime;
+        clone.attackCooldown = attackCooldown;
 
         clone.attacker = attacker;
         clone.parentTransform = parentTransform;
+        clone.parentTransform.TryGetComponent(out clone.animator);
+        clone.parentTransform.TryGetComponent(out clone.parentMovementController);
 
         clone.isClone = true;
-
-        // Reorganize in proper places
-        clone.stateMovements = stateMovements;
-        clone.parentTransform.TryGetComponent(out clone.movementController);
 
         return clone;
     }
@@ -94,14 +106,10 @@ public abstract class Attack : ScriptableObject
         Destroy(this);
     }
 
-    public abstract float GetDamage();
-
     public virtual void TransferToAttackState(AttackState attackState)
     {
         if (CanInitiateAttackState(attackState))
         {
-            OnAttackStateEnd(this.attackState);
-
             if (!hasAimingStage && attackState == AttackState.Aiming)
             {
                 attacker.InitiateAttackState(AttackState.ChargingUp);
@@ -112,6 +120,7 @@ public abstract class Attack : ScriptableObject
                 attackState = AttackState.CoolingDown;
             }
 
+            OnAttackStateEnd(this.attackState);
             this.attackState = attackState;
             InitiateAttackState(attackState);
         } 
@@ -133,14 +142,6 @@ public abstract class Attack : ScriptableObject
         attacker.TransferToAttackState(attackState);
 
         OnAttackStateStart(attackState);
-
-        if (attackState == AttackState.Idle)
-        {
-            return;
-        }
-
-        attackStateCoroutine = AttackStateCoroutine(attackState);
-        CoroutineRunner.Instance.StartCoroutine(attackStateCoroutine);
     }
 
     public virtual bool CanInitiateAttackState(AttackState attackState)
@@ -153,34 +154,88 @@ public abstract class Attack : ScriptableObject
         if (attackState == AttackState.ChargingUp)
         {
             return (Time.timeSinceLevelLoad - timeAimingStateStarted >= attackRequiredChargeUpTime);
-        } 
+        }
         else if (attackState == AttackState.Aiming)
         {
-            return (Time.timeSinceLevelLoad - timeAttackingStateEnded >= attackCooldown);
-        } 
+            return !onCooldown;
+        }
 
         return true;
     }
 
+    public virtual bool IsOnCooldown()
+    {
+        return onCooldown;
+    }
+
     public virtual void OnAttackStateStart(AttackState attackState)
     {
-        attacker.OnAttackStateStart(attackState);
+        attacker.OnAttackStateStart(attackState, AttackId);
 
         if (attackState == AttackState.Aiming)
         {
+            PlayAnimation(AnimationEvent.AimAttack, AttackId);
             timeAimingStateStarted = Time.timeSinceLevelLoad;
+        }
+        else if (attackState == AttackState.Attacking)
+        {
+            PlayAnimation(AnimationEvent.Attack, AttackId);
+            if (recieveStatusEffects.Count > 0 && parentTransform.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
+            {
+                statusEffectTarget.StatusEffectHolder.AddStatusEffect(recieveStatusEffects);
+            }
+        }
+
+        timeSinceStateStarted = 0;
+        useMovementState = false;
+
+        if (parentMovementController != null)
+        {
+            foreach (AttackStateMovement attackStateMovement in attackStateMovements)
+            {
+                if (attackStateMovement.State == attackState)
+                {
+                    useMovementState = true;
+                    activeStateMovement = attackStateMovement.Movement;
+
+                    switch (attackState)
+                    {
+                        case AttackState.Idle:
+                            stateTimeLength = 0;
+                            break;
+                        case AttackState.Aiming:
+                            stateTimeLength = maxAimTime;
+                            break;
+                        case AttackState.ChargingUp:
+                            stateTimeLength = chargingUpTime;
+                            break;
+                        case AttackState.Attacking:
+                            stateTimeLength = maxAttackTime;
+                            break;
+                        case AttackState.CoolingDown:
+                            stateTimeLength = coolingDownTime;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                }
+            }
         }
     }
 
-    public virtual void OnAttackState(AttackState attackState, float timeSinceStateStarted)
+    public virtual void OnAttackState()
     {
         attacker.OnAttackState(attackState);
+
+        timeSinceStateStarted += Time.fixedDeltaTime;
 
         switch (attackState)
         {
             case AttackState.Idle:
-                Debug.LogWarning("Idle On Attack State");
-                break;
+                onCooldown = Time.timeSinceLevelLoad - timeAttackingStateEnded <= attackCooldown;
+                return;
             case AttackState.Aiming:
                 if (maxAimTime < timeSinceStateStarted)
                 {
@@ -206,13 +261,16 @@ public abstract class Attack : ScriptableObject
                 }
                 break;
         }
+
+        if (useMovementState)
+        {
+            parentMovementController.SetVelocity(activeStateMovement.GetStateCurrentVelocity(timeSinceStateStarted, stateTimeLength, parentTransform, parentMovementController.GetVelocity()));
+        }
     }
 
     public virtual void OnAttackStateEnd(AttackState attackState)
     {
         attacker.OnAttackStateEnd(attackState);
-
-        CoroutineRunner.Instance.StopCoroutine(attackStateCoroutine);
 
         if (attackState == AttackState.Attacking)
         {
@@ -228,103 +286,96 @@ public abstract class Attack : ScriptableObject
         }
 
         this.attackState = AttackState.Idle;
-        CoroutineRunner.Instance.StopCoroutine(attackStateCoroutine);
 
-        if (attackState == AttackState.Attacking)
+        if (attackState == AttackState.Aiming)
+        {
+            PlayAnimation(AnimationEvent.AimAttackCancel, AttackId);
+        }
+        else if (attackState == AttackState.Attacking)
         {
             timeAttackingStateEnded = Time.timeSinceLevelLoad - attackCooldown + attackCancelCooldown;
         }
     }
 
-    public IEnumerator AttackStateCoroutine(AttackState attackState) 
+    public virtual void OnAttackTriggerEnter(Transform hit) { }
+
+    public virtual void OnAttackTriggerStay(Transform hit) { }
+
+    public virtual void OnAttackTriggerExit(Transform hit) { }
+
+    public virtual bool CanHitEntity(Transform hit)
     {
-        float timeStateStarted = Time.timeSinceLevelLoad;
-
-        bool useMovementState = false;
-        StateMovementData stateMovementData = null;
-        float stateTimeLength = 0;
-
-        if (movementController != null)
+        if (hit.TryGetComponent(out IHealth entityHealth))
         {
-            foreach (StateMovement stateMovement in stateMovements)
+            if (attacker.DamageableEntities.Contains(entityHealth.EntityType))
             {
-                if (stateMovement.State == attackState)
-                {
-                    useMovementState = true;
-                    stateMovementData = stateMovement.MovementData;
-
-                    switch (attackState)
-                    {
-                        case AttackState.Aiming:
-                            stateTimeLength = maxAimTime;
-                            break;
-                        case AttackState.ChargingUp:
-                            stateTimeLength = chargingUpTime;
-                            break;
-                        case AttackState.Attacking:
-                            stateTimeLength = maxAttackTime;
-                            break;
-                        case AttackState.CoolingDown:
-                            stateTimeLength = coolingDownTime;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    break;
-                }
+                return true;
             }
         }
 
-        while (true)
-        {
-            yield return new WaitForFixedUpdate();
+        return false;
+    }
 
-            if (useMovementState)
+    public virtual void OnAttackHit(Transform hit, float damage, float knockbackPower)
+    {
+        if (CanHitEntity(hit))
+        {
+            hit.GetComponent<IHealth>().Damage(damage);
+
+            if (applyStatusEffects.Count > 0 && hit.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
             {
-                movementController.SetVelocity(stateMovementData.GetStateCurrentVelocity(Time.timeSinceLevelLoad - timeStateStarted, stateTimeLength, parentTransform, movementController.GetVelocity()));
+                statusEffectTarget.StatusEffectHolder.AddStatusEffect(applyStatusEffects);
             }
 
-            OnAttackState(attackState, Time.timeSinceLevelLoad - timeStateStarted);
+            Vector3 knockbackDirection = (hit.position - parentTransform.position).normalized;
+            ApplyKnockback(hit, knockbackPower, knockbackDirection);
         }
     }
 
-    // All Code Below Needs Tweaking
-    public virtual bool OnAttackTriggerEnter(IHealth entity, Transform entityTransform)
+    public virtual void OnProjectileHit(BasicProjectile projectile, Transform hit, float damage, float knockbackPower)
     {
-        if (attackStatusEffects.Count > 0 && entityTransform.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
+        if (CanHitEntity(hit))
         {
-            StatusEffectManager.AddStatusEffectToObject(attackStatusEffects, statusEffectTarget, entityTransform);
+            projectile.DestroyProjectile();
+
+            hit.GetComponent<IHealth>().Damage(damage);
+
+            if (applyStatusEffects.Count > 0 && hit.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
+            {
+                statusEffectTarget.StatusEffectHolder.AddStatusEffect(applyStatusEffects);
+            }
+
+            Vector3 knockbackDirection = projectile.transform.forward;
+            ApplyKnockback(hit, knockbackPower, knockbackDirection);
         }
-
-        return CombatManager.Instance.DamageEntity(this, attacker, entity, parentTransform, entityTransform);
-        //CombatManager.Instance.ApplyKnockback(this, parentTransform, entityTransform);
     }
 
-    public virtual void OnAttackTriggerStay(IHealth entity, Transform entityTransform)
+    public virtual void ApplyKnockback(Transform hit, float knockbackPower, Vector3 knockbackDirection)
     {
-
-    }
-
-    public virtual void OnAttackTriggerExit(IHealth entity, Transform entityTransform)
-    {
-
-    }
-
-    public void PlayAudio(string audioId)
-    {
-        if (audioId != "")
+        if (hit.TryGetComponent(out MovementController parentMovementController))
         {
-
+            parentMovementController.ApplyForce(knockbackDirection.normalized * knockbackPower);
+        }
+        else if (hit.TryGetComponent(out Rigidbody rig))
+        {
+            rig.AddForce(knockbackDirection.normalized * knockbackPower, ForceMode.Impulse);
         }
     }
 
-    public void DamageEntity(IHealth entity)
+    public void PlayAudio(EventReference audioReference)
     {
-        CombatManager.Instance.DamageEntity(this, attacker, entity);
+        if (!audioReference.IsNull)
+        {
+            AudioManager.Instance.PlayOneShot(audioReference, parentTransform.position);
+        }
     }
 
-    public virtual GameObject SpawnProjectile(Projectile projectileData, Vector3 position, Vector3 rotation)
+    public void PlayAnimation(AnimationEvent animationEvent, string animationId)
+    {
+        animator?.OnAnimationStart(animationEvent, animationId);
+    }
+
+    public virtual GameObject SpawnProjectile(ProjectileData projectileData, Vector3 position, Vector3 rotation)
     {
         GameObject spawnedProjectile = Instantiate(projectileData.ProjectilePrefab, position, Quaternion.Euler(rotation));
         BasicProjectile basicProjectile = spawnedProjectile.GetComponent<BasicProjectile>();
@@ -342,7 +393,7 @@ public abstract class Attack : ScriptableObject
         return spawnedProjectile;
     }
 
-    public virtual void FireProjectile(Projectile projectileData, GameObject projectile, Vector3 direction)
+    public virtual void FireProjectile(ProjectileData projectileData, GameObject projectile, Vector3 direction)
     {
         Rigidbody rig = projectile.GetComponent<Rigidbody>();
 
@@ -353,11 +404,11 @@ public abstract class Attack : ScriptableObject
 }
 
 [Serializable]
-public class StateMovement
+public class AttackStateMovement
 {
     [SerializeField] private AttackState state;
-    [SerializeField] private StateMovementData movementData;
+    [SerializeField] private StateMovement movement;
 
     public AttackState State { get { return state; } }
-    public StateMovementData MovementData { get { return movementData; } }
+    public StateMovement Movement { get { return movement; } }
 }

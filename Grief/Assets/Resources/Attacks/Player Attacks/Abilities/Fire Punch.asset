@@ -13,21 +13,54 @@ MonoBehaviour:
   m_Name: Fire Punch
   m_EditorClassIdentifier: 
   attackId: fire_punch
-  attackEffects: 
-  attackCooldown: 2
-  attackCancelCooldown: 0.5
-  attackRequiredChargeUpTime: 0.4
+  recommendedAttackRange: 2
+  attackRangeDeviation: 1
+  applyStatusEffects: []
+  recieveStatusEffects: []
+  attackStateMovements: []
   hasAimingStage: 1
-  hasAttackStage: 1
   maxAimTime: 99
-  maxAttackTime: 0.5
+  attackRequiredChargeUpTime: 0
+  attackCancelCooldown: 0
   chargingUpTime: 0.2
+  hasAttackStage: 1
+  maxAttackTime: 0.5
   coolingDownTime: 0.4
-  damage: 5
+  attackCooldown: 2
+  damage: 50
   knockbackPower: 20
   attackTriggerScale: 6
   attackTriggerSpawnDistance: 3
-  playAudioIdOnAim: 
-  playAudioIdOnAttack: player_attack1
-  playAudioIdOnCooldown: 
-  playAudioIdOnCancel: 
+  playAudioIdOnAim:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnAttack:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCooldown:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCancel:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  particleEffectOnAimPrefab: {fileID: 6400168622586035988, guid: 824ee86bbbc98044984ce6620129a115,
+    type: 3}
+  particleEffectOnAttackPrefab: {fileID: 0}
+  particleEffectOnCooldownPrefab: {fileID: 0}
+  particleEffectOnCancelPrefab: {fileID: 0}

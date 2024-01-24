@@ -27,6 +27,8 @@ public class TestBox : MonoBehaviour, IHealth
             return;
         }
 
+        EffectManager.Instance.Flash(transform);
+
         health = Mathf.Max(health - damage, 0);
 
         //Debug.Log($"Test Box has lost {damage} health at {Time.timeSinceLevelLoad} seconds since level load");

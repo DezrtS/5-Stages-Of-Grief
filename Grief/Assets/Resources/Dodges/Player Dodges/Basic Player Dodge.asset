@@ -9,10 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 085ec5eb8eb15eb42a1dadffbeb8ff24, type: 3}
+  m_Script: {fileID: 11500000, guid: 428470a005befb94b92efd50df8587e1, type: 3}
   m_Name: Basic Player Dodge
   m_EditorClassIdentifier: 
   dodgeId: basic_player_dodge
-  dodgeDistance: 5
-  dodgeTime: 0.25
-  dodgeCooldown: 0.1
+  dodgeStateMovements:
+  - state: 3
+    movement: {fileID: 11400000, guid: be6935f823a314948baaf9365d7b327c, type: 2}
+  hasAimingStage: 0
+  maxAimTime: 99
+  dodgeRequiredChargeUpTime: 0
+  dodgeCancelCooldown: 0
+  chargingUpTime: 0
+  hasDodgeStage: 1
+  dodgeTime: 0.35
+  coolingDownTime: 0
+  dodgeCooldown: 0.15

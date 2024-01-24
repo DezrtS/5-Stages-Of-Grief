@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e37ce8317771fc64baa1b7b2b471715e, type: 3}
+  m_Name: Basic Bleed
+  m_EditorClassIdentifier: 
+  statusEffectId: Basic_Bleed
+  statusEffectType: 3
+  statusEffectDuration: 5
+  timeBetweenEffectActivations: 1
+  applyEffectOnStart: 1
+  applyEffectOnEnd: 0
+  particleEffectOnStartPrefab: {fileID: 0}
+  particleEffectOnApplyPrefab: {fileID: 9176901763896446002, guid: dbd500fa8b823464d9abdb41e0b28276,
+    type: 3}
+  playAudioOnStart:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioOnApply:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  healthEffectValue: 1
+  isDamage: 1

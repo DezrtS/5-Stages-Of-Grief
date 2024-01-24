@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{ebaa8bbd-c546-4ef9-93e4-32a7904827ac}">
+		<property name="name">
+			<value>dialogue_option</value>
+		</property>
+		<relationship name="folder">
+			<destination>{66d574d0-1905-4dc6-ace6-d48e611afcbc}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{ce0b7dc1-f93f-4500-893d-ffca7ebbc44e}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{ce0b7dc1-f93f-4500-893d-ffca7ebbc44e}">
+		<property name="parameterType">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>4</value>
+		</property>
+		<property name="isHeld">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

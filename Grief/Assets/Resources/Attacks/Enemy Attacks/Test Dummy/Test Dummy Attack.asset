@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Test Dummy Attack
   m_EditorClassIdentifier: 
   attackId: test_dummy_attack
-  attackStatusEffects: []
+  attackStatusEffects:
+  - {fileID: 11400000, guid: 72bf344e4b56f0c43815edf95b49e637, type: 2}
+  - {fileID: 11400000, guid: c7245dc7599cec142bcbd5bb15304825, type: 2}
   stateMovements:
   - state: 3
     movementData: {fileID: 11400000, guid: 2240e59b8d5a482478380b147662bbfd, type: 2}

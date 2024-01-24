@@ -21,7 +21,15 @@ public class AudioManager : Singleton<AudioManager>
 
     private void Start()
     {
-        InitializeAmbience(FMODEventsManager.Instance.ambience);
+        InitializeAmbience(FMODEventsManager.Instance.DenialTheme1);
+    }
+
+    private void FixedUpdate()
+    {
+        if (Random.Range(0, 100) == 1)
+        {
+            PlayOneShot(FMODEventsManager.Instance.crow, PlayerController.Instance.transform.position + new Vector3(Random.Range(1f, 2f), 0, Random.Range(1f, 2f)) * 10f);
+        }
     }
 
     private void InitializeAmbience(EventReference ambienceEventReference)
@@ -38,6 +46,11 @@ public class AudioManager : Singleton<AudioManager>
     public void PlayOneShot(EventReference sound, Vector3 worldPosition)
     {
         RuntimeManager.PlayOneShot(sound, worldPosition);
+    }
+
+    public void PlayOneShot(EventReference sound)
+    {
+        RuntimeManager.PlayOneShot(sound);
     }
 
     public EventInstance CreateInstance(EventReference eventReference)

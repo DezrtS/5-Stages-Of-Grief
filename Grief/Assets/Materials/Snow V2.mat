@@ -21,8 +21,12 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - BaseNormal:
+        m_Texture: {fileID: 2800000, guid: 7c55e6fc5e07f6342bcf5e983aa7a455, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - BaseTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 55aa1400046c8204b9cfc43117f481be, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - SnowNoise:
@@ -30,7 +34,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - SnowNormal:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 096d5a3c51167ec46a4574ebad798d0f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -47,20 +51,23 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - BaseSmoothness: 0.5
+    - BaseNormalStrength: 1
+    - BaseNormalTiling: 1
+    - BaseSmoothness: 0
+    - BaseTiling: 150
     - MaxSnowAngle: 1
     - SnowIntensity: 0.85
     - SnowNoiseSmooth: 0.04
     - SnowNoiseTiling: 0.01
-    - SnowNormalStrength: 0
+    - SnowNormalStrength: 0.5
     - SnowNormalTiling: 1
     - SnowSmoothness: 0
     - UseUVs: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - BaseColor: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 1}
-    - SnowColor: {r: 1, g: 1, b: 1, a: 1}
+    - BaseColor: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 1}
+    - SnowColor: {r: 1.0592737, g: 1.0592737, b: 1.0592737, a: 1}
     - SnowDirection: {r: 0, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &9125725151088031797

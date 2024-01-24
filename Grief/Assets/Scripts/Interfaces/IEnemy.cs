@@ -1,11 +1,13 @@
 public enum EnemyState
 {
-    Deciding,
     Idle,
     Patrolling,
     Chasing,
+    Repositioning,
     Attacking,
+    Dodging,
     Fleeing,
+
     Stunned,
     Dead
 }
@@ -13,6 +15,8 @@ public enum EnemyState
 public interface IEnemy 
 {
     EnemyState EnemyState { get; }
+    bool IsQueued { get; set; }
+    bool HasRequested { get; set; }
 
     public void TransferToEnemyState(EnemyState enemyState);
     public void InitiateEnemyState(EnemyState enemyState);

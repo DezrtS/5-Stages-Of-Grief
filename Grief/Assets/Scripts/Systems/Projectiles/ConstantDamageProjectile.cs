@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Class May Need Restructuring
 public class ConstantDamageProjectile : BasicProjectile
 {
     [SerializeField] private float delayBetweenDamage = 0.5f;
@@ -35,12 +36,12 @@ public class ConstantDamageProjectile : BasicProjectile
             timeSinceLastDamage = Time.timeSinceLevelLoad;
             foreach (IHealth entity in entities)
             {
-                parentAttack.DamageEntity(entity);
+                entity.Damage(projectileData.Damage);
             }
         }    
     }
 
-    public override void OnProjectileHit(Collider other)
+    public override void OnProjectileHit(Transform other)
     {
 
     }

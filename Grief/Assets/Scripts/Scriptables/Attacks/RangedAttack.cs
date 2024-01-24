@@ -1,12 +1,21 @@
+using FMODUnity;
 using UnityEngine;
 
 public abstract class RangedAttack : Attack
 {
     [Space(15)]
     [Header("Audio Variables")]
-    [SerializeField] protected string playAudioIdOnAim;
-    [SerializeField] protected string playAudioIdOnAttack;
-    [SerializeField] protected string playAudioIdOnCancel;
+    [field: SerializeField] protected EventReference playAudioIdOnAim;
+    [field: SerializeField] protected EventReference playAudioIdOnAttack;
+    [field: SerializeField] protected EventReference playAudioIdOnCancel;
 
-    public override abstract float GetDamage();
+    [Space(15)]
+    [Header("Particle Effect Variables")]
+    [SerializeField] protected GameObject particleEffectOnAimPrefab;
+    [SerializeField] protected GameObject particleEffectOnAttackPrefab;
+    [SerializeField] protected GameObject particleEffectOnCancelPrefab;
+
+    protected ParticleSystem particleEffectOnAim;
+    protected ParticleSystem particleEffectOnAttack;
+    protected ParticleSystem particleEffectOnCancel;
 }
