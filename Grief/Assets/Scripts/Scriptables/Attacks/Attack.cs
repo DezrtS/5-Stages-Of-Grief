@@ -170,7 +170,7 @@ public abstract class Attack : ScriptableObject
 
     public virtual void OnAttackStateStart(AttackState attackState)
     {
-        attacker.OnAttackStateStart(attackState);
+        attacker.OnAttackStateStart(attackState, AttackId);
 
         if (attackState == AttackState.Aiming)
         {
