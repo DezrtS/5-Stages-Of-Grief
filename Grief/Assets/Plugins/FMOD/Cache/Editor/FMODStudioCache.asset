@@ -125,7 +125,7 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638387589429603000
+  lastModified: 638421225064036370
   FileSizes:
   - Name: Desktop
     Value: 1036
@@ -272,7 +272,7 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Denial.bank
   Name: Denial
   StudioPath: bank:/Denial
-  lastModified: 638387589429566976
+  lastModified: 638421225063996326
   FileSizes:
   - Name: Desktop
     Value: 2464096
@@ -311,7 +311,7 @@ MonoBehaviour:
   - {fileID: -8260435118205532706}
   StringsBanks:
   - {fileID: 5618337765621597603}
-  cacheTime: 638394599928247455
+  cacheTime: 638421225064389933
   cacheVersion: 131608
 --- !u!114 &2029733761135007170
 MonoBehaviour:
@@ -383,7 +383,7 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638387589429613046
+  lastModified: 638421225064051437
   FileSizes:
   - Name: Desktop
     Value: 1506
@@ -430,7 +430,7 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638394599928247455
+  lastModified: 638421225064389933
   FileSizes:
   - Name: Desktop
     Value: 755424
