@@ -109,6 +109,11 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public event AbilitySelectEventHandler OnAbilitySelectEvent;
 
+    public delegate void AttackEventHandler(string attackId);
+
+    public event AttackEventHandler OnAttackEvent;
+
+
     // ---------------------------------------------------------------------------------------------------------
     // Default Unity Methods
     // ---------------------------------------------------------------------------------------------------------
@@ -519,7 +524,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         return true;
     }
 
-    public void OnAttackStateStart(AttackState attackState)
+    public void OnAttackStateStart(AttackState attackState, string attackId)
     {
         // Can be Simplified
 
@@ -561,6 +566,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
         else if (attackState == AttackState.Attacking)
         {
+            OnAttackEvent?.Invoke(attackId);
             Aim();
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);

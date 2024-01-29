@@ -381,7 +381,7 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
         return true;
     }
 
-    public virtual void OnAttackStateStart(AttackState attackState)
+    public virtual void OnAttackStateStart(AttackState attackState, string attackId) 
     {
         // Actions to do when the state has first started
         if (attackState == AttackState.Idle)

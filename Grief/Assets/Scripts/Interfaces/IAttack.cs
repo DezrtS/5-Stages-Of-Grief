@@ -21,7 +21,7 @@ public interface IAttack
     void TransferToAttackState(AttackState attackState);
     void InitiateAttackState(AttackState attackState);
     bool CanInitiateAttackState(AttackState attackState, string attackId);
-    void OnAttackStateStart(AttackState attackState);
+    void OnAttackStateStart(AttackState attackState, string attackId);
     void OnAttackState(AttackState attackState);
     void OnAttackStateEnd(AttackState attackState);
     void OnAttackStateCancel(AttackState attackState, bool otherHasCancelled);
