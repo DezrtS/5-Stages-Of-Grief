@@ -4379,7 +4379,7 @@ MonoBehaviour:
   pathfindObject: {fileID: 0}
   panStrength: 20
   panTimeMultiplier: 25
-  useAimAssist: 0
+  useAimAssist: 1
   maxHealth: 999
   damageableEntities: 01000000020000000300000004000000
   animator: {fileID: 1297662077455871042}

@@ -59,6 +59,9 @@ public class SingleProjectileAttack : RangedAttack
 
         if (attackState == AttackState.Attacking && fireProjectileOnAttack)
         {
+            projectile.transform.position = parentTransform.position + parentTransform.rotation * spawnOffset;
+            projectile.transform.forward = parentTransform.forward;
+            
             FireProjectile(projectileData, projectile, parentTransform.forward);
             PlayAudio(playAudioIdOnAttack);
 
@@ -100,7 +103,7 @@ public class SingleProjectileAttack : RangedAttack
     {
         base.OnAttackStateCancel(attackState, otherHasCancelled);
 
-        if (attackState == AttackState.Aiming)
+        if (attackState == AttackState.Aiming || attackState == AttackState.ChargingUp)
         {
             Destroy(projectile);
             PlayAudio(playAudioIdOnCancel);

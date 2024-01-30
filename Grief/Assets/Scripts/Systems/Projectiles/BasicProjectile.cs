@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BasicProjectile : MonoBehaviour
 {
+    private new Collider collider;
     protected ProjectileData projectileData;
     protected Attack parentAttack;
     protected bool canDamage = true;
@@ -11,6 +12,12 @@ public class BasicProjectile : MonoBehaviour
     private bool isFired;
 
     private float spawnTime = 0;
+
+    private void Awake()
+    {
+        collider = GetComponent<Collider>();
+        collider.enabled = false;
+    }
 
     private void FixedUpdate()
     {
@@ -57,6 +64,7 @@ public class BasicProjectile : MonoBehaviour
 
     public virtual void OnFireProjectile()
     {
+        collider.enabled = true;
         isFired = true;
         spawnTime = Time.timeSinceLevelLoad;
     }

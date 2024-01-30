@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyManager : Singleton<EnemyManager>
 {
-    private readonly List<Enemy> enemies;
+    private readonly List<Enemy> enemies = new();
     public List<Enemy> Enemies { get { return enemies; } }
 
     public void AddEnemyToList(Enemy enemy)

@@ -319,19 +319,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             case "buttonWest":
                 if (attackState == AttackState.Aiming)
                 {
-                    if (false)
-                    {
-                        List<Enemy> enemies = EnemyManager.Instance.Enemies;
-
-
-
-                        for (int i = 0; i < enemies.Count; i++)
-                        {
-
-                        }
-
-                        assistAim = false;
-                    }
 
                     //InitiateAttackState(AttackState.ChargingUp);
                 }
@@ -540,7 +527,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
             if (useAimAssist)
             {
-                if (attackHolder.GetActiveAttack().GetType().IsSubclassOf(typeof(RangedAttack)))
+                if (attackId == "ice_shard")
                 {
                     assistAim = true;
                 }
@@ -568,6 +555,36 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             OnAttackEvent?.Invoke(attackId);
             Aim();
+
+            if (assistAim)
+            {
+                List<Enemy> enemies = EnemyManager.Instance.Enemies;
+
+                Vector3 dir;
+                float closestAngle = 30f;
+                Vector3 closestDir = transform.forward;
+
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    dir = enemies[i].transform.position - transform.position;
+                    dir.y = 0;
+
+                    if (dir.magnitude < 45)
+                    {
+                        float angle = Vector3.Angle(transform.forward, dir.normalized);
+                        //Debug.Log(angle);
+                        if (angle <= closestAngle)
+                        {
+                            closestAngle = angle;
+                            closestDir = dir.normalized;
+                        }
+                    }
+                }
+
+                charAgent.SetRotation(Quaternion.Inverse(MovementController.MovementAxis) * closestDir);
+                assistAim = false;
+            }
+
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
         } 
