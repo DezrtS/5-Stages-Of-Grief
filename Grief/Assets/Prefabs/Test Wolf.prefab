@@ -408,6 +408,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackList:
   - {fileID: 11400000, guid: 3aefee0bf172bb44a99d7024f22d2a22, type: 2}
+  - {fileID: 11400000, guid: 33f2c9808cf9deb429a537386a7ec424, type: 2}
 --- !u!136 &565407727850481254
 CapsuleCollider:
   m_ObjectHideFlags: 0

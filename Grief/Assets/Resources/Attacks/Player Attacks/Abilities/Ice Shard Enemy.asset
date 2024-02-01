@@ -15,6 +15,10 @@ MonoBehaviour:
   attackId: ice_shard_enemy
   recommendedAttackRange: 15
   attackRangeDeviation: 5
+  isCombo: 0
+  comboAttackCount: 1
+  fullComboCooldown: 0.5
+  comboResetAfter: 1
   applyStatusEffects: []
   recieveStatusEffects: []
   attackStateMovements: []

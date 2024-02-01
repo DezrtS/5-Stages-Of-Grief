@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cf7acb1f422c0ce45b73a3afb945e3a0
+guid: 3ad06dd5b91cca344b76ad09f411d294
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -7,23 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: ef992accc8113db4cb3f42b1183a7d00, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: b1dda6b4b419ef247b04035478f971f5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Material.003
-    second: {fileID: 2100000, guid: cac3bbb86776f174d83c6a80a0008335, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.006
-    second: {fileID: 2100000, guid: 83e4cbb2f5bbe9b4b9fdc9d1f57238a0, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.011
-    second: {fileID: 2100000, guid: 79a39efbe31e74f429de5e56a8d2f31f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.013
-    second: {fileID: 2100000, guid: 27e47de6630517a48bd6a700e8e12f17, type: 2}
+    second: {fileID: 2100000, guid: c7c500fea8440d643b8bae47cca1b1fe, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -62,8 +57,8 @@ ModelImporter:
     sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 1
-    importLights: 1
+    importCameras: 0
+    importLights: 0
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0

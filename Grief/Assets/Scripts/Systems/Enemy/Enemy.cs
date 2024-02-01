@@ -262,7 +262,10 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
                 //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.snarl, transform.position);
                 break;
             case EnemyState.Repositioning:
-                navMeshAgent.updateRotation = false;
+                if (navMeshAgent != null)
+                {
+                    navMeshAgent.updateRotation = false;
+                }
                 break;
             case EnemyState.Attacking:
 
@@ -330,7 +333,10 @@ public abstract class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, I
 
                 break;
             case EnemyState.Repositioning:
-                navMeshAgent.updateRotation = true;
+                if (navMeshAgent != null)
+                {
+                    navMeshAgent.updateRotation = true;
+                }
                 break;
             case EnemyState.Attacking:
 

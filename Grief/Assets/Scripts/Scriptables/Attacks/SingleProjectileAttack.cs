@@ -90,7 +90,7 @@ public class SingleProjectileAttack : RangedAttack
 
     public override void OnAttackState()
     {
-        if (attackState == AttackState.Aiming)
+        if (attackState == AttackState.Aiming || attackState == AttackState.ChargingUp)
         {
             projectile.transform.position = parentTransform.position + parentTransform.rotation * spawnOffset;
             projectile.transform.forward = parentTransform.forward;

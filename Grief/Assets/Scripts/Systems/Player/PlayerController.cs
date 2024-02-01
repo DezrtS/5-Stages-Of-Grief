@@ -9,9 +9,10 @@ using UnityEngine.InputSystem;
 public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAttack, IDodge, IPathfind, IStatusEffectTarget, IAnimate
 {
     public EventInstance dialogue;
+    private bool useHeavyAttack;
 
     // ---------------------------------------------------------------------------------------------------------
-    // Player Variables
+    // PlayerController Class Variables
     // ---------------------------------------------------------------------------------------------------------
 
     [Header("Pathfinding Debugging")]
@@ -21,6 +22,12 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     [SerializeField] private float panStrength = 5;
     [Range(0.1f, 100)]
     [SerializeField] private float panTimeMultiplier = 10;
+
+    [Space(10)]
+    [Header("Aim Assist")]
+    [SerializeField] private bool useAimAssist = false;
+    [SerializeField] private float aimAssistMaxAngle = 20f;
+    [SerializeField] private float aimAssistMaxRange = 45f;
 
     private Transform playerTransform;
     private CharAgent charAgent;
@@ -35,11 +42,12 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     private bool useMouseForRotation;
 
-    [SerializeField] private bool useAimAssist = false;
     private bool assistAim;
 
-    private bool wantToAttack = false;
-
+    private bool queueAttack;
+    private bool queueDodge;
+    private float queueAttackTimer = 0;
+    private float queueDodgeTimer = 0;
 
     // ---------------------------------------------------------------------------------------------------------
     // Interface Related Variables
@@ -54,16 +62,16 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     [Space(10)]
     [Header("Attacking")]
+    [SerializeField] private float attackCoyoteTime = 0.2f;
     [SerializeField] private List<EntityType> damageableEntities;
     private AttackHolder attackHolder;
     private GameObject particleEffectHolder;
     private AttackState attackState;
     private bool isAttacking;
 
-    private bool queueAttack;
-
     [Space(10)]
     [Header("Dodging")]
+    [SerializeField] private float dodgeCoyoteTime = 0.2f;
     private DodgeHolder dodgeHolder;
     private DodgeState dodgeState;
     private bool isDodging;
@@ -74,6 +82,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     private StatusEffectHolder statusEffectHolder;
 
+    [Space(10)]
+    [Header("Animating")]
     [SerializeField] private Animator animator;
     private bool canAnimate = true;
 
@@ -98,7 +108,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
     public StatusEffectHolder StatusEffectHolder { get { return statusEffectHolder; } }
 
     // ---------------------------------------------------------------------------------------------------------
-    // Class Events
+    // PlayerController Class Events
     // ---------------------------------------------------------------------------------------------------------
 
     public delegate void PlayerHealthEventHandler(float health);
@@ -120,13 +130,14 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     protected override void Awake()
     {
+        // Call the base awake function from the Singleton class.
         base.Awake();
 
+        // Assign/create the needed variables for this class to work.
         playerTransform = transform;
         navMeshAgent = GetComponent<NavMeshAgent>();
         charAgent = GetComponent<CharAgent>();
         playerLook = transform.AddComponent<PlayerLook>();
-
 
         if (!TryGetComponent(out attackHolder))
         {
@@ -143,6 +154,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             statusEffectHolder = transform.AddComponent<StatusEffectHolder>();
         }
 
+        // Determine if this class can animate .
         if (animator == null)
         {
             canAnimate = false;
@@ -153,41 +165,62 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     private void Start()
     {
+        // Create the particle effect holder for this class.
         particleEffectHolder = Instantiate(GameManager.Instance.EmptyGameObject, transform);
         particleEffectHolder.name = $"{name}'s Particle Effect Holder";
 
+        // Create an audio instance for playing dialogue
         dialogue = AudioManager.Instance.CreateInstance(FMODEventsManager.Instance.dialogue);
+        // Call the CameraManager singleton to transfer the camera to this transform.
         CameraManager.Instance.TransferCameraTo(transform);
     }
 
     private void FixedUpdate()
     {
-        if (wantToAttack)
+        // Check to see if the player has queued a dodge, and when the dodge is no longer on a cooldown,
+        // the player is not attacking, and is not pathfinding, reset the dodge queue timer and activate a dodge.
+        if (queueDodge)
         {
-            if (!attackHolder.GetActiveAttack().IsOnCooldown())
+            queueDodgeTimer -= Time.fixedDeltaTime;
+
+            if (!dodgeHolder.GetActiveDodge().IsOnCooldown() && !isAttacking && !isPathfinding)
             {
+                queueDodge = false;
+                queueDodgeTimer = 0;
+                InitiateDodgeState(DodgeState.Aiming);
+                return;
+            }
+
+            if (queueDodgeTimer <= 0)
+            {
+                queueDodge = false;
+            }
+        }
+
+        // Works in the same way as with queuing a dodge.
+        if (queueAttack)
+        {
+            queueAttackTimer -= Time.fixedDeltaTime;
+
+            if (!attackHolder.GetActiveAttack().IsOnCooldown() && !isDodging && !isPathfinding)
+            {
+                queueAttack = false;
+                queueAttackTimer = 0;
+                InitiateAttackState(AttackState.Aiming);
                 InitiateAttackState(AttackState.ChargingUp);
-                StopAllCoroutines();
-                wantToAttack = false;
+                return;
+            }
+
+            if (queueAttackTimer <= 0)
+            {
+                queueAttack = false;
             }
         }
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            InitiateDodgeState(DodgeState.Aiming);
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            if (dodgeState == DodgeState.Aiming)
-            {
-                InitiateDodgeState(DodgeState.ChargingUp);
-            }
-        }
-
+        // Get input for various debugging purposes (Has to be properly implemented using the new input system later).
         if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking)
         {
             useMouseForRotation = true;
@@ -202,15 +235,22 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                 InitiateAttackState(AttackState.ChargingUp);
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            useHeavyAttack = !useHeavyAttack;
+        }
     }
 
     private void LateUpdate()
     {
+        // Pan the camera towards the direction of the right joystick.
         playerLook.PanTowards(rightJoystick.ReadValue<Vector2>(), panStrength, panTimeMultiplier);
     }
 
     private void OnEnable()
     {
+        // Enables the player input system controls and connects various input events to some of the methods in this class.
         playerInputControls ??= new PlayerInputControls();
 
         leftJoystick = playerInputControls.Player.Movement;
@@ -228,69 +268,61 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         dPad.Enable();
     }
 
+    /// <summary>
+    /// This method is a callback function for player input actions. It is invoked when a specific input action is performed.
+    /// </summary>
+    /// <param name="obj">The InputAction.CallbackContext object containing information about the performed action.</param>
     private void OnActionPerformed(InputAction.CallbackContext obj)
     {
+        // Check if the game is paused; if paused, do nothing in response to the input action.
         if (GameManager.Instance.IsPaused)
         {
             return;
         }
 
+        // Disable mouse rotation because mouse input caannot currently trigger this function so if mouse
+        // rotation was enabled, the user must have switched to a controller.
         useMouseForRotation = false;
 
+        // Get the name of the button associated with the performed action.
         string buttonName = obj.action.activeControl.name;
 
+        // Process the input based on the button's name.
         switch (buttonName)
         {
+            case "rightTrigger":
+                // Set the ability and initiate the attack aiming state.
+                SetAbility();
+                InitiateAttackState(AttackState.Aiming);
+                return;
             case "buttonNorth":
-
-                if (lastDPadInput == Vector2.up)
+                // Check if heavy attack is enabled and set the corresponding heavy attack, or just set the ability from the default.
+                // This is meant for testing purposes.
+                if (useHeavyAttack)
                 {
-                    AttackHolder.SetActiveAttack(1);
+                    attackHolder.SetActiveAttack(4);
                 }
-                else if (lastDPadInput == Vector2.left)
-                {
-                    AttackHolder.SetActiveAttack(2);
-                }
-                else if (lastDPadInput == Vector2.right)
-                {
-                    AttackHolder.SetActiveAttack(3);
-                }
-                else if (lastDPadInput == Vector2.down)
-                {
-                    AttackHolder.SetActiveAttack(1);
-                } 
                 else
                 {
-                    return;
+                    SetAbility();
                 }
-
                 InitiateAttackState(AttackState.Aiming);
-
-                //pathfindDestination = (new Vector3(pathfindObject.transform.position.x, transform.position.y, pathfindObject.transform.position.z));
-                //InitiatePathfinding();
                 return;
             case "buttonEast":
-
+                // Specific action for the "buttonEast" control (Currently has no use).
                 return;
+            case "space":
             case "buttonSouth":
+                // Initiate the dodge aiming state.
                 InitiateDodgeState(DodgeState.Aiming);
                 return;
             case "buttonWest":
+                // Set the activate attack to the default attack and initiate the attack aiming state.
                 AttackHolder.SetActiveAttack(0);
-
-                if (AttackHolder.CanAttack())
-                {
-                    if (AttackHolder.GetActiveAttack().IsOnCooldown())
-                    {
-                        StartCoroutine(AttackPressTimer());
-                    }
-                    else
-                    {
-                        InitiateAttackState(AttackState.Aiming);
-                    }
-                }
+                InitiateAttackState(AttackState.Aiming);
                 return;
             default:
+                // Default case: Do nothing for unrecognized controls.
                 return;
         }
     }
@@ -301,6 +333,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
         switch (buttonName)
         {
+            case "rightTrigger":
             case "buttonNorth":
                 if (attackState == AttackState.Aiming)
                 {
@@ -308,20 +341,10 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                 }
                 return;
             case "buttonEast":
-
                 return;
             case "buttonSouth":
-                if (dodgeState == DodgeState.Aiming)
-                {
-                    InitiateDodgeState(DodgeState.ChargingUp);
-                }
                 return;
             case "buttonWest":
-                if (attackState == AttackState.Aiming)
-                {
-
-                    //InitiateAttackState(AttackState.ChargingUp);
-                }
                 return;
             default:
                 return;
@@ -494,18 +517,32 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             return false;
         }
-        else if (isDodging)
-        {
-            queueAttack = true;
-            return false;
-        }
-        else if (attackState == AttackState.Aiming && (isAttacking || isDodging || isPathfinding))
-        {
-            return false;
-        } 
         else if (this.attackState == attackState)
         {
             return false;
+        }
+        else if (attackState == AttackState.Aiming)
+        {
+            if (isAttacking)
+            {
+                QueueAttack();
+                return false;
+            }
+            else if (isDodging)
+            {
+                QueueAttack();
+                return false;
+            }
+            else if (isPathfinding)
+            {
+                QueueAttack();
+                return false;
+            }
+            else if (attackHolder.GetActiveAttack().IsOnCooldown())
+            {
+                QueueAttack();
+                return false;
+            }
         }
 
         return true;
@@ -513,14 +550,18 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
 
     public void OnAttackStateStart(AttackState attackState, string attackId)
     {
-        // Can be Simplified
-
-        if (attackState != AttackState.Idle)
+        if (attackState == AttackState.Idle)
+        {
+            charAgent.SetAllowMovementInput(true);
+            charAgent.SetAllowRotationInput(true);
+            isAttacking = false;
+            return;
+        } 
+        else 
         {
             isAttacking = true;
         }
 
-        // Actions to do when the state has first started
         if (attackState == AttackState.Aiming)
         {
             charAgent.SetAllowMovementInput(false);
@@ -547,9 +588,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                     dialogue.start();
                 }
             }
-
-            //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerSwing, transform.position);
-            //playerAnimation.Swing();
         }
         else if (attackState == AttackState.Attacking)
         {
@@ -561,7 +599,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                 List<Enemy> enemies = EnemyManager.Instance.Enemies;
 
                 Vector3 dir;
-                float closestAngle = 30f;
+                float closestAngle = aimAssistMaxAngle;
                 Vector3 closestDir = transform.forward;
 
                 for (int i = 0; i < enemies.Count; i++)
@@ -569,10 +607,9 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                     dir = enemies[i].transform.position - transform.position;
                     dir.y = 0;
 
-                    if (dir.magnitude < 45)
+                    if (dir.magnitude < aimAssistMaxRange)
                     {
                         float angle = Vector3.Angle(transform.forward, dir.normalized);
-                        //Debug.Log(angle);
                         if (angle <= closestAngle)
                         {
                             closestAngle = angle;
@@ -592,13 +629,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
-        }
-        else if (attackState == AttackState.Idle)
-        {
-            charAgent.SetAllowMovementInput(true);
-            charAgent.SetAllowRotationInput(true);
-
-            isAttacking = false;
         }
     }
 
@@ -657,13 +687,32 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             return false;
         }
-        else if (dodgeState == DodgeState.Aiming && (isAttacking || IsDodging || isPathfinding))
-        {
-            return false;
-        }
         else if (this.dodgeState == dodgeState)
         {
             return false;
+        }
+        else if (dodgeState == DodgeState.Aiming)
+        {
+            if (isDodging)
+            {
+                QueueDodge();
+                return false;
+            }
+            else if (isAttacking)
+            {
+                QueueDodge();
+                return false;
+            }
+            else if (isPathfinding)
+            {
+                QueueDodge();
+                return false;
+            } 
+            else if (dodgeHolder.GetActiveDodge().IsOnCooldown())
+            {
+                QueueDodge();
+                return false;
+            }
         }
 
         return true;
@@ -678,13 +727,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             charAgent.SetAllowRotationInput(true);
 
             isDodging = false;
-
-            if (queueAttack)
-            {
-                InitiateAttackState(AttackState.Aiming);
-                InitiateAttackState(AttackState.ChargingUp);
-                queueAttack = false;
-            }
             return;
         }
         else
@@ -847,6 +889,49 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
     }
 
+    public void SetAbility()
+    {
+        AttackHolder.SetActiveAttack(1);
+
+        /*
+        if (lastDPadInput == Vector2.up)
+        {
+            AttackHolder.SetActiveAttack(1);
+        }
+        else if (lastDPadInput == Vector2.left)
+        {
+            AttackHolder.SetActiveAttack(2);
+        }
+        else if (lastDPadInput == Vector2.right)
+        {
+            AttackHolder.SetActiveAttack(3);
+        }
+        else if (lastDPadInput == Vector2.down)
+        {
+            AttackHolder.SetActiveAttack(1);
+        }
+        */
+    }
+
+    public void QueueDodge()
+    {
+        if (!queueDodge)
+        {
+            queueDodgeTimer = dodgeCoyoteTime;
+            queueDodge = true;
+            queueAttack = false;
+        }
+    }
+
+    public void QueueAttack()
+    {
+        if (!queueDodge && !queueAttack)
+        {
+            queueAttackTimer = attackCoyoteTime;
+            queueAttack = true;
+        }
+    }
+
     // ---------------------------------------------------------------------------------------------------------
     // Coroutines
     // ---------------------------------------------------------------------------------------------------------
@@ -858,12 +943,5 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         yield return new WaitForSeconds(0.2f);
         //Debug.Log("Ended Invincibility");
         isInvincible = false;
-    }
-
-    public IEnumerator AttackPressTimer()
-    {
-        wantToAttack = true;
-        yield return new WaitForSeconds(0.2f);
-        wantToAttack = false;
     }
 }

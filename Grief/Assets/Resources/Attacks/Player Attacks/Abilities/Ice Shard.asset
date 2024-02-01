@@ -15,6 +15,10 @@ MonoBehaviour:
   attackId: ice_shard
   recommendedAttackRange: 10
   attackRangeDeviation: 1
+  isCombo: 0
+  comboAttackCount: 1
+  fullComboCooldown: 0.5
+  comboResetAfter: 1
   applyStatusEffects: []
   recieveStatusEffects: []
   attackStateMovements: []
@@ -26,7 +30,7 @@ MonoBehaviour:
   hasAttackStage: 1
   maxAttackTime: 0
   coolingDownTime: 0.2
-  attackCooldown: 0.75
+  attackCooldown: 0.075
   playAudioIdOnAim:
     Guid:
       Data1: 0

@@ -15,6 +15,10 @@ MonoBehaviour:
   attackId: basic_player_attack
   recommendedAttackRange: 4
   attackRangeDeviation: 1
+  isCombo: 0
+  comboAttackCount: 1
+  fullComboCooldown: 0.5
+  comboResetAfter: 1
   applyStatusEffects: []
   recieveStatusEffects: []
   attackStateMovements:
