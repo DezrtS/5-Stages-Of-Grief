@@ -4,7 +4,7 @@ Shader "Unlit/Flash"
     {
         _FlashColor ("Flash Color", Color) = (1, 0, 0, 1)
         _FlashAmount ("Flash Amount", Range (0, 1)) = 0
-        _Emission ("Emission", Range (0, 1)) = 0
+        _Emission ("Emission", float) = 0
     }
 
     SubShader
