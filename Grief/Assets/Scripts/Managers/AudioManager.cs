@@ -9,7 +9,7 @@ public class AudioManager : Singleton<AudioManager>
     private List<EventInstance> eventInstances;
     private List<StudioEventEmitter> eventEmitters;
 
-    private EventInstance ambienceEventInstance;
+    private EventInstance musicEventInstance;
 
     protected override void Awake()
     {
@@ -21,7 +21,7 @@ public class AudioManager : Singleton<AudioManager>
 
     private void Start()
     {
-        InitializeAmbience(FMODEventsManager.Instance.DenialTheme1);
+        InitializeMusic(FMODEventsManager.Instance.DenialTheme1);
     }
 
     private void FixedUpdate()
@@ -32,15 +32,15 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    private void InitializeAmbience(EventReference ambienceEventReference)
+    private void InitializeMusic(EventReference musicEventReference)
     {
-        ambienceEventInstance = CreateInstance(ambienceEventReference);
-        ambienceEventInstance.start();
+        musicEventInstance = CreateInstance(musicEventReference);
+        musicEventInstance.start();
     }
 
-    public void SetAmbienceParameter(string parameterName, float parameterValue)
+    public void SetMusicPerameter(string parameterName, float parameterValue)
     {
-        ambienceEventInstance.setParameterByName(parameterName, parameterValue);
+        musicEventInstance.setParameterByName(parameterName, parameterValue);
     }
 
     public void PlayOneShot(EventReference sound, Vector3 worldPosition)

@@ -9,32 +9,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47472c27e9766ab429096ba3eaf354d9, type: 3}
-  m_Name: Heavy Attack
+  m_Script: {fileID: 11500000, guid: 4cf8d26b89509c449b672253b7d4bff6, type: 3}
+  m_Name: Ice Javelin
   m_EditorClassIdentifier: 
-  attackId: player_heavy_attack
-  recommendedAttackRange: 2
-  attackRangeDeviation: 1
-  isCombo: 0
-  comboAttackCount: 1
-  fullComboCooldown: 0.5
+  attackId: ice_shard_enemy
+  recommendedAttackRange: 15
+  attackRangeDeviation: 5
+  isCombo: 1
+  comboAttackCount: 3
+  fullComboCooldown: 1
   comboResetAfter: 1
   applyStatusEffects: []
   recieveStatusEffects: []
   attackStateMovements: []
-  hasAimingStage: 0
-  maxAimTime: 1
+  hasAimingStage: 1
+  maxAimTime: 0.2
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
   chargingUpTime: 0.2
   hasAttackStage: 1
-  maxAttackTime: 0.5
-  coolingDownTime: 0.4
-  attackCooldown: 2
-  damage: 50
-  knockbackPower: 20
-  attackTriggerScale: 6
-  attackTriggerSpawnDistance: 3
+  maxAttackTime: 0
+  coolingDownTime: 0.1
+  attackCooldown: 0.1
   playAudioIdOnAim:
     Guid:
       Data1: 0
@@ -49,13 +45,6 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  playAudioIdOnCooldown:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
   playAudioIdOnCancel:
     Guid:
       Data1: 0
@@ -64,7 +53,8 @@ MonoBehaviour:
       Data4: 0
     Path: 
   particleEffectOnAimPrefab: {fileID: 0}
-  particleEffectOnAttackPrefab: {fileID: 5799475271799421216, guid: 43875e3800f2817449af8acbb4d44f0b,
-    type: 3}
-  particleEffectOnCooldownPrefab: {fileID: 0}
+  particleEffectOnAttackPrefab: {fileID: 0}
   particleEffectOnCancelPrefab: {fileID: 0}
+  projectileData: {fileID: 11400000, guid: c41601858f119e345b8c0f3807727240, type: 2}
+  spawnOffset: {x: 0, y: 1, z: 2}
+  fireProjectileOnAttack: 1

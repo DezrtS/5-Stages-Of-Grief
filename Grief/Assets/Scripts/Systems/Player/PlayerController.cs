@@ -259,6 +259,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         rightJoystick = playerInputControls.Player.Look;
         rightJoystick.Enable();
 
+        //playerInputControls.Player.Action.started += OnActionStarted;
         playerInputControls.Player.Action.performed += OnActionPerformed;
         playerInputControls.Player.Action.canceled += OnActionCancelled;
         playerInputControls.Player.Action.Enable();
@@ -267,6 +268,44 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         dPad.performed += OnSelectAbility;
         dPad.Enable();
     }
+
+    /*
+    private void OnActionStarted(InputAction.CallbackContext obj)
+    {
+        if (GameManager.Instance.IsPaused)
+        {
+            return;
+        }
+
+        useMouseForRotation = false;
+
+        string buttonName = obj.action.activeControl.name;
+
+        switch (buttonName)
+        {
+            case "rightTrigger":
+
+                return;
+            case "buttonNorth":
+
+                return;
+            case "buttonEast":
+
+                return;
+            case "space":
+            case "buttonSouth":
+
+                return;
+            case "buttonWest":
+                AttackHolder.SetActiveAttack(0);
+                InitiateAttackState(AttackState.Aiming);
+                return;
+            default:
+                // Default case: Do nothing for unrecognized controls.
+                return;
+        }
+    }
+    */
 
     /// <summary>
     /// This method is a callback function for player input actions. It is invoked when a specific input action is performed.
@@ -318,6 +357,8 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
                 return;
             case "buttonWest":
                 // Set the activate attack to the default attack and initiate the attack aiming state.
+                //OnAttackStateCancel(attackState, false);
+                //AttackHolder.SetActiveAttack(4);
                 AttackHolder.SetActiveAttack(0);
                 InitiateAttackState(AttackState.Aiming);
                 return;
@@ -345,6 +386,12 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             case "buttonSouth":
                 return;
             case "buttonWest":
+                /*
+                if (attackState == AttackState.Aiming)
+                {
+                    InitiateAttackState(AttackState.ChargingUp);
+                }
+                */
                 return;
             default:
                 return;

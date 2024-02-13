@@ -10,34 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 47472c27e9766ab429096ba3eaf354d9, type: 3}
-  m_Name: Basic Player Attack
+  m_Name: Undead Villager Sword Attack
   m_EditorClassIdentifier: 
-  attackId: basic_player_attack
-  recommendedAttackRange: 2
-  attackRangeDeviation: 1
-  isCombo: 1
+  attackId: undead_villager_sword_attack
+  recommendedAttackRange: 4
+  attackRangeDeviation: 2
+  isCombo: 0
   forceCombo: 0
-  comboAttackCount: 3
-  fullComboCooldown: 0.4
-  comboResetAfter: 0.35
+  comboAttackCount: 1
+  fullComboCooldown: 0.5
+  comboResetAfter: 1
   applyStatusEffects: []
   recieveStatusEffects: []
-  attackStateMovements:
-  - state: 3
-    movement: {fileID: 11400000, guid: 2240e59b8d5a482478380b147662bbfd, type: 2}
+  attackStateMovements: []
   hasAimingStage: 0
   maxAimTime: 99
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
-  chargingUpTime: 0
+  chargingUpTime: 0.25
   hasAttackStage: 1
-  maxAttackTime: 0.1
-  coolingDownTime: 0
-  attackCooldown: 0.1
+  maxAttackTime: 0.2
+  coolingDownTime: 0.5
+  attackCooldown: 1
   damage: 3
   knockbackPower: 12
-  attackTriggerScale: 5
-  attackTriggerSpawnDistance: 2.5
+  attackTriggerScale: 7
+  attackTriggerSpawnDistance: 5
   playAudioIdOnAim:
     Guid:
       Data1: 0
@@ -47,11 +45,11 @@ MonoBehaviour:
     Path: 
   playAudioIdOnAttack:
     Guid:
-      Data1: -2074651602
-      Data2: 1316148225
-      Data3: -305748817
-      Data4: 1512994757
-    Path: event:/SFX/Player/PlayerSwing
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   playAudioIdOnCooldown:
     Guid:
       Data1: 0
@@ -67,7 +65,7 @@ MonoBehaviour:
       Data4: 0
     Path: 
   particleEffectOnAimPrefab: {fileID: 0}
-  particleEffectOnAttackPrefab: {fileID: 5799475271799421216, guid: 5c52ebf674c4ce84d9a5ff86b1b2c921,
+  particleEffectOnAttackPrefab: {fileID: 5799475271799421216, guid: 43875e3800f2817449af8acbb4d44f0b,
     type: 3}
   particleEffectOnCooldownPrefab: {fileID: 0}
   particleEffectOnCancelPrefab: {fileID: 0}

@@ -92,6 +92,7 @@ public class SingleProjectileAttack : RangedAttack
     {
         if (attackState == AttackState.Aiming || attackState == AttackState.ChargingUp)
         {
+            // Some sort of bug making the projectile or the parent transform equal to null
             projectile.transform.position = parentTransform.position + parentTransform.rotation * spawnOffset;
             projectile.transform.forward = parentTransform.forward;
         }

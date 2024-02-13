@@ -47,7 +47,7 @@ public class RigidAgent : MovementController
 
         if (navMeshAgent != null)
         {
-            navMeshAgent.updatePosition = false;
+            //navMeshAgent.updatePosition = false;
         }
     }
 
@@ -138,7 +138,7 @@ public class RigidAgent : MovementController
             pathfinder.TransferToPathfindingState(true);
 
             navMeshAgent.updatePosition = false;
-            navMeshAgent.enabled = true;
+            //navMeshAgent.enabled = true;
 
             isPathfinding = true;
             navMeshAgent.isStopped = false;
@@ -208,8 +208,9 @@ public class RigidAgent : MovementController
 
         SetRotation(Quaternion.Inverse(MovementAxis) * transform.forward);
         rig.velocity = navMeshAgent.velocity;
+        navMeshAgent.velocity = Vector3.zero;
 
-        navMeshAgent.enabled = false;
+        //navMeshAgent.enabled = false;
 
         isPathfinding = false;
 

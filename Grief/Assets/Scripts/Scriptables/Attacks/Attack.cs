@@ -13,6 +13,7 @@ public abstract class Attack : ScriptableObject
 
     [Space(10)]
     [SerializeField] private bool isCombo = false;
+    [SerializeField] private bool forceCombo = false;
     [SerializeField] private int comboAttackCount = 1;
     [SerializeField] private float fullComboCooldown = 0.5f;
     [SerializeField] private float comboResetAfter = 1;
@@ -86,6 +87,7 @@ public abstract class Attack : ScriptableObject
         clone.attackRangeDeviation = attackRangeDeviation;
 
         clone.isCombo = isCombo;
+        clone.forceCombo = forceCombo;
         clone.comboAttackCount = comboAttackCount;
         clone.fullComboCooldown = fullComboCooldown;
         clone.comboResetAfter = comboResetAfter;
@@ -277,7 +279,15 @@ public abstract class Attack : ScriptableObject
             case AttackState.Attacking:
                 if (maxAttackTime < timeSinceStateStarted)
                 {
-                    TransferToAttackState(AttackState.CoolingDown);
+                    if (isCombo && forceCombo && comboAttack <= comboAttackCount)
+                    {
+                        comboAttack++;
+                        TransferToAttackState(AttackState.ChargingUp);
+                    }
+                    else
+                    {
+                        TransferToAttackState(AttackState.CoolingDown);
+                    }
                 }
                 break;
             case AttackState.CoolingDown:

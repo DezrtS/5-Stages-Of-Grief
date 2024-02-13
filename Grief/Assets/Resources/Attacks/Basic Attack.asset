@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 47472c27e9766ab429096ba3eaf354d9, type: 3}
-  m_Name: Basic Player Attack
+  m_Name: Basic Attack
   m_EditorClassIdentifier: 
-  attackId: basic_player_attack
-  recommendedAttackRange: 2
-  attackRangeDeviation: 1
+  attackId: basic__attack
+  recommendedAttackRange: 4
+  attackRangeDeviation: 2
   isCombo: 1
-  forceCombo: 0
   comboAttackCount: 3
-  fullComboCooldown: 0.4
-  comboResetAfter: 0.35
+  fullComboCooldown: 1.5
+  comboResetAfter: 1
   applyStatusEffects: []
   recieveStatusEffects: []
   attackStateMovements:
@@ -29,15 +28,15 @@ MonoBehaviour:
   maxAimTime: 99
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
-  chargingUpTime: 0
+  chargingUpTime: 0.25
   hasAttackStage: 1
   maxAttackTime: 0.1
-  coolingDownTime: 0
-  attackCooldown: 0.1
+  coolingDownTime: 0.1
+  attackCooldown: 0.2
   damage: 3
   knockbackPower: 12
-  attackTriggerScale: 5
-  attackTriggerSpawnDistance: 2.5
+  attackTriggerScale: 12
+  attackTriggerSpawnDistance: 6
   playAudioIdOnAim:
     Guid:
       Data1: 0
@@ -67,7 +66,7 @@ MonoBehaviour:
       Data4: 0
     Path: 
   particleEffectOnAimPrefab: {fileID: 0}
-  particleEffectOnAttackPrefab: {fileID: 5799475271799421216, guid: 5c52ebf674c4ce84d9a5ff86b1b2c921,
+  particleEffectOnAttackPrefab: {fileID: 5799475271799421216, guid: 43875e3800f2817449af8acbb4d44f0b,
     type: 3}
   particleEffectOnCooldownPrefab: {fileID: 0}
   particleEffectOnCancelPrefab: {fileID: 0}
