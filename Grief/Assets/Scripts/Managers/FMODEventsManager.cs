@@ -7,6 +7,7 @@ public class FMODEventsManager : Singleton<FMODEventsManager>
 {
     [field: Header("Music")]
     [field: SerializeField] public EventReference DenialTheme1 { get; private set; }
+    [field: SerializeField] public EventReference FrozenLakeTheme1 { get; private set; }
 
     [field: Header("Ambience")]
     [field: SerializeField] public EventReference ambience { get; private set; }

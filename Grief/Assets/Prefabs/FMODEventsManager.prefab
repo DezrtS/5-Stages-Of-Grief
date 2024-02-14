@@ -51,6 +51,13 @@ MonoBehaviour:
       Data3: 850447770
       Data4: -1576932907
     Path: event:/Music/Denial Theme 1
+  <FrozenLakeTheme1>k__BackingField:
+    Guid:
+      Data1: 1897653162
+      Data2: 1231678848
+      Data3: -1957739862
+      Data4: 265929012
+    Path: event:/Music/Frozen Lake Theme
   <ambience>k__BackingField:
     Guid:
       Data1: 1155922249

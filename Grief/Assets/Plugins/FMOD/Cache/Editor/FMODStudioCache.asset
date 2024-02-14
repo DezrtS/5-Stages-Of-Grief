@@ -125,7 +125,7 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638421225064036370
+  lastModified: 638434713412869920
   FileSizes:
   - Name: Desktop
     Value: 1036
@@ -178,6 +178,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-5089246411055194025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Frozen Lake Theme
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Frozen Lake Theme
+  Guid:
+    Data1: 1897653162
+    Data2: 1231678848
+    Data3: -1957739862
+    Data4: 265929012
+  Banks:
+  - {fileID: -534576764791880568}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 170183
 --- !u!114 &-4824679643330590444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,10 +299,10 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Denial.bank
   Name: Denial
   StudioPath: bank:/Denial
-  lastModified: 638421225063996326
+  lastModified: 638434713412829878
   FileSizes:
   - Name: Desktop
-    Value: 2464096
+    Value: 4443424
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -306,12 +333,13 @@ MonoBehaviour:
   - {fileID: 2029733761135007170}
   - {fileID: 6475642112388995495}
   - {fileID: -8493200301936791099}
+  - {fileID: -5089246411055194025}
   EditorParameters: []
   MasterBanks:
   - {fileID: -8260435118205532706}
   StringsBanks:
   - {fileID: 5618337765621597603}
-  cacheTime: 638421225064389933
+  cacheTime: 638434713412869920
   cacheVersion: 131608
 --- !u!114 &2029733761135007170
 MonoBehaviour:
@@ -383,10 +411,10 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638421225064051437
+  lastModified: 638434713412869920
   FileSizes:
   - Name: Desktop
-    Value: 1506
+    Value: 1566
   Exists: 1
 --- !u!114 &6475642112388995495
 MonoBehaviour:
@@ -430,7 +458,7 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638421225064389933
+  lastModified: 638434712615141934
   FileSizes:
   - Name: Desktop
     Value: 755424

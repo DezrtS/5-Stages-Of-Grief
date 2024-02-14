@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAttack, IDodge, IPathfind, IStatusEffectTarget, IAnimate
 {
-    public EventInstance dialogue;
+    //public EventInstance dialogue;
     private bool useHeavyAttack;
 
     // ---------------------------------------------------------------------------------------------------------
@@ -170,7 +170,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         particleEffectHolder.name = $"{name}'s Particle Effect Holder";
 
         // Create an audio instance for playing dialogue
-        dialogue = AudioManager.Instance.CreateInstance(FMODEventsManager.Instance.dialogue);
+        //dialogue = AudioManager.Instance.CreateInstance(FMODEventsManager.Instance.dialogue);
         // Call the CameraManager singleton to transfer the camera to this transform.
         CameraManager.Instance.TransferCameraTo(transform);
     }
@@ -457,19 +457,16 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         health = Mathf.Max(health - damage, 0);
         OnAnimationStart(AnimationEvent.Hurt, "");
 
-        if (Random.Range(0, 10) == 1)
-        {
-            dialogue.getPlaybackState(out PLAYBACK_STATE playbackState);
-            if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
-            {
-                dialogue.setParameterByName("dialogue_option", 0);
-                dialogue.start();
-            }
-        }
-        else
-        {
-            AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerHurt, transform.position);
-        }
+        //if (Random.Range(0, 10) == 1)
+        //{
+        //    dialogue.getPlaybackState(out PLAYBACK_STATE playbackState);
+        //    if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
+        //    {
+        //        dialogue.setParameterByName("dialogue_option", 0);
+        //        dialogue.start();
+        //    }
+        //}
+        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerHurt, transform.position);
 
         //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, transform.position);
         CameraManager.Instance.Shake(6, 0.2f);
@@ -626,15 +623,15 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
 
-            if (Random.Range(0, 10) == 1)
-            {
-                dialogue.getPlaybackState(out PLAYBACK_STATE playbackState);
-                if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
-                {
-                    dialogue.setParameterByName("dialogue_option", 1);
-                    dialogue.start();
-                }
-            }
+            //if (Random.Range(0, 10) == 1)
+            //{
+            //    dialogue.getPlaybackState(out PLAYBACK_STATE playbackState);
+            //    if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
+            //    {
+            //        dialogue.setParameterByName("dialogue_option", 1);
+            //        dialogue.start();
+            //    }
+            //}
         }
         else if (attackState == AttackState.Attacking)
         {
