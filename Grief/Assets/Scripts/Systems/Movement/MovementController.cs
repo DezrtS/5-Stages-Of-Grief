@@ -6,6 +6,8 @@ public abstract class MovementController : MonoBehaviour
 {
     public static Quaternion MovementAxis = Quaternion.Euler(90, 0, -45);
 
+    [SerializeField] private ParticleSystem[] footstepSpawners = new ParticleSystem[0];
+
     protected bool isDisabled;
     public bool IsDisabled { get { return isDisabled; } set { isDisabled = value; } }
 
@@ -27,5 +29,14 @@ public abstract class MovementController : MonoBehaviour
     protected abstract void CheckPathfindingState();
     public abstract void StopPathfinding();
 
-
+    public void TriggerFootstep(int foot)
+    {
+        foot--;
+        if (foot < footstepSpawners.Length)
+        {
+            var main = footstepSpawners[foot].main;
+            main.startRotation = transform.forward.z * 90 * Mathf.Deg2Rad;
+            footstepSpawners[foot].Play();
+        }
+    }
 }

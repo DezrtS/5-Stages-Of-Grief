@@ -19,26 +19,37 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Armature.001|hurt' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'mixamorig:Neck' has translation animation
-      that will be discarded.\n\t'mixamorig:LeftShoulder' has translation animation
-      that will be discarded.\n\t'mixamorig:RightShoulder' has translation animation
-      that will be discarded.\n\nClip 'Armature.001|run' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'mixamorig:Neck' has translation animation
-      that will be discarded.\n\t'mixamorig:LeftShoulder' has translation animation
-      that will be discarded.\n\t'mixamorig:RightShoulder' has translation animation
-      that will be discarded.\n\nClip 'Armature.001|slash attack' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'mixamorig:Spine' has translation
-      animation that will be discarded.\n\nClip 'Armature.001|walk' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'mixamorig:LeftShoulder' has
-      translation animation that will be discarded.\n\t'mixamorig:RightShoulder'
-      has translation animation that will be discarded.\n"
-    animationRetargetingWarnings: 
-    animationDoRetargetingWarnings: 0
+    animationImportWarnings: 
+    animationRetargetingWarnings: "\nRetargeting quality report for clip 'Armature.001|Armature.001|mixamo.com|Layer0':\n\tRetargeting
+      quality is good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature.001|Armature.001|mixamo.com|Layer0.001':\n\tRetargeting
+      quality is good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature.001|Armature.002|mixamo.com|Layer0':\n\tRetargeting
+      quality is good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature.001|Armature|mixamo.com|Layer0':\n\tRetargeting
+      quality is good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature.001|hurt':\n\tRetargeting quality is good.
+      No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature.001|ice attack':\n\tLeftHand average position
+      error 2.0 mm and maximum position error 5.2 mm at time 0:12 (60.0%) Frame 12\n\tRightHand
+      average position error 5.0 mm and maximum position error 9.5 mm at time 0:12
+      (60.0%) Frame 12\n\nRetargeting quality report for clip 'Armature.001|idle':\n\tRetargeting
+      quality is good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature.001|roll':\n\tLeftFoot average position error
+      0.1 mm and maximum position error 1.2 mm at time 0:12 (48.0%) Frame 12\n\tRightFoot
+      average orientation error 0.8 deg and maximum orientation error 18.6 deg at
+      time 0:12 (48.0%) Frame 12\n\nRetargeting quality report for clip 'Armature.001|run':\n\tRetargeting
+      quality is good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature.001|slash attack':\n\tLeftFoot average position
+      error 0.4 mm and maximum position error 5.3 mm at time 0: 1 (5.0%) Frame 1\n\tLeftHand
+      average position error 3.0 mm and maximum position error 37.0 mm at time 0:
+      1 (5.0%) Frame 1\n\nRetargeting quality report for clip 'Armature.001|tpose':\n\tRetargeting
+      quality is good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature.001|walk':\n\tRightFoot average position
+      error 0.4 mm and maximum position error 2.2 mm at time 0:14 (42.4%) Frame 14\n\tLeftHand
+      average position error 0.2 mm and maximum position error 1.9 mm at time 0:
+      4 (12.1%) Frame 4\n"
+    animationDoRetargetingWarnings: 1
     importAnimatedCustomProperties: 0
     importConstraints: 0
     animationCompression: 3
@@ -1174,7 +1185,7 @@ ModelImporter:
     feetSpacing: 0
     globalScale: 1
     rootMotionBoneName: 
-    hasTranslationDoF: 0
+    hasTranslationDoF: 1
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
