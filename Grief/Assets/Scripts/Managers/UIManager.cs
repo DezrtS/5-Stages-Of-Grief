@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
@@ -14,12 +15,13 @@ public class UIManager : Singleton<UIManager>
     public Button[] buttons;
     public float verticalInput;
     public int indexNum;
+    public string sceneName;
     [SerializeField] Sprite button1,button2;
     //public ColorBlock defualt, highlight;
     public bool canSwap;
 
     [SerializeField] private bool canPause = true;
-    private bool isPaused;
+    public bool isPaused;
 
     public bool IsPaused { get { return isPaused; } }
 
@@ -66,9 +68,9 @@ public class UIManager : Singleton<UIManager>
 
     public void OnNavigation(InputAction.CallbackContext obj)
     {
-        Vector2 navigationInput = navigationAction.ReadValue<Vector2>();
-        verticalInput = navigationInput.y;
-        swapButtons();
+        //Vector2 navigationInput = navigationAction.ReadValue<Vector2>();
+        //verticalInput = navigationInput.y;
+        //swapButtons();
     }
 
     public void OnQuickTabNavigation(InputAction.CallbackContext obj)
@@ -126,7 +128,7 @@ public class UIManager : Singleton<UIManager>
     private void Update()
     {
         //swapButtons();
-        buttonColor();
+        //buttonColor();
         CheckCancelInvoke();
     }
     void swapButtons()
@@ -162,23 +164,38 @@ public class UIManager : Singleton<UIManager>
         canSwap = true;
     }
 
-    void buttonColor()
+    public void ButtonPressedTest()
     {
-
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            if (i == indexNum)
-            {
-                buttons[indexNum].Select();
-                    //.colors = highlight;
-            }
-            else
-            {
-                //buttons[i].Select();
-                    //.colors = defualt; ;
-            }
-        }
+        
+        Debug.Log("test");
 
     }
-    
+
+    public void ResumeButton()
+    {
+        isPaused = false;
+        GameManager.Instance.UnPauseGame();
+        DisableUserInterfaceInput();
+    }
+    //void buttonColor()
+    //{
+
+    //    for (int i = 0; i < buttons.Length; i++)
+    //    {
+    //        if (i == indexNum)
+    //        {
+    //            buttons[indexNum].Select();
+    //                //.colors = highlight;
+    //        }
+    //        else
+    //        {
+    //            //buttons[i].Select();
+    //                //.colors = defualt; ;
+    //        }
+    //    }
+
+    //}
+
+
+
 }
