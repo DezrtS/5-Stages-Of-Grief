@@ -282,9 +282,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4280ce5cbe2a3844a9563dbf044435d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flashObject: {fileID: 0}
   flashEffectData: {fileID: 11400000, guid: 4206cd636fddf86459d55cf9eaf09486, type: 2}
   flashMaterial: {fileID: 2100000, guid: a87de172ec36f964db0379ebe53357c3, type: 2}
+  dissolveMaterial: {fileID: 2100000, guid: 0013dff1b33260b4db601cda0968ec9d, type: 2}
 --- !u!1 &5234610735720588866
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,6 +374,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04bd755dc5108b441864995fbdba1f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttons: []
+  verticalInput: 0
+  indexNum: 0
+  button1: {fileID: 0}
+  button2: {fileID: 0}
+  canSwap: 0
   canPause: 1
 --- !u!1 &6961895227856782655
 GameObject:

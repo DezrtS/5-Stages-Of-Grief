@@ -38,6 +38,10 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
 
     private bool isOnCooldown;
 
+    private float timer = 0;
+    private float spawnTime = 2;
+    private float dyingTime = 2;
+
     // ---------------------------------------------------------------------------------------------------------
     // Interface Related Variables
     // ---------------------------------------------------------------------------------------------------------
@@ -154,7 +158,9 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
             attackRangeDeviation = attackHolder.GetActiveAttack().AttackRangeDeviation;
         }
 
-        InitiateEnemyState(EnemyState.Idle);
+        InitiateEnemyState(EnemyState.Spawning);
+
+        EffectManager.Instance.Dissolve(transform, true);
     }
 
     private void FixedUpdate()
@@ -181,7 +187,8 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
 
         if (health == 0)
         {
-            Die();
+            TransferToEnemyState(EnemyState.Dying);
+            //Die();
         }
     }
 
@@ -251,6 +258,10 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
     {
         switch (enemyState)
         {
+            case EnemyState.Spawning:
+                timer = 0;
+                isInvincible = true;
+                break;
             case EnemyState.Idle:
 
                 break;
@@ -279,8 +290,11 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
             case EnemyState.Stunned:
 
                 break;
-            case EnemyState.Dead:
-
+            case EnemyState.Dying:
+                EffectManager.Instance.Dissolve(transform, false);
+                CancelPathfinding();
+                timer = 0;
+                isInvincible = true;
                 break;
         }
     }
@@ -289,6 +303,9 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
     { 
         switch (enemyState)
         {
+            case EnemyState.Spawning:
+                OnSpawning(); 
+                break;
             case EnemyState.Idle:
                 OnIdle();
                 break;
@@ -313,8 +330,8 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
             case EnemyState.Stunned:
                 OnStunned();
                 break;
-            case EnemyState.Dead:
-                OnDead();
+            case EnemyState.Dying:
+                OnDying();
                 break;
         }
     }
@@ -323,6 +340,9 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
     {
         switch (enemyState)
         {
+            case EnemyState.Spawning:
+                isInvincible = false;
+                break;
             case EnemyState.Idle:
 
                 break;
@@ -350,8 +370,8 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
             case EnemyState.Stunned:
 
                 break;
-            case EnemyState.Dead:
-
+            case EnemyState.Dying:
+                isInvincible = false;
                 break;
         }
     }
@@ -654,6 +674,16 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
     // Extra Methods
     // ---------------------------------------------------------------------------------------------------------
 
+    public virtual void OnSpawning()
+    {
+        timer += Time.fixedDeltaTime;
+
+        if (timer >= spawnTime)
+        {
+            TransferToEnemyState(EnemyState.Idle);
+        }
+    }
+
     public virtual void OnIdle()
     {
         if (IsWithinChasingDistance())
@@ -833,7 +863,15 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
 
     public virtual void OnStunned() { }
 
-    public virtual void OnDead() { }
+    public virtual void OnDying()
+    {
+        timer += Time.fixedDeltaTime;
+
+        if (timer > dyingTime)
+        {
+            Die();
+        }
+    }
 
     public virtual void Aim()
     {

@@ -5,26 +5,56 @@ using UnityEngine;
 
 public class EffectManager : Singleton<EffectManager>
 {
-    [SerializeField] private GameObject flashObject;
-    [SerializeField] private FlashEffectData flashEffectData;
+    public FlashEffectData flashEffectData;
 
     public Material flashMaterial;
+    public Material dissolveMaterial;
 
-    /*
-    private void Update()
+    public void Dissolve(Transform dissolveObject, bool dissolveIn)
     {
-        if (Input.GetKeyDown(KeyCode.Y))
+        Renderer[] renderers = dissolveObject.GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in renderers)
         {
-            if (TryGetComponent(out FlashEffect oldFlash))
+            if (renderer.CompareTag("Uneffectable"))
             {
-                oldFlash.Deactivate();
+                continue;
             }
 
-            FlashEffect newFlash = flashObject.AddComponent<FlashEffect>();
-            newFlash.Activate(flashEffectData);
+            if (renderer.transform.TryGetComponent(out IEffect effect))
+            {
+                if (dissolveIn)
+                {
+                    if (effect.Type == EffectType.Spawn)
+                    {
+                        effect.RestartEffect();
+                        continue;
+                    }
+                } 
+                else
+                {
+                    if (effect.Type == EffectType.Death)
+                    {
+                        effect.RestartEffect();
+                        continue;
+                    }
+                }
+
+                if (effect.CanBeOverrided)
+                {
+                    effect.DeactivateEffect();
+                }
+                else 
+                {
+                    continue;
+                }
+            }
+
+            DissolveEffect newDissolve = renderer.transform.AddComponent<DissolveEffect>();
+            newDissolve.SetDissolveIn(dissolveIn);
+            newDissolve.ActivateEffect();
         }
     }
-    */
 
     public void Flash(Transform flashObject)
     {
@@ -32,19 +62,31 @@ public class EffectManager : Singleton<EffectManager>
 
         foreach (Renderer renderer in renderers)
         {
-            if (renderer.CompareTag("Unflashable"))
+            if (renderer.CompareTag("Uneffectable"))
             {
                 continue;
             }
 
-            if (renderer.transform.TryGetComponent(out FlashEffect oldFlash))
+            if (renderer.transform.TryGetComponent(out IEffect effect))
             {
-                oldFlash.Restart(flashEffectData);
-                continue;
+                if (effect.Type == EffectType.Damage)
+                {
+                    effect.RestartEffect();
+                    continue;
+                }
+                
+                if (effect.CanBeOverrided)
+                {
+                    effect.DeactivateEffect();
+                }
+                else
+                {
+                    continue;
+                }
             }
 
             FlashEffect newFlash = renderer.transform.AddComponent<FlashEffect>();
-            newFlash.Activate(flashEffectData);
+            newFlash.ActivateEffect();
         }
     }
 }

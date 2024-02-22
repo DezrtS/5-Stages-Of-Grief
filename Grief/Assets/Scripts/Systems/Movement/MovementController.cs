@@ -35,7 +35,7 @@ public abstract class MovementController : MonoBehaviour
         if (foot < footstepSpawners.Length)
         {
             var main = footstepSpawners[foot].main;
-            main.startRotation = transform.forward.z * 90 * Mathf.Deg2Rad;
+            main.startRotationY = -transform.eulerAngles.y * Mathf.Deg2Rad; //transform.forward.z * 90 * Mathf.Deg2Rad;
             footstepSpawners[foot].Play();
         }
     }

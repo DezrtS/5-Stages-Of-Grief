@@ -425,7 +425,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
             //selectedAbility = 3;
         }
 
-        OnAbilitySelectEvent.Invoke(selectedAbility);
+        OnAbilitySelectEvent?.Invoke(selectedAbility);
 
         lastDPadInput = dPadInput;
     }

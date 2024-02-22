@@ -1,5 +1,6 @@
 public enum EnemyState
 {
+    Spawning,
     Idle,
     Patrolling,
     Chasing,
@@ -9,7 +10,7 @@ public enum EnemyState
     Fleeing,
 
     Stunned,
-    Dead
+    Dying
 }
 
 public interface IEnemy 

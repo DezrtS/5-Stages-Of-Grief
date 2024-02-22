@@ -16,6 +16,7 @@ MonoBehaviour:
   recommendedAttackRange: 10
   attackRangeDeviation: 1
   isCombo: 0
+  forceCombo: 0
   comboAttackCount: 1
   fullComboCooldown: 0.5
   comboResetAfter: 1
@@ -52,7 +53,8 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  particleEffectOnAimPrefab: {fileID: 0}
+  particleEffectOnAimPrefab: {fileID: 6991939091875630784, guid: 67c7c6fd9781f5940b1630fabd0f0fc2,
+    type: 3}
   particleEffectOnAttackPrefab: {fileID: 0}
   particleEffectOnCancelPrefab: {fileID: 0}
   projectileData: {fileID: 11400000, guid: 05d0e010dd510714ab0a17e541954f6e, type: 2}
