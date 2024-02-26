@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Testing Scenes/Temp Scenes/Temp Menu.unity
     guid: 87a27045cee869947bab676b30513710
   - enabled: 1
+    path: Assets/Scenes/Level Scenes/PlaytestingLevel.unity
+    guid: c6b013589bfa9554cadf5fc49122439a
+  - enabled: 0
     path: Assets/Scenes/Testing Scenes/Temp Scenes/Short Level.unity
     guid: 47203a949a1dffc4c890b1e83b5da41a
   m_configObjects: {}

@@ -16,6 +16,7 @@ MonoBehaviour:
   recommendedAttackRange: 15
   attackRangeDeviation: 5
   isCombo: 0
+  forceCombo: 0
   comboAttackCount: 1
   fullComboCooldown: 0.5
   comboResetAfter: 1
@@ -29,8 +30,8 @@ MonoBehaviour:
   chargingUpTime: 0.2
   hasAttackStage: 1
   maxAttackTime: 0
-  coolingDownTime: 3
-  attackCooldown: 0.2
+  coolingDownTime: 2
+  attackCooldown: 0.7
   playAudioIdOnAim:
     Guid:
       Data1: 0
@@ -40,11 +41,11 @@ MonoBehaviour:
     Path: 
   playAudioIdOnAttack:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 328082509
+      Data2: 1220948772
+      Data3: -2081576303
+      Data4: -474198981
+    Path: event:/SFX/Attacks/Ice Freeze
   playAudioIdOnCancel:
     Guid:
       Data1: 0

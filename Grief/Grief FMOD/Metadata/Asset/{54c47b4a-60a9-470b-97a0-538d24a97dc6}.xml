@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="EncodableAsset" id="{54c47b4a-60a9-470b-97a0-538d24a97dc6}">
+		<property name="assetPath">
+			<value>SFX/Rolls/Stone Roll/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{3a5acdd4-29bd-4fa7-9d09-8638563d8c46}</destination>
+		</relationship>
+	</object>
+</objects>

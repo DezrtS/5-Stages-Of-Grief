@@ -85,7 +85,7 @@ public class CharAgent : MovementController
             navMeshAgent.enabled = false;
         }
 
-        footsteps = AudioManager.Instance.CreateInstance(FMODEventsManager.Instance.footsteps);
+        footsteps = AudioManager.Instance.CreateInstance(FMODEventsManager.Instance.GeneralFootsteps);
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(footsteps, transform);
     }
 

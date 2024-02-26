@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{a2fc445f-f5be-4c60-8a72-bb5093dc434a}">
 		<property name="assetPath">
-			<value>SFX/Crow Caws/Crow Caw 5.wav</value>
+			<value>Ambience/Crow Caws/Crow Caw 5.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>24</value>

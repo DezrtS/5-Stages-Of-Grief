@@ -199,15 +199,6 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
 
     public virtual void Die()
     {
-        if (isAttacking)
-        {
-            OnAttackStateCancel(attackState, false);
-        }
-        if (isDodging)
-        {
-            OnDodgeStateCancel(dodgeState, false);
-        }
-
         OnAnimationStart(AnimationEvent.Die, "");
 
         if (isQueued)
@@ -219,15 +210,13 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
             EnemyQueueManager.Instance.RemoveFromQueue(this);
         }
 
-        EnemyManager.Instance.RemoveEnemyFromList(this);
-
         OnEnemyDeath?.Invoke(this);
 
         statusEffectHolder.ClearStatusEffects();
         attackHolder.DestroyClones();
         dodgeHolder.DestroyClones();
 
-        CancelPathfinding();
+        //CancelPathfinding();
 
         Destroy(gameObject);
     }
@@ -291,6 +280,17 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
 
                 break;
             case EnemyState.Dying:
+                if (isAttacking)
+                {
+                    OnAttackStateCancel(attackState, false);
+                }
+                if (isDodging)
+                {
+                    OnDodgeStateCancel(dodgeState, false);
+                }
+
+                EnemyManager.Instance.RemoveEnemyFromList(this);
+
                 EffectManager.Instance.Dissolve(transform, false);
                 CancelPathfinding();
                 timer = 0;

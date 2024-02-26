@@ -16,6 +16,7 @@ MonoBehaviour:
   recommendedAttackRange: 4
   attackRangeDeviation: 1
   isCombo: 0
+  forceCombo: 0
   comboAttackCount: 1
   fullComboCooldown: 0.5
   comboResetAfter: 1
@@ -35,7 +36,7 @@ MonoBehaviour:
   maxAttackTime: 0.2
   coolingDownTime: 1
   attackCooldown: 1
-  damage: 3
+  damage: 1
   knockbackPower: 12
   attackTriggerScale: 5
   attackTriggerSpawnDistance: 3
@@ -48,11 +49,11 @@ MonoBehaviour:
     Path: 
   playAudioIdOnAttack:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -915998310
+      Data2: 1292681357
+      Data3: -1445540176
+      Data4: 1586691702
+    Path: event:/SFX/Attacks/Claw Attack
   playAudioIdOnCooldown:
     Guid:
       Data1: 0

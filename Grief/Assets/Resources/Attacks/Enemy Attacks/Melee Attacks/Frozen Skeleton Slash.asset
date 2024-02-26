@@ -34,7 +34,7 @@ MonoBehaviour:
   maxAttackTime: 0.2
   coolingDownTime: 0
   attackCooldown: 0.5
-  damage: 3
+  damage: 1
   knockbackPower: 12
   attackTriggerScale: 5
   attackTriggerSpawnDistance: 3

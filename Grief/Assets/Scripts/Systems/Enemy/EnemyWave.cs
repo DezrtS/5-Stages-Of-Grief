@@ -6,6 +6,7 @@ using UnityEngine;
 public class EnemyWave : MonoBehaviour
 {
     [SerializeField] private bool repeatable = false;
+    [SerializeField] private bool repeatAfterLastWave = false;
     [SerializeField] List<EnemyWaveData> enemyWaves = new();
     [SerializeField] private float spawnRadius = 5;
     [SerializeField] private float spawnOffset = 5;
@@ -54,6 +55,11 @@ public class EnemyWave : MonoBehaviour
         if (wave >= enemyWaves.Count)
         {
             waveDefeated = true;
+            
+            if (repeatAfterLastWave)
+            {
+                RestartWave();
+            }
             return;
         }
 

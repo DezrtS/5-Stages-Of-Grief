@@ -31,7 +31,7 @@ MonoBehaviour:
   hasAttackStage: 1
   maxAttackTime: 0
   coolingDownTime: 0.2
-  attackCooldown: 0.075
+  attackCooldown: 0.5
   playAudioIdOnAim:
     Guid:
       Data1: 0
@@ -41,11 +41,11 @@ MonoBehaviour:
     Path: 
   playAudioIdOnAttack:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 328082509
+      Data2: 1220948772
+      Data3: -2081576303
+      Data4: -474198981
+    Path: event:/SFX/Attacks/Ice Freeze
   playAudioIdOnCancel:
     Guid:
       Data1: 0

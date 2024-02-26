@@ -2499,7 +2499,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -700, y: 0}
-  m_SizeDelta: {x: 1000, y: 625}
+  m_SizeDelta: {x: 1000, y: 700}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1113620423
 MonoBehaviour:
@@ -2523,11 +2523,13 @@ MonoBehaviour:
       m_Calls: []
   m_text: "[This Menu is Solely for Listing Controls. Click Start for Game]\n[Will
     be Changed in the Final Product] \n----------------------------------------------------------------------------------\nThe
-    game is meant to be played with a controller,\n\nLeft Stick -> Move\nRight Stick
-    -> Pan Camera\nNorth Button -> Use Ability\nWest Button -> Attack\nSouth Button
-    -> Dodge\nD-Pad -> Select Ability\nStart -> Pause\n\nIf you are not playing with
-    a controller,\n\nWASD -> Move\nMouse -> Aim\nLeft Mouse Button -> Attack\nSpace
-    Bar -> Dodge\nTAB -> Pause"
+    game is meant to be played with a controller,\n\nLeft Stick \t\t\t\t-> Move\nRight
+    Trigger / North Button \t-> Use Ability\nWest Button \t\t\t-> Attack\nSouth Button
+    \t\t\t-> Dodge\nStart \t\t\t\t\t-> Pause\n\nIf you are not playing with a controller,
+    [Not Recommended]\n\nWASD \t\t\t\t-> Move\nMouse Position\t\t\t-> Aim\nF \t\t\t\t\t->
+    Use Ability\nLeft Mouse Button \t\t-> Attack\nSpace Bar \t\t\t\t-> Dodge\nTAB
+    \t\t\t\t\t-> Pause\n----------------------------------------------------------------------------------\nR
+    \t\t\t\t\t-> Reset Game"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

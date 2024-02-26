@@ -125,11 +125,38 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638435084957382041
+  lastModified: 638443880376489482
   FileSizes:
   - Name: Desktop
     Value: 1036
   Exists: 1
+--- !u!114 &-7739722439955394015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Ambience/Crow Caw
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Ambience/Crow Caw
+  Guid:
+    Data1: 448562119
+    Data2: 1191485845
+    Data3: -540737393
+    Data4: -624302374
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-7540015918839843185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,31 +181,7 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &-7388814863845891478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Footsteps/terrain_material
-  m_EditorClassIdentifier: 
-  Name: terrain_material
-  StudioPath: 
-  Min: 0
-  Max: 5
-  Default: 0
-  ID:
-    data1: 3417398644
-    data2: 3274630146
-  Type: 1
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-4824679643330590444
+--- !u!114 &-7443101373261933233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,9 +191,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/Denial Theme 1
+  m_Name: event:/SFX/Hits/Roll Into Tree
   m_EditorClassIdentifier: 
-  Path: event:/Music/Denial Theme 1
+  Path: event:/SFX/Hits/Roll Into Tree
+  Guid:
+    Data1: 16830129
+    Data2: 1126193571
+    Data3: -1172360018
+    Data4: -1716877159
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-6219444820839448990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Denial Theme
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Denial Theme
   Guid:
     Data1: 1445230782
     Data2: 1075501126
@@ -202,10 +232,91 @@ MonoBehaviour:
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: -1252631137041875416}
+  - {fileID: 2640189709588707000}
   MinDistance: 1
   MaxDistance: 20
   Length: 97714
+--- !u!114 &-5056636671557377564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Hits/Roll Into Ice
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Hits/Roll Into Ice
+  Guid:
+    Data1: -2037625605
+    Data2: 1162919753
+    Data3: 795060909
+    Data4: -1342924397
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4873709804644223144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Attacks/Ice Freeze
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Attacks/Ice Freeze
+  Guid:
+    Data1: 328082509
+    Data2: 1220948772
+    Data3: -2081576303
+    Data4: -474198981
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4860404931619337598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Attacks/Boss Sword Swing
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Attacks/Boss Sword Swing
+  Guid:
+    Data1: -859894708
+    Data2: 1147766010
+    Data3: -1358030434
+    Data4: 1020499710
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4774784603381018101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,6 +344,61 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 170183
+--- !u!114 &-4549297124160208624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Movement/Rolling
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Movement/Rolling
+  Guid:
+    Data1: 1838587931
+    Data2: 1157285556
+    Data3: 1804733372
+    Data4: 605529978
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 1634400977709298802}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4029896060511268396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Hits/Roll Into Rock
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Hits/Roll Into Rock
+  Guid:
+    Data1: -1050195681
+    Data2: 1177488998
+    Data3: -1992884086
+    Data4: 1004146833
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-3583667136050282892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,7 +426,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 430
---- !u!114 &-1252631137041875416
+--- !u!114 &-2795742440512074793
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -270,20 +436,47 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Denial Theme 1/combat_intensity
+  m_Name: parameter:/General Footsteps/terrain_material
   m_EditorClassIdentifier: 
-  Name: combat_intensity
+  Name: terrain_material
   StudioPath: 
   Min: 0
-  Max: 1
+  Max: 5
   Default: 0
   ID:
-    data1: 1732933865
-    data2: 854172175
-  Type: 0
+    data1: 3417398644
+    data2: 3274630146
+  Type: 1
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-914794774062134863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Hits/Hit
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Hits/Hit
+  Guid:
+    Data1: -256632904
+    Data2: 1307947147
+    Data3: 1160089789
+    Data4: -630896032
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-534576764791880568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,7 +492,7 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Denial.bank
   Name: Denial
   StudioPath: bank:/Denial
-  lastModified: 638435084957345506
+  lastModified: 638443867839719767
   FileSizes:
   - Name: Desktop
     Value: 4443424
@@ -326,22 +519,30 @@ MonoBehaviour:
   - {fileID: -3583667136050282892}
   - {fileID: -9064084284937919549}
   - {fileID: -8557064927371499859}
-  - {fileID: 7939333833758903401}
-  - {fileID: -4824679643330590444}
   - {fileID: 9190125042507677311}
-  - {fileID: 3154388379945603181}
-  - {fileID: 2029733761135007170}
   - {fileID: 6475642112388995495}
   - {fileID: -8493200301936791099}
   - {fileID: -4774784603381018101}
+  - {fileID: -6219444820839448990}
+  - {fileID: -4549297124160208624}
+  - {fileID: -4029896060511268396}
+  - {fileID: -4860404931619337598}
+  - {fileID: 145384752493199619}
+  - {fileID: 5795372223571848650}
+  - {fileID: -7443101373261933233}
+  - {fileID: -914794774062134863}
+  - {fileID: -7739722439955394015}
+  - {fileID: 7596929621233708925}
+  - {fileID: -5056636671557377564}
+  - {fileID: -4873709804644223144}
   EditorParameters: []
   MasterBanks:
   - {fileID: -8260435118205532706}
   StringsBanks:
   - {fileID: 5618337765621597603}
-  cacheTime: 638435084960658323
+  cacheTime: 638443880377668443
   cacheVersion: 131608
---- !u!114 &2029733761135007170
+--- !u!114 &145384752493199619
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -351,36 +552,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Crow Caw
+  m_Name: event:/SFX/Movement/General Footsteps
   m_EditorClassIdentifier: 
-  Path: event:/SFX/Crow Caw
-  Guid:
-    Data1: 448562119
-    Data2: 1191485845
-    Data3: -540737393
-    Data4: -624302374
-  Banks:
-  - {fileID: 7561616249138049272}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &3154388379945603181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Footsteps
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Footsteps
+  Path: event:/SFX/Movement/General Footsteps
   Guid:
     Data1: 678729342
     Data2: 1329422836
@@ -392,10 +566,58 @@ MonoBehaviour:
   Is3D: 1
   IsOneShot: 1
   Parameters:
-  - {fileID: -7388814863845891478}
+  - {fileID: -2795742440512074793}
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &1634400977709298802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Rolling/terrain_material
+  m_EditorClassIdentifier: 
+  Name: terrain_material
+  StudioPath: 
+  Min: 0
+  Max: 5
+  Default: 0
+  ID:
+    data1: 3417398644
+    data2: 3274630146
+  Type: 1
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &2640189709588707000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Denial Theme/combat_intensity
+  m_EditorClassIdentifier: 
+  Name: combat_intensity
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1732933865
+    data2: 854172175
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &5618337765621597603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,11 +633,38 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638435084957392182
+  lastModified: 638443880376509461
   FileSizes:
   - Name: Desktop
-    Value: 1566
+    Value: 1992
   Exists: 1
+--- !u!114 &5795372223571848650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Attacks/Claw Attack
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Attacks/Claw Attack
+  Guid:
+    Data1: -915998310
+    Data2: 1292681357
+    Data3: -1445540176
+    Data4: 1586691702
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &6475642112388995495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,11 +707,38 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638435084960658323
+  lastModified: 638443880377668443
   FileSizes:
   - Name: Desktop
-    Value: 755424
+    Value: 1207168
   Exists: 1
+--- !u!114 &7596929621233708925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Attacks/Player Sword Swing
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Attacks/Player Sword Swing
+  Guid:
+    Data1: 760435174
+    Data2: 1315181214
+    Data3: -1647417705
+    Data4: 102186708
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &7829615312821548797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,33 +763,6 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &7939333833758903401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Hit
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Hit
-  Guid:
-    Data1: -256632904
-    Data2: 1307947147
-    Data3: 1160089789
-    Data4: -630896032
-  Banks:
-  - {fileID: 7561616249138049272}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
 --- !u!114 &9190125042507677311
 MonoBehaviour:
   m_ObjectHideFlags: 0

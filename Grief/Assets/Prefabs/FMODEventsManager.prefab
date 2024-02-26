@@ -44,13 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4061028c55eee644e8b24cb488852942, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <DenialTheme1>k__BackingField:
+  <DenialTheme>k__BackingField:
     Guid:
       Data1: 1445230782
       Data2: 1075501126
       Data3: 850447770
       Data4: -1576932907
-    Path: event:/Music/Denial Theme 1
+    Path: event:/Music/Denial Theme
   <FrozenLakeTheme1>k__BackingField:
     Guid:
       Data1: 1897653162
@@ -58,73 +58,115 @@ MonoBehaviour:
       Data3: -1957739862
       Data4: 265929012
     Path: event:/Music/Frozen Lake Theme
-  <ambience>k__BackingField:
+  <Wind>k__BackingField:
     Guid:
       Data1: 1155922249
       Data2: 1225195686
       Data3: -127649608
       Data4: 718933337
     Path: event:/Ambience/Wind
-  <crow>k__BackingField:
+  <CrowCaw>k__BackingField:
     Guid:
       Data1: 448562119
       Data2: 1191485845
       Data3: -540737393
       Data4: -624302374
-    Path: event:/SFX/Crow Caw
-  <hit>k__BackingField:
-    Guid:
-      Data1: -256632904
-      Data2: 1307947147
-      Data3: 1160089789
-      Data4: -630896032
-    Path: event:/SFX/Hit
-  <iceBreak>k__BackingField:
-    Guid:
-      Data1: -4191380
-      Data2: 1238532757
-      Data3: -719494777
-      Data4: -350574295
-    Path: event:/SFX/Ice Break
-  <footsteps>k__BackingField:
-    Guid:
-      Data1: 678729342
-      Data2: 1329422836
-      Data3: -1377246560
-      Data4: -1789574410
-    Path: event:/SFX/Footsteps
-  <snarl>k__BackingField:
+    Path: event:/SFX/Ambience/Crow Caw
+  <WolfSnarl>k__BackingField:
     Guid:
       Data1: 1406374580
       Data2: 1209354181
       Data3: 2037563797
       Data4: -1343434883
     Path: event:/SFX/Snarl
-  <dialogue>k__BackingField:
+  <PlayerDialogue>k__BackingField:
     Guid:
       Data1: -1209801701
       Data2: 1117437563
       Data3: -781440865
       Data4: 772181357
     Path: event:/SFX/Dialogue/Dialogue
-  <playerHurt>k__BackingField:
+  <PlayerHurt>k__BackingField:
     Guid:
       Data1: 2130559376
       Data2: 1229179963
       Data3: 246479765
       Data4: 2084110762
     Path: event:/SFX/Player/PlayerHurt
-  <playerFootsteps>k__BackingField:
+  <GeneralFootsteps>k__BackingField:
     Guid:
-      Data1: 395596340
-      Data2: 1313608852
-      Data3: -958807653
-      Data4: 1197719863
-    Path: event:/SFX/Player/PlayerFootsteps
-  <playerSwing>k__BackingField:
+      Data1: 678729342
+      Data2: 1329422836
+      Data3: -1377246560
+      Data4: -1789574410
+    Path: event:/SFX/Movement/General Footsteps
+  <RockEnemyRolling>k__BackingField:
     Guid:
-      Data1: -2074651602
-      Data2: 1316148225
-      Data3: -305748817
-      Data4: 1512994757
-    Path: event:/SFX/Player/PlayerSwing
+      Data1: 1838587931
+      Data2: 1157285556
+      Data3: 1804733372
+      Data4: 605529978
+    Path: event:/SFX/Movement/Rolling
+  <PlayerSwordSwing>k__BackingField:
+    Guid:
+      Data1: 760435174
+      Data2: 1315181214
+      Data3: -1647417705
+      Data4: 102186708
+    Path: event:/SFX/Attacks/Player Sword Swing
+  <BossSwordSwing>k__BackingField:
+    Guid:
+      Data1: -859894708
+      Data2: 1147766010
+      Data3: -1358030434
+      Data4: 1020499710
+    Path: event:/SFX/Attacks/Boss Sword Swing
+  <ClawAttack>k__BackingField:
+    Guid:
+      Data1: -915998310
+      Data2: 1292681357
+      Data3: -1445540176
+      Data4: 1586691702
+    Path: event:/SFX/Attacks/Claw Attack
+  <IceFreeze>k__BackingField:
+    Guid:
+      Data1: 328082509
+      Data2: 1220948772
+      Data3: -2081576303
+      Data4: -474198981
+    Path: event:/SFX/Attacks/Ice Freeze
+  <GeneralHit>k__BackingField:
+    Guid:
+      Data1: -256632904
+      Data2: 1307947147
+      Data3: 1160089789
+      Data4: -630896032
+    Path: event:/SFX/Hits/Hit
+  <RollIntoTree>k__BackingField:
+    Guid:
+      Data1: 16830129
+      Data2: 1126193571
+      Data3: -1172360018
+      Data4: -1716877159
+    Path: event:/SFX/Hits/Roll Into Tree
+  <RollIntoRock>k__BackingField:
+    Guid:
+      Data1: -1050195681
+      Data2: 1177488998
+      Data3: -1992884086
+      Data4: 1004146833
+    Path: event:/SFX/Hits/Roll Into Rock
+  <RollIntoIce>k__BackingField:
+    Guid:
+      Data1: -2037625605
+      Data2: 1162919753
+      Data3: 795060909
+      Data4: -1342924397
+    Path: event:/SFX/Hits/Roll Into Ice
+  <IceBreak>k__BackingField:
+    Guid:
+      Data1: -4191380
+      Data2: 1238532757
+      Data3: -719494777
+      Data4: -350574295
+    Path: event:/SFX/Ice Break
