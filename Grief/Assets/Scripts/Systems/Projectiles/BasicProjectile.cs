@@ -23,10 +23,7 @@ public class BasicProjectile : MonoBehaviour
     {
         if (isFired)
         {
-            if (Time.timeSinceLevelLoad - spawnTime >= projectileData.ProjectileLifespan && !isBeingDestroyed)
-            {
-                DestroyProjectile();
-            }
+            OnProjectile();
         }
     }
 
@@ -45,6 +42,14 @@ public class BasicProjectile : MonoBehaviour
         if (isFired)
         {
             OnProjectileHit(other.transform);
+        }
+    }
+
+    public virtual void OnProjectile()
+    {
+        if (IsExpired())
+        {
+            DestroyProjectile();
         }
     }
 
@@ -67,6 +72,11 @@ public class BasicProjectile : MonoBehaviour
         collider.enabled = true;
         isFired = true;
         spawnTime = Time.timeSinceLevelLoad;
+    }
+
+    public virtual bool IsExpired()
+    {
+        return Time.timeSinceLevelLoad - spawnTime >= projectileData.ProjectileLifespan && !isBeingDestroyed;
     }
 
     public virtual void DestroyProjectile()

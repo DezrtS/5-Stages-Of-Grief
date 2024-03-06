@@ -1087,7 +1087,7 @@ MonoBehaviour:
   walkingSpeed: 5
   groundLayerMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 768
   groundCheckDistance: 1.15
 --- !u!114 &96941613
 MonoBehaviour:
@@ -1197,6 +1197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   repeatable: 0
+  repeatAfterLastWave: 0
   enemyWaves:
   - enemyDatas:
     - enemyPrefab: {fileID: 565407727850481255, guid: 8746f54eee464e24b8495067ff6dc166,
@@ -8392,6 +8393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   repeatable: 1
+  repeatAfterLastWave: 0
   enemyWaves:
   - enemyDatas:
     - enemyPrefab: {fileID: 565407727850481255, guid: 8746f54eee464e24b8495067ff6dc166,

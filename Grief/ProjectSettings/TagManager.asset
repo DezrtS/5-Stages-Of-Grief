@@ -8,6 +8,7 @@ TagManager:
   - Snow
   - Ice
   - Uneffectable
+  - Unflashable
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,8 @@ TagManager:
   - Entity
   - Entity Trigger
   - Ground
-  - 
-  - 
+  - Platform
+  - Water Freezing
   - 
   - 
   - 

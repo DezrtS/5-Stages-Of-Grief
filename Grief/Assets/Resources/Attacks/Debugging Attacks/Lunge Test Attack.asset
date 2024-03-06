@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47472c27e9766ab429096ba3eaf354d9, type: 3}
   m_Name: Lunge Test Attack
   m_EditorClassIdentifier: 
-  attackId: basic_player_attack
+  attackId: lunge_attack
   recommendedAttackRange: 4
   attackRangeDeviation: 1
   isCombo: 0

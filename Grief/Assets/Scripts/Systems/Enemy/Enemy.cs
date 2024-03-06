@@ -641,7 +641,7 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
                 //animator.SetTrigger("AimDodgeCancel");
                 break;
             case AnimationEvent.Attack:
-                animator.SetTrigger("Attack");
+                animator.SetTrigger("Attack1");
                 break;
             case AnimationEvent.Dodge:
                 animator.SetTrigger("Dodge");

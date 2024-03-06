@@ -118,7 +118,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _HueVariationKwToggle: 1
-    - _IsForTerrain: 0
+    - _IsForTerrain: 1
     - _Metallic: 0
     - _Mode: 0
     - _NormalMapKwToggle: 1
