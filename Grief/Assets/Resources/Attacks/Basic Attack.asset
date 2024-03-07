@@ -16,6 +16,7 @@ MonoBehaviour:
   recommendedAttackRange: 4
   attackRangeDeviation: 2
   isCombo: 1
+  forceCombo: 0
   comboAttackCount: 3
   fullComboCooldown: 1.5
   comboResetAfter: 1
@@ -33,7 +34,7 @@ MonoBehaviour:
   maxAttackTime: 0.1
   coolingDownTime: 0.1
   attackCooldown: 0.2
-  damage: 3
+  damage: 1
   knockbackPower: 12
   attackTriggerScale: 12
   attackTriggerSpawnDistance: 6
@@ -46,11 +47,11 @@ MonoBehaviour:
     Path: 
   playAudioIdOnAttack:
     Guid:
-      Data1: -2074651602
-      Data2: 1316148225
-      Data3: -305748817
-      Data4: 1512994757
-    Path: event:/SFX/Player/PlayerSwing
+      Data1: 760435174
+      Data2: 1315181214
+      Data3: -1647417705
+      Data4: 102186708
+    Path: event:/SFX/Attacks/Player Sword Swing
   playAudioIdOnCooldown:
     Guid:
       Data1: 0

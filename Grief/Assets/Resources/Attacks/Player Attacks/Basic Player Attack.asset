@@ -34,7 +34,7 @@ MonoBehaviour:
   maxAttackTime: 0.1
   coolingDownTime: 0
   attackCooldown: 0.1
-  damage: 3
+  damage: 2
   knockbackPower: 12
   attackTriggerScale: 5
   attackTriggerSpawnDistance: 2.5
@@ -47,11 +47,11 @@ MonoBehaviour:
     Path: 
   playAudioIdOnAttack:
     Guid:
-      Data1: -2074651602
-      Data2: 1316148225
-      Data3: -305748817
-      Data4: 1512994757
-    Path: event:/SFX/Player/PlayerSwing
+      Data1: 760435174
+      Data2: 1315181214
+      Data3: -1647417705
+      Data4: 102186708
+    Path: event:/SFX/Attacks/Player Sword Swing
   playAudioIdOnCooldown:
     Guid:
       Data1: 0

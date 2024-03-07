@@ -12,14 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47472c27e9766ab429096ba3eaf354d9, type: 3}
   m_Name: Charge Test Attack
   m_EditorClassIdentifier: 
-  attackId: basic_player_attack
-  attackStatusEffects:
-  - {fileID: 11400000, guid: c7245dc7599cec142bcbd5bb15304825, type: 2}
+  attackId: charge_attack
+  recommendedAttackRange: 2
+  attackRangeDeviation: 1
+  isCombo: 0
+  forceCombo: 0
+  comboAttackCount: 1
+  fullComboCooldown: 0.5
+  comboResetAfter: 1
+  applyStatusEffects: []
+  recieveStatusEffects: []
   attackStateMovements:
   - state: 1
     movement: {fileID: 11400000, guid: 6361b49771be5744680e7013d50baa15, type: 2}
   hasAimingStage: 1
-  maxAimTime: 5
+  maxAimTime: 6
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
   chargingUpTime: 1
@@ -27,11 +34,39 @@ MonoBehaviour:
   maxAttackTime: 0
   coolingDownTime: 0.2
   attackCooldown: 0.2
-  damage: 3
+  damage: 1
   knockbackPower: 12
   attackTriggerScale: 3
   attackTriggerSpawnDistance: 2
-  playAudioIdOnAim: 
-  playAudioIdOnAttack: player_attack1
-  playAudioIdOnCooldown: 
-  playAudioIdOnCancel: 
+  playAudioIdOnAim:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnAttack:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCooldown:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCancel:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  particleEffectOnAimPrefab: {fileID: 0}
+  particleEffectOnAttackPrefab: {fileID: 0}
+  particleEffectOnCooldownPrefab: {fileID: 0}
+  particleEffectOnCancelPrefab: {fileID: 0}

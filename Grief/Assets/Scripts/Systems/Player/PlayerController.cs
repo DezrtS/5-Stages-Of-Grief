@@ -224,11 +224,18 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         if (Input.GetKeyDown(KeyCode.Mouse0) && !isAttacking)
         {
             useMouseForRotation = true;
-
+            AttackHolder.SetActiveAttack(0);
             InitiateAttackState(AttackState.Aiming);
         }
 
-        if (Input.GetKeyUp(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            useMouseForRotation = true;
+            SetAbility();
+            InitiateAttackState(AttackState.Aiming);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0) || Input.GetKeyUp(KeyCode.F))
         {
             if (attackState == AttackState.Aiming)
             {
@@ -466,7 +473,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         //        dialogue.start();
         //    }
         //}
-        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.playerHurt, transform.position);
+        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.PlayerHurt, transform.position);
 
         //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, transform.position);
         CameraManager.Instance.Shake(6, 0.2f);
@@ -622,16 +629,6 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         {
             charAgent.SetAllowMovementInput(false);
             charAgent.SetAllowRotationInput(false);
-
-            //if (Random.Range(0, 10) == 1)
-            //{
-            //    dialogue.getPlaybackState(out PLAYBACK_STATE playbackState);
-            //    if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
-            //    {
-            //        dialogue.setParameterByName("dialogue_option", 1);
-            //        dialogue.start();
-            //    }
-            //}
         }
         else if (attackState == AttackState.Attacking)
         {

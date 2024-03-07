@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{562478be-d846-401a-9acd-b032d5e901a2}">
 		<property name="name">
-			<value>Denial Theme 1</value>
+			<value>Denial Theme</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>

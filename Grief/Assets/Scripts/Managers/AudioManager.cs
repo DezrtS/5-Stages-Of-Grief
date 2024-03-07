@@ -28,7 +28,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (Random.Range(0, 100) == 1)
         {
-            PlayOneShot(FMODEventsManager.Instance.crow, PlayerController.Instance.transform.position + new Vector3(Random.Range(1f, 2f), 0, Random.Range(1f, 2f)) * 10f);
+            PlayOneShot(FMODEventsManager.Instance.CrowCaw, PlayerController.Instance.transform.position + new Vector3(Random.Range(1f, 2f), 0, Random.Range(1f, 2f)) * 10f);
         }
     }
 

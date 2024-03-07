@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DebugManager : Singleton<DebugManager>
 {
+    public GameObject testCube;
+
     public static void PrintList<T>(List<T> list)
     {
         foreach (var item in list)

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{36aa3c7b-5d34-4209-a214-bbd3fccc7c68}">
 		<property name="assetPath">
-			<value>SFX/Hit Sounds V1/Hit5.wav</value>
+			<value>SFX/Hits/Hits V2/Hit5.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>

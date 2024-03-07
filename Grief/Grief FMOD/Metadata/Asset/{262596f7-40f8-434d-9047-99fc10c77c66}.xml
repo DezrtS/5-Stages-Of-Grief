@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="EncodableAsset" id="{262596f7-40f8-434d-9047-99fc10c77c66}">
 		<property name="assetPath">
-			<value>SFX/Crow Caws/</value>
+			<value>Ambience/Crow Caws/</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{3a5acdd4-29bd-4fa7-9d09-8638563d8c46}</destination>

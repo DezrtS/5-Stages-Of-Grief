@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{81e31d8f-41fa-4de8-8acc-999820bfa717}">
 		<property name="assetPath">
-			<value>SFX/Ice Footsteps/Ice Footstep 3.wav</value>
+			<value>SFX/Footsteps/Ice Footsteps/Ice Footstep 3.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

@@ -15,7 +15,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 4907591497259816637, guid: b82170c954195bf4381670151f895f72,
     type: 3}
   projectileId: ice_shard
-  damage: 5
+  damage: 4
   knockbackPower: 0
   fireSpeed: 90
   projectileLifespan: 4
