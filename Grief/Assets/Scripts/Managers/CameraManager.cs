@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class CameraManager : Singleton<CameraManager>
 {
+    public Transform cameraTransform { get; private set; }
+
+    private Vector3 globalOffset;
+
     private CinemachineVirtualCamera cinemachineCamera;
     private CinemachineTransposer cinemachineTransposer;
 
@@ -24,6 +28,8 @@ public class CameraManager : Singleton<CameraManager>
 
         if (foundCamera)
         {
+            cameraTransform = cameraGameObject.transform;
+            globalOffset = cameraTransform.position;
             cinemachineCamera = cameraGameObject.GetComponent<CinemachineVirtualCamera>();
             cinemachineTransposer = cinemachineCamera.GetCinemachineComponent<CinemachineTransposer>();
             channelPerlin = cinemachineCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
@@ -47,7 +53,7 @@ public class CameraManager : Singleton<CameraManager>
         if (foundCamera)
         {
             cinemachineCamera.Follow = null;
-            cinemachineCamera.gameObject.transform.position = transform.position;
+            cinemachineCamera.gameObject.transform.position = transform.position + globalOffset;
             cinemachineCamera.Follow = transform;
         }
     }
@@ -66,7 +72,7 @@ public class CameraManager : Singleton<CameraManager>
     {
         if (foundCamera)
         {
-            cinemachineTransposer.m_FollowOffset = offset;
+            cinemachineTransposer.m_FollowOffset = offset + globalOffset;
         }
     }
 
