@@ -3,7 +3,42 @@ guid: 2164f9c5d40fa3a479bcf80f5518e646
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.007
+    second: {fileID: 2100000, guid: 705b0d891ff98a24b94893593da3966b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.008
+    second: {fileID: 2100000, guid: 4ddbf2c37d999f74484fc4898fa0191e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.009
+    second: {fileID: 2100000, guid: 70fcbd042021bd142b7b84e4ad75dc8a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.010
+    second: {fileID: 2100000, guid: 3b1d9ad7b13851e42b447832e6e61d31, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.011
+    second: {fileID: 2100000, guid: 162cffeae81236f4b851cda05d419e28, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.012
+    second: {fileID: 2100000, guid: 39aca69b5ade7df43bdf97ce88971622, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: grey.001
+    second: {fileID: 2100000, guid: 930d851f20c78e242984a84baed12fea, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -30,8 +65,11 @@ ModelImporter:
       quality is good. No significant differences with original animation were found.\n\nRetargeting
       quality report for clip 'Armature.001|hurt':\n\tRetargeting quality is good.
       No significant differences with original animation were found.\n\nRetargeting
-      quality report for clip 'Armature.001|ice attack':\n\tLeftHand average position
-      error 2.0 mm and maximum position error 5.2 mm at time 0:12 (60.0%) Frame 12\n\tRightHand
+      quality report for clip 'Armature.001|ice attack':\n\tLeftLowerLeg average
+      position error 5.7 mm and maximum position error 118.9 mm at time 0: 7 (35.0%)
+      Frame 7\n\tLeftFoot average position error 5.7 mm and maximum position error
+      118.9 mm at time 0: 7 (35.0%) Frame 7\n\tLeftHand average position error 2.0
+      mm and maximum position error 5.2 mm at time 0:12 (60.0%) Frame 12\n\tRightHand
       average position error 5.0 mm and maximum position error 9.5 mm at time 0:12
       (60.0%) Frame 12\n\nRetargeting quality report for clip 'Armature.001|idle':\n\tRetargeting
       quality is good. No significant differences with original animation were found.\n\nRetargeting
