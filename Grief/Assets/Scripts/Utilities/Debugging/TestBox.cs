@@ -46,6 +46,7 @@ public class TestBox : MonoBehaviour, IHealth
 
     public void Die()
     {
+        Destroy(gameObject);
         Debug.Log("Test Box Has Died");
     }
 }
