@@ -101,6 +101,8 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
     public bool IsPathfinding { get { return isPathfinding; } }
     public Vector3 PathfindDestination { get { return pathfindDestination; } set { pathfindDestination = value; } }
     public StatusEffectHolder StatusEffectHolder { get { return statusEffectHolder; } }
+    public Animator Animator { get { return animator; } }
+    public bool CanAnimate { get { return canAnimate; } }
 
     // ---------------------------------------------------------------------------------------------------------
     // Class Events
@@ -180,7 +182,7 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
         }
 
         health = Mathf.Max(health - damage, 0);
-        OnAnimationStart(AnimationEvent.Hurt, "");
+        OnAnimationEventStart(AnimationEvent.Hurt, "");
 
         EffectManager.Instance.Flash(transform);
         //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, transform.position);
@@ -199,7 +201,7 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
 
     public virtual void Die()
     {
-        OnAnimationStart(AnimationEvent.Die, "");
+        OnAnimationEventStart(AnimationEvent.Die, "");
 
         if (isQueued)
         {
@@ -617,7 +619,15 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
         rigidAgent.StopPathfinding();
     }
 
-    public void OnAnimationStart(AnimationEvent animationEvent, string animationId)
+    public void TriggerAnimation(string animationId)
+    {
+        if (canAnimate)
+        {
+            animator.SetTrigger(animationId);
+        }
+    }
+
+    public void OnAnimationEventStart(AnimationEvent animationEvent, string animationId)
     {
         if (!canAnimate)
         {
@@ -628,41 +638,26 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
 
         switch (animationEvent)
         {
-            case AnimationEvent.AimAttack:
-                //animator.SetTrigger("AimAttack");
+            case AnimationEvent.Aiming:
+                animator.SetTrigger("Aiming");
                 break;
-            case AnimationEvent.AimDodge:
-                //animator.SetTrigger("AimDodge");
+            case AnimationEvent.Charging:
+                animator.SetTrigger("Charging");
                 break;
-            case AnimationEvent.AimAttackCancel:
-                //animator.SetTrigger("AimAttackCancel");
+            case AnimationEvent.Activating:
+                animator.SetTrigger("Activating");
                 break;
-            case AnimationEvent.AimDodgeCancel:
-                //animator.SetTrigger("AimDodgeCancel");
+            case AnimationEvent.Cooling:
+                animator.SetTrigger("Cooling");
                 break;
-            case AnimationEvent.Attack:
-                animator.SetTrigger("Attack1");
-                break;
-            case AnimationEvent.Dodge:
-                animator.SetTrigger("Dodge");
-                break;
-            case AnimationEvent.Walk:
-                animator.SetBool("IsRunning", false);
-                animator.SetBool("IsWalking", true);
-                break;
-            case AnimationEvent.Run:
-                animator.SetBool("IsWalking", false);
-                animator.SetBool("IsRunning", true);
-                break;
-            case AnimationEvent.Stand:
-                animator.SetBool("IsWalking", false);
-                animator.SetBool("IsRunning", false);
+            case AnimationEvent.Canceling:
+                animator.SetTrigger("Cancelling");
                 break;
             case AnimationEvent.Hurt:
-                animator.SetTrigger("Hurt");
+                //animator.SetTrigger("Hurt");
                 break;
             case AnimationEvent.Die:
-                animator.SetTrigger("Die");
+                //animator.SetTrigger("Die");
                 break;
             default:
                 Debug.Log($"Animation Event {animationEvent} is not supported for {name}");

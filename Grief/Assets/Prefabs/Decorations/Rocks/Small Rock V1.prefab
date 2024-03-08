@@ -94,12 +94,13 @@ GameObject:
   - component: {fileID: 6454417366386182066}
   - component: {fileID: 7943621799772719127}
   - component: {fileID: 5321458954261265629}
+  - component: {fileID: 6495043354978268726}
   m_Layer: 0
   m_Name: Small Rock V1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6454417366386182066
 Transform:
@@ -167,3 +168,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &6495043354978268726
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5969911397713173768}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.2592596
+  m_Center: {x: 0.000000059604645, y: 0.21, z: 0}

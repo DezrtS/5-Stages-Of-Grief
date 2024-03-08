@@ -55,6 +55,8 @@ public class Dodge : ScriptableObject
     private StateMovement activeStateMovement;
     private float stateTimeLength = 0;
 
+    private bool activated = false;
+
     public string DodgeId { get { return dodgeId; } }
 
     public virtual Dodge Clone(Dodge clone, IDodge dodger, Transform parentTransform)
@@ -131,7 +133,12 @@ public class Dodge : ScriptableObject
 
         if (dodgeState == DodgeState.Idle)
         {
-            return;
+            activated = false;
+        }
+        else if (!activated)
+        {
+            activated = true;
+            animator?.TriggerAnimation("Dodge1");
         }
     }
 
@@ -165,16 +172,21 @@ public class Dodge : ScriptableObject
 
         if (dodgeState == DodgeState.Aiming)
         {
-            PlayAnimation(AnimationEvent.AimDodge, dodgeId);
+            PlayAnimation(AnimationEvent.Aiming, dodgeId);
             timeAimingStateStarted = Time.timeSinceLevelLoad;
         }
         else if (dodgeState == DodgeState.ChargingUp)
         {
+            PlayAnimation(AnimationEvent.Charging, dodgeId);
             onCooldown = true;
         }
         else if (dodgeState == DodgeState.Dodging)
         {
-            PlayAnimation(AnimationEvent.Dodge, dodgeId);
+            PlayAnimation(AnimationEvent.Activating, dodgeId);
+        }
+        else if (dodgeState == DodgeState.CoolingDown)
+        {
+            PlayAnimation(AnimationEvent.Cooling, dodgeId);
         }
 
         timeSinceStateStarted = 0;
@@ -280,17 +292,19 @@ public class Dodge : ScriptableObject
 
         if (dodgeState == DodgeState.Aiming)
         {
-            PlayAnimation(AnimationEvent.AimDodgeCancel, dodgeId);
+            PlayAnimation(AnimationEvent.Canceling, dodgeId);
         }
         else if (dodgeState == DodgeState.Dodging)
         {
             timeDodgingStateEnded = Time.timeSinceLevelLoad - dodgeCooldown + dodgeCancelCooldown;
         }
+
+        activated = false;
     }
 
     public void PlayAnimation(AnimationEvent animationEvent, string animationId)
     {
-        animator?.OnAnimationStart(animationEvent, animationId);
+        animator?.OnAnimationEventStart(animationEvent, animationId);
     }
 }
 

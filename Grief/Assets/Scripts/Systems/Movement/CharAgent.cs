@@ -28,10 +28,6 @@ public class CharAgent : MovementController
     [SerializeField] private float rotationInputSmoothMultiplier = 6;
 
     [Space(10)]
-    [SerializeField] private float runningSpeed = 10;
-    [SerializeField] private float walkingSpeed = 5;
-
-    [Space(10)]
     [Header("Gravity")]
     [SerializeField] private LayerMask groundLayerMask;
     [SerializeField] private float groundCheckDistance;
@@ -54,8 +50,6 @@ public class CharAgent : MovementController
     private string groundTag;
 
     IAnimate animator;
-    private bool isWalking;
-    private bool isRunning;
 
     // ---------------------------------------------------------------------------------------------------------
     // Pathfinding Variables
@@ -387,43 +381,13 @@ public class CharAgent : MovementController
 
     private void UpdateAnimations()
     {
-        float inputSpeed = inputProvider.GetMovementInput().magnitude * maxSpeed;
-
-        if (!allowMovementInput)
+        if (animator.CanAnimate)
         {
-            animator?.OnAnimationStart(AnimationEvent.Stand, "");
-            isWalking = false;
-            isRunning = false;
-            return;
-        }
-
-        if (inputSpeed >= runningSpeed)
-        {
-            if (!isRunning)
-            {
-                //Debug.Log("IsNowRunning");
-                animator?.OnAnimationStart(AnimationEvent.Run, "");
-                isWalking = false;
-                isRunning = true;
-            }
-        }
-        else if (inputSpeed >= walkingSpeed)
-        {
-            if (!isWalking)
-            {
-                //Debug.Log("IsNowWalking");
-                animator?.OnAnimationStart(AnimationEvent.Walk, "");
-                isRunning = false;
-                isWalking = true;
-            }
-        }
-        else if (isWalking || isRunning)
-        {
-            //Debug.Log("IsNowStanding");
-            animator?.OnAnimationStart(AnimationEvent.Stand, "");
-            isWalking = false;
-            isRunning = false;
-        }
+            // Velocity relative to world
+            Vector3 velocity = GetVelocity();
+            float dot = Vector3.Dot(transform.forward, velocity);
+            animator.Animator.SetFloat("Speed", velocity.magnitude / navMeshAgent.speed * Mathf.Sign(dot));
+        } 
     }
 
     // Change to Play footstep sound at a certain rate

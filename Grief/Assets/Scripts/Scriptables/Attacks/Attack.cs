@@ -70,6 +70,8 @@ public abstract class Attack : ScriptableObject
 
     private int comboAttack = 0;
 
+    private bool activated = false;
+
     public string AttackId { get { return attackId; } }
     public float AttackRange { get { return recommendedAttackRange; } }
     public float AttackRangeDeviation { get { return attackRangeDeviation; } }
@@ -157,6 +159,16 @@ public abstract class Attack : ScriptableObject
         attacker.TransferToAttackState(attackState);
 
         OnAttackStateStart(attackState);
+
+        if (attackState == AttackState.Idle)
+        {
+            activated = false;
+        }
+        else if (!activated)
+        {
+            activated = true;
+            animator?.TriggerAnimation("Attack1");
+        }
     }
 
     public virtual bool CanInitiateAttackState(AttackState attackState)
@@ -189,11 +201,12 @@ public abstract class Attack : ScriptableObject
 
         if (attackState == AttackState.Aiming)
         {
-            PlayAnimation(AnimationEvent.AimAttack, AttackId);
+            PlayAnimation(AnimationEvent.Aiming, AttackId);
             timeAimingStateStarted = Time.timeSinceLevelLoad;
         } 
         else if (attackState == AttackState.ChargingUp)
         {
+            PlayAnimation(AnimationEvent.Charging, AttackId);
             onCooldown = true;
             if (isCombo)
             {
@@ -202,11 +215,15 @@ public abstract class Attack : ScriptableObject
         }
         else if (attackState == AttackState.Attacking)
         {
-            PlayAnimation(AnimationEvent.Attack, AttackId);
+            PlayAnimation(AnimationEvent.Activating, AttackId);
             if (recieveStatusEffects.Count > 0 && parentTransform.TryGetComponent(out IStatusEffectTarget statusEffectTarget))
             {
                 statusEffectTarget.StatusEffectHolder.AddStatusEffect(recieveStatusEffects);
             }
+        }
+        else if (attackState == AttackState.CoolingDown)
+        {
+            PlayAnimation(AnimationEvent.Cooling, AttackId);
         }
 
         timeSinceStateStarted = 0;
@@ -333,12 +350,13 @@ public abstract class Attack : ScriptableObject
 
         if (attackState == AttackState.Aiming)
         {
-            PlayAnimation(AnimationEvent.AimAttackCancel, AttackId);
+            PlayAnimation(AnimationEvent.Canceling, AttackId);
         }
         else if (attackState == AttackState.Attacking)
         {
             timeAttackingStateEnded = Time.timeSinceLevelLoad - attackCooldown + attackCancelCooldown;
         }
+        activated = false;
     }
 
     public virtual void OnAttackTriggerEnter(Transform hit) { }
@@ -416,7 +434,7 @@ public abstract class Attack : ScriptableObject
 
     public void PlayAnimation(AnimationEvent animationEvent, string animationId)
     {
-        animator?.OnAnimationStart(animationEvent, animationId);
+        animator?.OnAnimationEventStart(animationEvent, animationId);
     }
 
     public virtual GameObject SpawnProjectile(ProjectileData projectileData, Vector3 position, Vector3 rotation)

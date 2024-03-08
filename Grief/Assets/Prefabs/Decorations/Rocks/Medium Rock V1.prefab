@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 906165389239554792}
   - component: {fileID: 4268430632581832013}
   - component: {fileID: 2078539056886540679}
+  - component: {fileID: 594186470793272443}
   m_Layer: 0
   m_Name: Medium Rock V1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &906165389239554792
 Transform:
@@ -84,6 +85,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &594186470793272443
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 565351502903822418}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2.3883915
+  m_Center: {x: -0.22814679, y: -0.18, z: 0.18177187}
 --- !u!1 &849447944153510171
 GameObject:
   m_ObjectHideFlags: 0

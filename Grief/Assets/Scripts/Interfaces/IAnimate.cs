@@ -1,21 +1,20 @@
+using UnityEngine;
+
 public enum AnimationEvent
 {
-    AimAttack,
-    AimDodge,
-    AimAttackCancel,
-    AimDodgeCancel,
-    Attack,
-    Dodge,
-
-    Walk,
-    Run,
-    Stand,
-
+    Aiming,
+    Charging,
+    Activating,
+    Cooling,
+    Canceling,
     Hurt,
     Die,
 }
 
 public interface IAnimate
 {
-    public void OnAnimationStart(AnimationEvent animationEvent, string animationId);
+    public Animator Animator { get; }
+    public bool CanAnimate { get; }
+    public void TriggerAnimation(string animationId);
+    public void OnAnimationEventStart(AnimationEvent animationEvent, string animationId);
 }
