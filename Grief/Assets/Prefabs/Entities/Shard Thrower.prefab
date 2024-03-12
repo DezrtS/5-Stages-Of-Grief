@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01f7ce24ace3d434e92afc8ced015309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseActivationDistance: 20
+  chaseActivationDistance: 30
   defaultRepositioningDistance: 12
   defaultRepositioningDeviationDistance: 2
   timeBetweenWanders: 3
