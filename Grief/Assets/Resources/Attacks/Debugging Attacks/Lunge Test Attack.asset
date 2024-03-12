@@ -49,11 +49,11 @@ MonoBehaviour:
     Path: 
   playAudioIdOnAttack:
     Guid:
-      Data1: -915998310
-      Data2: 1292681357
-      Data3: -1445540176
-      Data4: 1586691702
-    Path: event:/SFX/Attacks/Claw Attack
+      Data1: 437261502
+      Data2: 1143686277
+      Data3: 187320726
+      Data4: -1023193129
+    Path: event:/SFX/Attacks/Bite Attack
   playAudioIdOnCooldown:
     Guid:
       Data1: 0

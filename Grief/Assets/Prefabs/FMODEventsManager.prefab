@@ -142,6 +142,13 @@ MonoBehaviour:
       Data3: 1160089789
       Data4: -630896032
     Path: event:/SFX/Hits/Hit
+  <LogHit>k__BackingField:
+    Guid:
+      Data1: 1674139499
+      Data2: 1193003576
+      Data3: 107088571
+      Data4: -1610638875
+    Path: event:/SFX/Hits/Log Hit
   <RollIntoTree>k__BackingField:
     Guid:
       Data1: 16830129
@@ -170,3 +177,10 @@ MonoBehaviour:
       Data3: -719494777
       Data4: -350574295
     Path: event:/SFX/Ice Break
+  <LogBreak>k__BackingField:
+    Guid:
+      Data1: -588002540
+      Data2: 1119153255
+      Data3: -1082678400
+      Data4: 1989447146
+    Path: event:/SFX/Log Break

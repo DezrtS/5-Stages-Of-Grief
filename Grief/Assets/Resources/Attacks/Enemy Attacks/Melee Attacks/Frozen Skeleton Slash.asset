@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Frozen Skeleton Slash
   m_EditorClassIdentifier: 
   attackId: frozen_skeleton_slash
-  recommendedAttackRange: 4
-  attackRangeDeviation: 2
+  recommendedAttackRange: 5
+  attackRangeDeviation: 3
   isCombo: 1
   forceCombo: 1
-  comboAttackCount: 3
+  comboAttackCount: 2
   fullComboCooldown: 0.5
   comboResetAfter: 1
   applyStatusEffects: []

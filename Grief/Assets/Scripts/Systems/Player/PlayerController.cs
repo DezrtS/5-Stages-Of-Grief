@@ -475,7 +475,7 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         //        dialogue.start();
         //    }
         //}
-        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.PlayerHurt, transform.position);
+        //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.PlayerHurt, transform.position);
 
         //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.hit, transform.position);
         CameraManager.Instance.Shake(6, 0.2f);

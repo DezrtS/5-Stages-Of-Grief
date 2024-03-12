@@ -30,9 +30,11 @@ public class FMODEventsManager : Singleton<FMODEventsManager>
     [field: SerializeField] public EventReference IceFreeze { get; private set; }
     [field: Header("    Hits")]
     [field: SerializeField] public EventReference GeneralHit { get; private set; }
+    [field: SerializeField] public EventReference LogHit { get; private set; }
     [field: SerializeField] public EventReference RollIntoTree { get; private set; }
     [field: SerializeField] public EventReference RollIntoRock { get; private set; }
     [field: SerializeField] public EventReference RollIntoIce { get; private set; }
     [field: Header("    Misc")]
     [field: SerializeField] public EventReference IceBreak { get; private set; }
+    [field: SerializeField] public EventReference LogBreak { get; private set; }
 }

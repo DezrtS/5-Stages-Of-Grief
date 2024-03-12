@@ -395,7 +395,7 @@ public class CharAgent : MovementController
     {
         if (velocity.magnitude > 0.75f)
         {
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo, groundCheckDistance, groundLayerMask, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out RaycastHit hitInfo, groundCheckDistance, groundLayerMask, QueryTriggerInteraction.Ignore))
             {
                 string tag = hitInfo.collider.tag;
 

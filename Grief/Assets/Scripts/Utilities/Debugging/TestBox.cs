@@ -32,6 +32,7 @@ public class TestBox : MonoBehaviour, IHealth
         health = Mathf.Max(health - damage, 0);
 
         //Debug.Log($"Test Box has lost {damage} health at {Time.timeSinceLevelLoad} seconds since level load");
+        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.LogHit, transform.position);
 
         if (health == 0)
         {
@@ -46,7 +47,10 @@ public class TestBox : MonoBehaviour, IHealth
 
     public void Die()
     {
-        Destroy(gameObject);
+        isInvincible = true;
+        AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.LogBreak, transform.position);
+        EffectManager.Instance.Dissolve(transform, false);
+        Destroy(gameObject, 1.5f);
         Debug.Log("Test Box Has Died");
     }
 }

@@ -261,7 +261,6 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
                 InitiatePathfinding();
                 break;
             case EnemyState.Chasing:
-                //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.snarl, transform.position);
                 break;
             case EnemyState.Repositioning:
                 if (navMeshAgent != null)
@@ -270,7 +269,7 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
                 }
                 break;
             case EnemyState.Attacking:
-
+                AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.WolfSnarl, transform.position);
                 break;
             case EnemyState.Dodging: 
                 
@@ -292,7 +291,9 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
                 }
 
                 EnemyManager.Instance.RemoveEnemyFromList(this);
-
+                if (TryGetComponent(out Collider collider)) {
+                    collider.enabled = false;
+                }
                 EffectManager.Instance.Dissolve(transform, false);
                 CancelPathfinding();
                 timer = 0;
