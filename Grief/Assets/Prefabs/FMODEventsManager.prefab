@@ -135,6 +135,13 @@ MonoBehaviour:
       Data3: -2081576303
       Data4: -474198981
     Path: event:/SFX/Attacks/Ice Freeze
+  <GroundSlam>k__BackingField:
+    Guid:
+      Data1: -370697309
+      Data2: 1144559414
+      Data3: -1644296811
+      Data4: -298761693
+    Path: event:/SFX/Attacks/Ground Slam
   <GeneralHit>k__BackingField:
     Guid:
       Data1: -256632904

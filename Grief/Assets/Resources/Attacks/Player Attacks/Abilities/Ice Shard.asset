@@ -31,7 +31,7 @@ MonoBehaviour:
   hasAttackStage: 1
   maxAttackTime: 0
   coolingDownTime: 0.2
-  attackCooldown: 0.5
+  attackCooldown: 1
   playAudioIdOnAim:
     Guid:
       Data1: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player Dodge
   m_EditorClassIdentifier: 
   stateMovementData:
-  - activeSpeed: 25
+  - activeSpeed: 27
     activeDirection: {x: 0, y: 0, z: 1}
     activationRangeStart: 0
     activationRangeEnd: 1

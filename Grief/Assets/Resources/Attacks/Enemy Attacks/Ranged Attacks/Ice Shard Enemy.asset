@@ -24,7 +24,7 @@ MonoBehaviour:
   recieveStatusEffects: []
   attackStateMovements: []
   hasAimingStage: 1
-  maxAimTime: 0.2
+  maxAimTime: 1
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
   chargingUpTime: 0.2

@@ -8,6 +8,7 @@ public class DodgeHolder : MonoBehaviour
     private Dodge[] clonedDodgeList = new Dodge[0];
 
     private Dodge activeDodge;
+    private int chosenDodge;
 
     private bool canDodge = true;
     private int dodgeCount = 0;
@@ -31,6 +32,7 @@ public class DodgeHolder : MonoBehaviour
         }
 
         activeDodge = clonedDodgeList[0];
+        chosenDodge = 1;
     }
 
     private void FixedUpdate()
@@ -56,6 +58,11 @@ public class DodgeHolder : MonoBehaviour
         return canDodge;
     }
 
+    public int GetChosenDodge()
+    {
+        return chosenDodge;
+    }
+
     public void SetActiveDodge(int index)
     {
         if (!canDodge || index < 0 || index >= dodgeCount)
@@ -64,6 +71,7 @@ public class DodgeHolder : MonoBehaviour
         }
 
         activeDodge = clonedDodgeList[index];
+        chosenDodge = index + 1;
     }
 
     public void SetRandomActiveDodge()
@@ -75,6 +83,7 @@ public class DodgeHolder : MonoBehaviour
 
         int index = Random.Range(0, dodgeCount);
         activeDodge = clonedDodgeList[index];
+        chosenDodge = index + 1;
     }
 
     public void SetRandomActiveDodge(int rangeStartInclusive, int rangeEndExclusive)

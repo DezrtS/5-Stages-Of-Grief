@@ -13,15 +13,9 @@ MonoBehaviour:
   m_Name: Charge Movement Data
   m_EditorClassIdentifier: 
   stateMovementData:
-  - activeSpeed: 15
-    activeDirection: {x: 0, y: 0, z: -1}
-    activationRangeStart: 0
-    activationRangeEnd: 0.1
-    accelerateToActiveSpeed: 1
-    rangeOfAcceleration: 0.5
   - activeSpeed: 25
     activeDirection: {x: 0, y: 0, z: 1}
-    activationRangeStart: 0.1
+    activationRangeStart: 0
     activationRangeEnd: 1
     accelerateToActiveSpeed: 1
     rangeOfAcceleration: 0.1

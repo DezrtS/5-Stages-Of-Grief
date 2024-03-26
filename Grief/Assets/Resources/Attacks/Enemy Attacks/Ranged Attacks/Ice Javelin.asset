@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Ice Javelin
   m_EditorClassIdentifier: 
   attackId: ice_shard_enemy
-  recommendedAttackRange: 15
-  attackRangeDeviation: 2
+  recommendedAttackRange: 8
+  attackRangeDeviation: 7
   isCombo: 1
   forceCombo: 0
   comboAttackCount: 1
@@ -24,13 +24,13 @@ MonoBehaviour:
   recieveStatusEffects: []
   attackStateMovements: []
   hasAimingStage: 1
-  maxAimTime: 0.2
+  maxAimTime: 0.35
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
   chargingUpTime: 0.2
   hasAttackStage: 1
   maxAttackTime: 0
-  coolingDownTime: 0.1
+  coolingDownTime: 0.25
   attackCooldown: 0.1
   playAudioIdOnAim:
     Guid:
@@ -41,11 +41,11 @@ MonoBehaviour:
     Path: 
   playAudioIdOnAttack:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 328082509
+      Data2: 1220948772
+      Data3: -2081576303
+      Data4: -474198981
+    Path: event:/SFX/Attacks/Ice Freeze
   playAudioIdOnCancel:
     Guid:
       Data1: 0

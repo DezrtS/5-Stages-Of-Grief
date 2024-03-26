@@ -42,6 +42,7 @@ public class RigidAgent : MovementController
 
         if (navMeshAgent != null)
         {
+            navMeshAgent.velocity = Vector3.zero;
             //navMeshAgent.updatePosition = false;
         }
     }

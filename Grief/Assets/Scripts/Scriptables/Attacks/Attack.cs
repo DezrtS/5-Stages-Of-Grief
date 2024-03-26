@@ -167,7 +167,7 @@ public abstract class Attack : ScriptableObject
         else if (!activated)
         {
             activated = true;
-            animator?.TriggerAnimation("Attack1");
+            animator?.TriggerMultiAnimation("Attack", true);
         }
     }
 

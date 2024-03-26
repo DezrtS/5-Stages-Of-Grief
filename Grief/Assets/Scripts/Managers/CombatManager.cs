@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CombatManager : Singleton<CombatManager>
 {
-    public LayerMask attackLayer;
-    public GameObject circleTrigger;
+    public LayerMask bumpLayer;
+    public GameObject circleAttackTrigger;
 
-    public GameObject CreateCircleTrigger(Attack attack, Vector3 position, float scale)
+    public GameObject CreateCircleAttackTrigger(Attack attack, Vector3 position, float scale)
     {
-        GameObject trigger = Instantiate(circleTrigger, position, Quaternion.identity);
+        GameObject trigger = Instantiate(circleAttackTrigger, position, Quaternion.identity);
         trigger.transform.localScale = Vector3.one * scale;
         trigger.GetComponent<AttackTrigger>().SetParentAttack(attack);
         return trigger;

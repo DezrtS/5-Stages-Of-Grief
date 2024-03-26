@@ -54,7 +54,7 @@ public class BasicAttack : PhysicalAttack
         }
         else if (attackState == AttackState.Attacking)
         {
-            attackTrigger = CombatManager.Instance.CreateCircleTrigger(this, parentTransform.position + parentTransform.forward * attackTriggerSpawnDistance + Vector3.up, attackTriggerScale);
+            attackTrigger = CombatManager.Instance.CreateCircleAttackTrigger(this, parentTransform.position + parentTransform.forward * attackTriggerSpawnDistance + Vector3.up, attackTriggerScale);
             triggerOffset = attackTrigger.transform.position - parentTransform.position;
             PlayAudio(playAudioIdOnAttack);
 

@@ -3,7 +3,42 @@ guid: d9e90e4de49e88149841c3f037829d2e
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: dc8d75df48265f749a8f91a2f84b5788, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 8081fc2ed65a165469813383f68a4edd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: d9ef02a248cbfe94697f7c462ed4323b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Snow
+    second: {fileID: 2100000, guid: cd1c79719f4253e43960c7a61826fc98, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Snow.002
+    second: {fileID: 2100000, guid: f5b15637b5aa27e4096707aee799bd9b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Snow.003
+    second: {fileID: 2100000, guid: 4bfa78b752d6eb5428fb68d67ef6e40a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Snow.004
+    second: {fileID: 2100000, guid: 2d54476a5b84ea64d89a780ea53cf64f, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

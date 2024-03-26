@@ -138,7 +138,7 @@ public class Dodge : ScriptableObject
         else if (!activated)
         {
             activated = true;
-            animator?.TriggerAnimation("Dodge1");
+            animator?.TriggerMultiAnimation("Dodge", false);
         }
     }
 

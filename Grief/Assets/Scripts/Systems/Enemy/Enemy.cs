@@ -269,7 +269,7 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
                 }
                 break;
             case EnemyState.Attacking:
-                AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.WolfSnarl, transform.position);
+                //AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.WolfSnarl, transform.position);
                 break;
             case EnemyState.Dodging: 
                 
@@ -625,6 +625,21 @@ public class Enemy : MonoBehaviour, IHealth, IEnemy, IAttack, IDodge, IPathfind,
         if (canAnimate)
         {
             animator.SetTrigger(animationId);
+        }
+    }
+
+    public void TriggerMultiAnimation(string animationId, bool attackVsDodge)
+    {
+        if (canAnimate)
+        {
+            if (attackVsDodge && attackHolder.CanAttack())
+            {
+                animator.SetTrigger(animationId + attackHolder.GetChosenAttack());
+            }
+            else if (!attackVsDodge && dodgeHolder.CanDodge())
+            {
+                animator.SetTrigger(animationId + dodgeHolder.GetChosenDodge());
+            }
         }
     }
 

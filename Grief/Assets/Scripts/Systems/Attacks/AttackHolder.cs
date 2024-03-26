@@ -9,6 +9,7 @@ public class AttackHolder : MonoBehaviour
     private Attack[] clonedAttackList = new Attack[0];
 
     private Attack activeAttack;
+    private int chosenAttack;
 
     private bool canAttack = true;
     private int attackCount = 0;
@@ -32,6 +33,7 @@ public class AttackHolder : MonoBehaviour
         }
 
         activeAttack = clonedAttackList[0];
+        chosenAttack = 1;
     }
 
     private void FixedUpdate()
@@ -57,6 +59,11 @@ public class AttackHolder : MonoBehaviour
         return canAttack;
     }
 
+    public int GetChosenAttack()
+    {
+        return chosenAttack;
+    }
+
     public void SetActiveAttack(int index)
     {
         if (!canAttack || index < 0 || index >= attackCount)
@@ -65,6 +72,7 @@ public class AttackHolder : MonoBehaviour
         }
 
         activeAttack = clonedAttackList[index];
+        chosenAttack = index + 1;
     }
 
     public void SetRandomActiveAttack()
@@ -76,6 +84,7 @@ public class AttackHolder : MonoBehaviour
 
         int index = Random.Range(0, attackCount);
         activeAttack = clonedAttackList[index];
+        chosenAttack = index + 1;
     }
 
     public void SetRandomActiveAttack(int rangeStartInclusive, int rangeEndExclusive)

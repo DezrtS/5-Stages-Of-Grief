@@ -28,6 +28,7 @@ public class FMODEventsManager : Singleton<FMODEventsManager>
     [field: SerializeField] public EventReference BossSwordSwing { get; private set; }
     [field: SerializeField] public EventReference ClawAttack { get; private set; }
     [field: SerializeField] public EventReference IceFreeze { get; private set; }
+    [field: SerializeField] public EventReference GroundSlam { get; private set; }
     [field: Header("    Hits")]
     [field: SerializeField] public EventReference GeneralHit { get; private set; }
     [field: SerializeField] public EventReference LogHit { get; private set; }

@@ -16,6 +16,7 @@ MonoBehaviour:
   recommendedAttackRange: 15
   attackRangeDeviation: 5
   isCombo: 0
+  forceCombo: 0
   comboAttackCount: 1
   fullComboCooldown: 0.5
   comboResetAfter: 1
@@ -23,7 +24,7 @@ MonoBehaviour:
   recieveStatusEffects: []
   attackStateMovements: []
   hasAimingStage: 1
-  maxAimTime: 0.2
+  maxAimTime: 0.5
   attackRequiredChargeUpTime: 0
   attackCancelCooldown: 0
   chargingUpTime: 0.2

@@ -31,6 +31,10 @@ public class GameManager : Singleton<GameManager>
         {
             SceneManager.Instance.ResetScene();
         }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            SceneManager.Instance.LoadNextScene();
+        }
     }
 
     public void PauseGame()

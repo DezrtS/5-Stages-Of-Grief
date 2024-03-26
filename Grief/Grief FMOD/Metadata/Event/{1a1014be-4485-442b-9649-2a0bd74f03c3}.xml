@@ -73,7 +73,7 @@
 	</object>
 	<object class="EventMixerMaster" id="{40df2e0f-f82a-42df-a1ce-6f8925dbed18}">
 		<property name="volume">
-			<value>-13.5</value>
+			<value>-28</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{e94a102d-8dd6-42cf-8575-2cb443be26d4}</destination>

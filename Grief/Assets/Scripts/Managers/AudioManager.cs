@@ -21,7 +21,7 @@ public class AudioManager : Singleton<AudioManager>
 
     private void Start()
     {
-        InitializeMusic(FMODEventsManager.Instance.FrozenLakeTheme1);
+        //InitializeMusic(FMODEventsManager.Instance.FrozenLakeTheme1);
     }
 
     private void FixedUpdate()

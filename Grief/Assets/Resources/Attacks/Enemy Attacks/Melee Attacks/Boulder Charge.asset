@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aad696d7f3134840b67d6330ac144e1, type: 3}
+  m_Name: Boulder Charge
+  m_EditorClassIdentifier: 
+  attackId: boulder_charge
+  recommendedAttackRange: 10
+  attackRangeDeviation: 9
+  isCombo: 0
+  forceCombo: 0
+  comboAttackCount: 1
+  fullComboCooldown: 0.5
+  comboResetAfter: 1
+  applyStatusEffects: []
+  recieveStatusEffects: []
+  attackStateMovements:
+  - state: 3
+    movement: {fileID: 11400000, guid: 6361b49771be5744680e7013d50baa15, type: 2}
+  hasAimingStage: 1
+  maxAimTime: 0.5
+  attackRequiredChargeUpTime: 0
+  attackCancelCooldown: 0
+  chargingUpTime: 0.2
+  hasAttackStage: 1
+  maxAttackTime: 3
+  coolingDownTime: 1
+  attackCooldown: 3
+  damage: 3
+  knockbackPower: 40
+  attackTriggerScale: 5
+  attackTriggerSpawnDistance: 2
+  playAudioIdOnAim:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnAttack:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCooldown:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  playAudioIdOnCancel:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  particleEffectOnAimPrefab: {fileID: 0}
+  particleEffectOnAttackPrefab: {fileID: 0}
+  particleEffectOnCooldownPrefab: {fileID: 0}
+  particleEffectOnCancelPrefab: {fileID: 0}
+  playAudioIdOnCharge:
+    Guid:
+      Data1: 1838587931
+      Data2: 1157285556
+      Data3: 1804733372
+      Data4: 605529978
+    Path: event:/SFX/Movement/Rolling

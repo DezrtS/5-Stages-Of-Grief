@@ -1,14 +1,18 @@
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Scriptable Objects/Attacks/Physical Attacks/Charge Attack")]
 public class ChargeAttack : PhysicalAttack
 {
-    private LayerMask interruptLayer;
+    private CombatManager combatManager;
+    private int bumpDistance = 4;
     private GameObject attackTrigger;
     private Vector3 triggerOffset;
 
-    //private GameObject attackTrigger;
+    float rollDelay = 0.5f;
+    float rollTimer = 0;
 
     public override void OnAttackStateStart(AttackState attackState)
     {
@@ -58,7 +62,8 @@ public class ChargeAttack : PhysicalAttack
         }
         else if (attackState == AttackState.Attacking)
         {
-            attackTrigger = CombatManager.Instance.CreateCircleTrigger(this, parentTransform.position + parentTransform.forward * attackTriggerSpawnDistance + Vector3.up, attackTriggerScale);
+            combatManager = CombatManager.Instance;
+            attackTrigger = CombatManager.Instance.CreateCircleAttackTrigger(this, parentTransform.position + parentTransform.forward * attackTriggerSpawnDistance + Vector3.up, attackTriggerScale);
             triggerOffset = attackTrigger.transform.position - parentTransform.position;
             PlayAudio(playAudioIdOnAttack);
 
@@ -89,10 +94,20 @@ public class ChargeAttack : PhysicalAttack
     {
         if (attackState == AttackState.Attacking)
         {
-            attackTrigger.transform.position = parentTransform.position + triggerOffset;
-            if (Physics.CheckSphere(parentTransform.position + new Vector3(0, 0, 1), 2, interruptLayer, QueryTriggerInteraction.Ignore))
+            rollTimer += Time.fixedDeltaTime;
+            if (rollTimer >= rollDelay)
             {
-                Debug.Log("Bumped");
+                rollTimer = 0;
+                AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.RockEnemyRolling, parentTransform.position);
+            }
+            attackTrigger.transform.position = parentTransform.position + triggerOffset;
+            if (Physics.Raycast(parentTransform.position + new Vector3(0, 3, 0), parentTransform.forward, bumpDistance, combatManager.bumpLayer, QueryTriggerInteraction.Ignore))
+            {
+                //Debug.Log("Bumped");
+                animator?.TriggerAnimation("Roll Hit");
+                AudioManager.Instance.PlayOneShot(FMODEventsManager.Instance.RollIntoTree);
+                TransferToAttackState(AttackState.CoolingDown);
+                return;
             }
         }
 

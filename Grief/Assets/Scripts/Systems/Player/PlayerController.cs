@@ -873,6 +873,21 @@ public class PlayerController : Singleton<PlayerController>, IHealth, IMove, IAt
         }
     }
 
+    public void TriggerMultiAnimation(string animationId, bool attackVsDodge)
+    {
+        if (canAnimate)
+        {
+            if (attackVsDodge && attackHolder.CanAttack())
+            {
+                animator.SetTrigger(animationId + attackHolder.GetChosenAttack());
+            }
+            else if (!attackVsDodge && dodgeHolder.CanDodge())
+            {
+                animator.SetTrigger(animationId + dodgeHolder.GetChosenDodge());
+            }
+        }
+    }
+
     public void OnAnimationEventStart(AnimationEvent animationEvent, string animationId)
     {
         if (!canAnimate)

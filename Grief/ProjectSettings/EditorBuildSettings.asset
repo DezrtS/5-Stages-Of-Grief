@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/Testing Scenes/Gameplay Testing.unity
-    guid: 106db255f50e3c34db4622ab984046d0
   - enabled: 1
     path: Assets/Scenes/Testing Scenes/Temp Scenes/Temp Menu.unity
     guid: 87a27045cee869947bab676b30513710
@@ -15,9 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Level Scenes/Level V1.unity
     guid: 5ffccbe04b1510a4facae66901560e73
   - enabled: 0
-    path: Assets/Scenes/Level Scenes/PlaytestingLevel.unity
-    guid: c6b013589bfa9554cadf5fc49122439a
-  - enabled: 0
-    path: Assets/Scenes/Testing Scenes/Temp Scenes/Short Level.unity
-    guid: 47203a949a1dffc4c890b1e83b5da41a
+    path: Assets/Scenes/Level Scenes/Cutscenes Level.unity
+    guid: 821dfd9f0bdf4044ab2b0c1335d13db7
   m_configObjects: {}

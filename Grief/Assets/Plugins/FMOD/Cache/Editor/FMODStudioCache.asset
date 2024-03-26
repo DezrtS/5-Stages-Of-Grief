@@ -27,6 +27,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1050
+--- !u!114 &-9048547615855301450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Attacks/Ground Slam
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Attacks/Ground Slam
+  Guid:
+    Data1: -370697309
+    Data2: 1144559414
+    Data3: -1644296811
+    Data4: -298761693
+  Banks:
+  - {fileID: 7561616249138049272}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-8557064927371499859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,7 +152,7 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638455257239821281
+  lastModified: 638467364141565269
   FileSizes:
   - Name: Desktop
     Value: 1036
@@ -442,7 +469,7 @@ MonoBehaviour:
   StudioPath: 
   Min: 0
   Max: 5
-  Default: 0
+  Default: 1
   ID:
     data1: 3417398644
     data2: 3274630146
@@ -519,7 +546,7 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Denial.bank
   Name: Denial
   StudioPath: bank:/Denial
-  lastModified: 638455203688240779
+  lastModified: 638467364141494840
   FileSizes:
   - Name: Desktop
     Value: 4443424
@@ -565,12 +592,13 @@ MonoBehaviour:
   - {fileID: 6653008144969293927}
   - {fileID: 6970958544425622709}
   - {fileID: -1342470488886998966}
+  - {fileID: -9048547615855301450}
   EditorParameters: []
   MasterBanks:
   - {fileID: -8260435118205532706}
   StringsBanks:
   - {fileID: 5618337765621597603}
-  cacheTime: 638455263124149570
+  cacheTime: 638467378064733261
   cacheVersion: 131608
 --- !u!114 &145384752493199619
 MonoBehaviour:
@@ -616,7 +644,7 @@ MonoBehaviour:
   StudioPath: 
   Min: 0
   Max: 5
-  Default: 0
+  Default: 1
   ID:
     data1: 3417398644
     data2: 3274630146
@@ -663,10 +691,10 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638455257239836365
+  lastModified: 638467364141575267
   FileSizes:
   - Name: Desktop
-    Value: 2124
+    Value: 2166
   Exists: 1
 --- !u!114 &5795372223571848650
 MonoBehaviour:
@@ -791,10 +819,10 @@ MonoBehaviour:
   Path: Grief FMOD/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638455263124149570
+  lastModified: 638467378064733261
   FileSizes:
   - Name: Desktop
-    Value: 1212480
+    Value: 1301248
   Exists: 1
 --- !u!114 &7596929621233708925
 MonoBehaviour:

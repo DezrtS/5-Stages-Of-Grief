@@ -16,5 +16,6 @@ public interface IAnimate
     public Animator Animator { get; }
     public bool CanAnimate { get; }
     public void TriggerAnimation(string animationId);
+    public void TriggerMultiAnimation(string animationId, bool attackVsDodge);
     public void OnAnimationEventStart(AnimationEvent animationEvent, string animationId);
 }

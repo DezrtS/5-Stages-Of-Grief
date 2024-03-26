@@ -32,7 +32,7 @@ MonoBehaviour:
   chargingUpTime: 0.25
   hasAttackStage: 1
   maxAttackTime: 0.2
-  coolingDownTime: 0
+  coolingDownTime: 0.25
   attackCooldown: 0.5
   damage: 1
   knockbackPower: 12
