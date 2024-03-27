@@ -18,7 +18,7 @@ MonoBehaviour:
   isCombo: 1
   forceCombo: 1
   comboAttackCount: 2
-  fullComboCooldown: 0.5
+  fullComboCooldown: 0.25
   comboResetAfter: 1
   applyStatusEffects: []
   recieveStatusEffects: []
@@ -32,7 +32,7 @@ MonoBehaviour:
   chargingUpTime: 0.25
   hasAttackStage: 1
   maxAttackTime: 0.2
-  coolingDownTime: 0.25
+  coolingDownTime: 1.5
   attackCooldown: 0.5
   damage: 1
   knockbackPower: 12
