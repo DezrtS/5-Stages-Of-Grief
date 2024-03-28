@@ -85,6 +85,7 @@ Transform:
   - {fileID: 603211336319115847}
   - {fileID: 587196982365370495}
   - {fileID: 703498836986494602}
+  - {fileID: 1273514571529839647}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -286,6 +287,8 @@ MonoBehaviour:
   flashEffectData: {fileID: 11400000, guid: 4206cd636fddf86459d55cf9eaf09486, type: 2}
   flashMaterial: {fileID: 2100000, guid: a87de172ec36f964db0379ebe53357c3, type: 2}
   dissolveMaterial: {fileID: 2100000, guid: 0013dff1b33260b4db601cda0968ec9d, type: 2}
+  bloodSplatter: {fileID: 6846862102782483461, guid: 9e4d477b5dea592469b440b29ae18bdd,
+    type: 3}
 --- !u!1 &5234610735720588866
 GameObject:
   m_ObjectHideFlags: 0
@@ -523,6 +526,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd457b4737beb204a93256e40727d131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8801342076755247710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1273514571529839647}
+  - component: {fileID: 1288231603085446731}
+  m_Layer: 0
+  m_Name: DecalManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1273514571529839647
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801342076755247710}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 798816379751952140}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1288231603085446731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801342076755247710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cb399628de8db74eb496178fa6cf9fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxBloodDecals: 50
+  bloodDecal: {fileID: 7622659242855033035, guid: a4d6e55a2fb2bb041b373a21376e6426,
+    type: 3}
 --- !u!1001 &63343846143478546
 PrefabInstance:
   m_ObjectHideFlags: 0

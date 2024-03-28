@@ -67,7 +67,7 @@ MonoBehaviour:
       Data4: 0
     Path: 
   particleEffectOnAimPrefab: {fileID: 0}
-  particleEffectOnAttackPrefab: {fileID: 5799475271799421216, guid: 5c52ebf674c4ce84d9a5ff86b1b2c921,
+  particleEffectOnAttackPrefab: {fileID: 7094088434895775797, guid: 56d31daf429aadd43a7bfa5708af4bbc,
     type: 3}
   particleEffectOnCooldownPrefab: {fileID: 0}
   particleEffectOnCancelPrefab: {fileID: 0}

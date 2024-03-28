@@ -10,6 +10,9 @@ public class EffectManager : Singleton<EffectManager>
     public Material flashMaterial;
     public Material dissolveMaterial;
 
+    public GameObject bloodSplatter;
+    private GameObject activeSplatter = null;
+
     public void Dissolve(Transform dissolveObject, bool dissolveIn)
     {
         Renderer[] renderers = dissolveObject.GetComponentsInChildren<Renderer>();
@@ -88,5 +91,17 @@ public class EffectManager : Singleton<EffectManager>
             FlashEffect newFlash = renderer.transform.AddComponent<FlashEffect>();
             newFlash.ActivateEffect();
         }
+    }
+
+    public void Bleed(Transform bleedObject, Vector3 direction)
+    {
+        if (activeSplatter != null)
+        {
+            Destroy(activeSplatter);
+        }
+
+        activeSplatter = Instantiate(bloodSplatter, bleedObject.transform.position + Vector3.up * 2 + direction * 2, Quaternion.identity, transform);
+        activeSplatter.transform.forward = direction;
+        activeSplatter.GetComponent<BloodSplatter>().Activate();
     }
 }

@@ -390,6 +390,7 @@ public abstract class Attack : ScriptableObject
             }
 
             Vector3 knockbackDirection = (hit.position - parentTransform.position).normalized;
+            EffectManager.Instance.Bleed(hit, knockbackDirection);
             ApplyKnockback(hit, knockbackPower, knockbackDirection);
         }
     }

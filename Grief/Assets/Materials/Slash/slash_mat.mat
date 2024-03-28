@@ -7,17 +7,22 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Stylized Water
-  m_Shader: {fileID: -6465566751694194690, guid: 2bd1034fca8348444820656b7c38ded1,
+  m_Name: slash_mat
+  m_Shader: {fileID: -6465566751694194690, guid: e6149ec1e473f6e41ab6995131ff811d,
     type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _ALPHATEST_ON
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses:
+  - SHADOWCASTER
+  - MOTIONVECTORS
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -79,52 +84,68 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AlphaClip: 0
+    - _AlphaClip: 1
+    - _AlphaToMask: 0
     - _Blend: 0
+    - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
+    - _CastShadows: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Cull: 2
+    - _Core_Width: 0.36
+    - _Core_height: 0.2
+    - _Core_size: 0.5
+    - _Cull: 0
     - _Cutoff: 0.5
-    - _Depth_Compare_Distance: 7
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DstBlend: 0
+    - _Distortion: 0.398
+    - _Distortion_scale: 25
+    - _DstBlend: 10
+    - _DstBlendAlpha: 0
+    - _Edge_location: -0.08
     - _EnvironmentReflections: 1
-    - _Foam_Amount: 1.19
-    - _Foam_Cutoff: 1.18
-    - _Foam_Scale: 5000
-    - _Foam_Speed: 0.1
+    - _Fresnal_Strength: -2.7
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _Height: 2
+    - _Mask_size: 0.634
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Scroll: -0.47
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SrcBlend: 1
-    - _Surface: 0
-    - _Testing: -25
-    - _Testing1: 0.1
-    - _Testing2: 0
-    - _Water_Depth: 6
+    - _SrcBlend: 5
+    - _SrcBlendAlpha: 1
+    - _Start_Color_Slider: 0
+    - _Surface: 1
+    - _UV_color_lerp_z: 1
+    - _UV_scroll_lerp_w: 1
+    - _Width: 2
     - _WorkflowMode: 1
+    - _ZTest: 4
     - _ZWrite: 1
+    - _ZWriteControl: 1
+    - _inner_roundness: 1.08
+    - _outter_roundness: 0.86
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Deep_Water: {r: 0, g: 0.08484745, b: 0.4433962, a: 0.9254902}
+    - _Distortion_speed: {r: 0, g: 0, b: 0, a: 0}
+    - _Distortion_tiling: {r: 2, g: 15, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Foam_Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Shallow_Water: {r: 0.70440245, g: 0.9744974, b: 1, a: 1}
+    - _Inner_Color: {r: 2.0828805, g: 2.0565329, b: 0.34896418, a: 1}
+    - _Outer_Color: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Start_Color: {r: 2.0828805, g: 2.0565329, b: 0.34896418, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &3735813594634407618
+--- !u!114 &8364103550556646363
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -136,4 +157,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 5
+  version: 9
